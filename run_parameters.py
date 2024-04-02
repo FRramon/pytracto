@@ -17,10 +17,10 @@ ClusterConsensus = False
 
 
 source_dir = '/mnt/POOL_IRM08/CONHECT'
+dicom_dir = '/mnt/POOL_IRM06/CONHECT/ConhectDatabase'
 data_folder = 'nifti3'
 group = 'Patients'
-session_list = ['001']
-
+session_list = [1,2,3]
 pipe_name = 'full_results'
 result_name = 'results_patients_20'
 ntracks = 10000000

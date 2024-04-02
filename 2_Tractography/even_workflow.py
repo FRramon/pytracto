@@ -60,7 +60,7 @@ mrcatPA = Node(mrt.MRCat(),name="mrcatPA")
 ### Conversion du DWI AP en .mif avec le nifti, bvec, bval
 mrconvertAP = MapNode(mrt.MRConvert(),name = "mrconvertAP",iterfield = ['in_file','in_bvec','in_bval'])
 #mrconvertAP = Node(mrt.MRConvert(),name = "mrconvertAP")
-mrcatAP = Node(mrt.MRCat(),name="mrcatPA")
+mrcatAP = Node(mrt.MRCat(),name="mrcatAP")
 
 ############# DC : Connecting the WF #######################
 
@@ -127,8 +127,16 @@ b0AP_extract = Node(mrt.DWIExtract(),name = 'b0AP_extract')
 b0AP_extract.inputs.bzero = True
 b0AP_extract.inputs.out_file ='b0AP.mif'
 
+# Mean b=0 AP
+avg_b0AP = Node(mrt.MRMath(),name = 'avg_b0AP')
+avg_b0AP.inputs.operation = 'mean'
+avg_b0AP.inputs.axis = 3
+avg_b0AP.inputs.out_file = 'avg_b0AP.mif'
+
 ## Concat B=0 in reverse phase directions
 merger_preproc = Node(Merge(2),name = 'merger')
+
+
 mrcatb0 = Node(mrt.MRCat(),name = 'mrcatb0')
 mrcatb0.inputs.axis = 3
 
@@ -159,8 +167,10 @@ wf_preproc.config['execution']['hash_method'] = 'content'
 wf_preproc.connect(denoise,'out_file',unring,'in_file')
 wf_preproc.connect(unring,'out_file',b0PA_extract,'in_file')
 wf_preproc.connect(b0PA_extract,'out_file',avg_b0PA,'in_file')
+wf_preproc.connect(b0AP_extract,'out_file',avg_b0AP,'in_file')
+
 wf_preproc.connect(avg_b0PA,'out_file',merger_preproc,'in1')
-wf_preproc.connect(b0AP_extract,'out_file',merger_preproc,'in2')
+wf_preproc.connect(avg_b0AP,'out_file',merger_preproc,'in2')
 wf_preproc.connect(merger_preproc,'out',mrcatb0,'in_files')
 wf_preproc.connect(unring,'out_file',dwpreproc,'in_file')
 wf_preproc.connect(mrcatb0,'out_file',dwpreproc,'in_epi')
@@ -397,4 +407,4 @@ wf_tractography.write_graph(graph2use='orig',dotfilename='./graph_tractography.d
 wf_dc.write_graph(graph2use='orig',dotfilename='./graph_dc.dot')
 connectome.write_graph(graph2use='orig',dotfilename='./graph_connectome.dot')
 
-main_wf.run(plugin = 'Linear',plugin_args={'n_procs' : 12})
+main_wf.run(plugin = plugin_processing ,plugin_args={'n_procs' : 12})

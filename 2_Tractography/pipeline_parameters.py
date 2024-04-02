@@ -34,6 +34,10 @@ tckgen_backtrack_param = True
 #### BUILD CONNECTOME ####
 
 # Path to desired atlas in user's mrtrix3/labelconvert directory
-labelconvert_param = '/mnt/POOL_IRM08/CONHECT/code/fs_a2009s.txt'
+labelconvert_param = '/mnt/POOL_IRM08/CONHECT/dmri-pipeline/fs_a2009s.txt'
 # Path to LUT file in $FREESURFER_HOME directory
-fs_lut_param = '/mnt/POOL_IRM08/CONHECT/code/FreeSurferColorLUT.txt'
+fs_lut_param = '/mnt/POOL_IRM08/CONHECT/dmri-pipeline/FreeSurferColorLUT.txt'
+
+### COMPUTATIONAL PARAMETERS 
+
+plugin_processing = "MultiProc"

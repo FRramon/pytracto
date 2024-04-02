@@ -395,4 +395,4 @@ wf_tractography.write_graph(graph2use='orig',dotfilename='./graph_tractography.d
 wf_dc.write_graph(graph2use='orig',dotfilename='./graph_dc.dot')
 connectome.write_graph(graph2use='orig',dotfilename='./graph_connectome.dot')
 
-main_wf.run(plugin = 'Linear',plugin_args={'n_procs' : 12})
+main_wf.run(plugin = plugin_processing ,plugin_args={'n_procs' : 12})

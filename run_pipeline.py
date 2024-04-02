@@ -26,7 +26,8 @@ from run_parameters import *
 data_dir = os.path.join(source_dir,data_folder,group)
 base_directory = source_dir + '/' + pipe_name
 out_dir = source_dir + '/' + result_name
-
+config_list = ["evenPA","oddPA","noAP"]
+workflows = ["2_Tractography/even_workflow.py","2_Tractography/odd_workflow.py","2_Tractography/synth_workflow.py"]
 
 # Select subject and sessions
 #layout = BIDSLayout(data_dir)
@@ -45,25 +46,50 @@ if run_pipeline:
 	# subprocess.run(command_pipeline20,shell = True)
 
 	for ses in session_list:
-		mri_list,even_subject_list,odd_subject_list,synth_subject_list = get_list_sessions_inverse_phase(source_dir,group,ses)
-		subject_list = odd_subject_list
-		#subject_list = ['01,02,03,04,05,06,07,08,09']
 
 
-		print('Subjects : ', subject_list)
-		print('Sessions : ', session_list)
-
-		#CLI_subject_list = '30,40,24,07,25,08,28,22,10,29,39,19,12,13,21,01,37,05,43,34,35,02,14,32,23,15,42,44'
+		# mri_list,even_subject_list,odd_subject_list,synth_subject_list = get_list_sessions_inverse_phase(source_dir,group,ses)
+		list_subject_list = get_ids_by_sessions(dicom_dir,source_dir,group,ses)
 
 
-		CLI_subject_list = ','.join(subject_list)
+		print(list_subject_list)
+		ses = "00" + str(ses)
 
-		CLI_session_list = ses  #','.join(session_list)
+		for i,config in enumerate(config_list):
+			if config == "evenPA":
+				subject_list = list_subject_list[1]
+				workflow = workflows[0]
+			elif config == "oddPA":
+				subject_list = list_subject_list[2]
+				workflow = workflows[1]
+			elif config == "noAP":
+				subject_list = list_subject_list[3]
+				workflow = workflows[2]
+
+			print(subject_list)
+			if subject_list[0] != '':
+				print(f"Running {config} workflow on subject {subject_list}")
+
+			
+		# subject_list = odd_subject_list
+		# #subject_list = ['01,02,03,04,05,06,07,08,09']
+
+
+		# print('Subjects : ', subject_list)
+		# print('Sessions : ', session_list)
+
+		# #CLI_subject_list = '30,40,24,07,25,08,28,22,10,29,39,19,12,13,21,01,37,05,43,34,35,02,14,32,23,15,42,44'
+
+
+				CLI_subject_list = ','.join(subject_list)
+
+				CLI_session_list = ses  #','.join(session_list)
 
 
 
-		command_pipeline = f'python 2_Tractography/odd_workflow.py {data_dir} {CLI_subject_list} {CLI_session_list} {base_directory} {out_dir} {ntracks} '
-		subprocess.run(command_pipeline,shell = True)
+				command_pipeline = f'python {workflow} {data_dir} {CLI_subject_list} {CLI_session_list} {base_directory} {out_dir} {ntracks} '
+				print(command_pipeline)
+			#subprocess.run(command_pipeline,shell = True)
 
 
 #################################################################
