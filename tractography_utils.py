@@ -156,7 +156,7 @@ def check_dimensions_problems(source_dir,base_dir,groups,session):
 					nvols = len(os.listdir(os.path.join(ses_path,folder)))
 					statement = (nvols==norms[i])
 					if statement == False:
-						print(f"Problem on {key} for {s} : {nvols} instead of {norms[i]}")
+						#print(f"Problem on {key} for {s} : {nvols} instead of {norms[i]}")
 						haveProblem.append(s)
 
 
@@ -182,7 +182,17 @@ def get_ids_by_sessions(source_dir,base_dir,groups,session):
 	transformed_list_Ses = ','.join(haveSes)
 	result_list_Ses = [transformed_list_Ses]
 
-	have_even = [s for s in have_even if s not in haveProblem]
+	
+	if session == 1 : 
+		have_even = [s for s in have_even if s not in haveProblem and s != '16']
+		haveProblem.append("16")
+	elif session == 2:
+		have_even = [s for s in have_even if s not in haveProblem and s != '03']
+		haveProblem.append("03")
+
+	else: 
+		have_even = [s for s in have_even if s not in haveProblem]
+
 	transformed_list_even = ','.join(have_even)
 	result_list_even = [transformed_list_even]
 
@@ -196,9 +206,9 @@ def get_ids_by_sessions(source_dir,base_dir,groups,session):
 	result_list_not = [transformed_list_not]
 
 
-	return result_list_Ses,result_list_even,result_list_odd,result_list_not
+	return result_list_Ses,result_list_even,result_list_odd,result_list_not, haveProblem
 
 
 
-r = get_ids_by_sessions("/mnt/POOL_IRM06/CONHECT/ConhectDatabase","/mnt/POOL_IRM08/CONHECT","Patients",1)
-print(r)
+# r = get_ids_by_sessions("/mnt/POOL_IRM06/CONHECT/ConhectDatabase","/mnt/POOL_IRM08/CONHECT","Patients",2)
+# print(r)

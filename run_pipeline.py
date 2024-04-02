@@ -55,6 +55,8 @@ if run_pipeline:
 		print(list_subject_list)
 		ses = "00" + str(ses)
 
+		print(f"Dimensions inconsistency : {list_subject_list[4]}")
+
 		for i,config in enumerate(config_list):
 			if config == "evenPA":
 				subject_list = list_subject_list[1]
@@ -89,7 +91,7 @@ if run_pipeline:
 
 				command_pipeline = f'python {workflow} {data_dir} {CLI_subject_list} {CLI_session_list} {base_directory} {out_dir} {ntracks} '
 				print(command_pipeline)
-			#subprocess.run(command_pipeline,shell = True)
+				subprocess.run(command_pipeline,shell = True)
 
 
 #################################################################
