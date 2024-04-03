@@ -187,8 +187,9 @@ def get_ids_by_sessions(source_dir,base_dir,groups,session):
 		have_even = [s for s in have_even if s not in haveProblem and s != '16']
 		haveProblem.append("16")
 	elif session == 2:
-		have_even = [s for s in have_even if s not in haveProblem and s != '03']
+		have_even = [s for s in have_even if s not in haveProblem and s != '03' and s != '06']
 		haveProblem.append("03")
+		haveProblem.append("06")
 
 	else: 
 		have_even = [s for s in have_even if s not in haveProblem]

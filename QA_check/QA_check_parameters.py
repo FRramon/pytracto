@@ -3,7 +3,7 @@
 ##########################################################
 
 create_vf = False
-create_smallertck = True
+create_smallertck = False
 
 view_denoised = False
 view_b0 = False
@@ -13,4 +13,5 @@ view_registration= False
 view_5tt = False
 view_odf = False
 view_freesurfer =  False
-view_streamline = True
+view_streamline = False
+view_connectome = True

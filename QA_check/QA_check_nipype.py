@@ -27,7 +27,7 @@ for sub in subject_list:
 		print(f"Running on {subject_id} - {session_id}")
 
 		# Set directories
-		main_workflow_dir = '/mnt/CONHECT_data/pipe_healthy/main_workflow'
+		main_workflow_dir = '/mnt/POOL_IRM08/CONHECT/full_results/main_workflow'
 		preproc_dir = os.path.join(main_workflow_dir,'preproc',identifier)
 		tracto_dir = os.path.join(main_workflow_dir,'wf_tractography',identifier)
 		connectome_dir = os.path.join(main_workflow_dir,'connectome',identifier)
@@ -130,5 +130,9 @@ for sub in subject_list:
 			print(f"Running command: {bash_command}")
 			subprocess.run(bash_command, shell=True)
 
+		if view_connectome:
+			bash_command = f"mrview {preproc_dir}/biascorrect/biascorrect.mif -connectome.init {connectome_dir}/labelconvert/mapflow/_labelconvert2/parcellation.mif -connectome.load {connectome_dir}/tck2connectome/mapflow/_tck2connectome2/connectome.csv "
+			print(f"Running command: {bash_command}")
+			subprocess.run(bash_command, shell=True)
 
 
