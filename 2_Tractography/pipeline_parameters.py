@@ -40,4 +40,4 @@ fs_lut_param = '/mnt/POOL_IRM08/CONHECT/dmri-pipeline/FreeSurferColorLUT.txt'
 
 ### COMPUTATIONAL PARAMETERS 
 
-plugin_processing = "MultiProc"
+plugin_processing = "Linear"

@@ -101,22 +101,41 @@ if run_pipeline:
 
 if createMatrixes:
 	for ses in session_list:
-		subject_list = get_list_sessions(source_dir,group,ses)
+		list_subject_list = get_ids_by_sessions(dicom_dir,source_dir,group,ses)
+
+
+		print(list_subject_list)
+		ses = "00" + str(ses)
+		for i,config in enumerate(config_list):
+			if config == "evenPA":
+				subject_list = list_subject_list[1]
+				workflow = workflows[0]
+			elif config == "oddPA":
+				subject_list = list_subject_list[2]
+				workflow = workflows[1]
+			elif config == "noAP":
+				subject_list = list_subject_list[3]
+				workflow = workflows[2]
+
+			print(subject_list)
+			if subject_list[0] != '':
+				print(f"Running {config} workflow on subject {subject_list}")
+		#subject_list = get_list_sessions(source_dir,group,ses)
 		#subject_list = ['01,02,03,04,05,06,07,08,09']
 
-		print('Subjects : ', subject_list)
-		print('Sessions : ', session_list)
+		#print('Subjects : ', subject_list)
+		#print('Sessions : ', session_list)
 
-		CLI_subject_list = ','.join(subject_list)
-		CLI_session_list = ses  #','.join(session_list)
+				CLI_subject_list = ','.join(subject_list)
+				CLI_session_list = ses  #','.join(session_list)
 
 
-		bash_command = f'python 3_MatrixesCreation/MatrixesCreation.py {CLI_subject_list} {CLI_session_list} {source_dir}'
-		subprocess.run(bash_command,shell = True)
+				bash_command = f'python 3_MatrixesCreation/MatrixesCreation.py {CLI_subject_list} {CLI_session_list} {source_dir}'
+				subprocess.run(bash_command,shell = True)
 	
 
 if createROIfile:
-	bash_command = f'python 3_MatrixesCreation/createROIfile.py {CLI_subject_list} {CLI_session_list} {source_dir} {base_directory}'
+	bash_command = f'python 3_MatrixesCreation/clone_createROIfile.py '
 	subprocess.run(bash_command,shell = True)
 
 #################################################################

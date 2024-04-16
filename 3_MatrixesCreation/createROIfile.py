@@ -34,6 +34,9 @@ all_non_zero_entries = []
 
 result_dir = os.path.join(base_dir,'main_workflow','connectome')
 
+metric = "ndi"
+
+
 for sub in subject_list:
 
 	ses_dir = os.path.join(result_dir,f'sub-{sub}')
@@ -44,7 +47,7 @@ for sub in subject_list:
 	for ses in ses_list:
 
 		identifier = '_ses_id_' + ses + '_subject_id_' + sub
-		connectome_dir = os.path.join(result_dir,identifier,"sc")
+		connectome_dir = os.path.join(result_dir,identifier,"{metric}")
 		print(connectome_dir)
 		if not os.path.exists(connectome_dir):
 			sys.exit(
@@ -53,7 +56,7 @@ for sub in subject_list:
 			print(f'RUNNING : {sub} - {ses}')
 
 			print(f'--- Creating ROI file')
-			input_file = os.path.join(connectome_dir, 'sc_connectivity_matrix.csv')
+			input_file = os.path.join(connectome_dir, f'{metric}_connectivity_matrix.csv')
 
 			df = pd.read_csv(input_file)
 			# Create a list to store the non-zero entries for each subject and session
@@ -85,7 +88,7 @@ for sub in subject_list:
 			df_withlabels.drop(columns='index', inplace=True)
 
 
-			output_current_file = connectome_dir + f"/{sub}_{ses}_SC_ROIs.csv" 
+			output_current_file = connectome_dir + f"/{sub}_{ses}_{metric}_ROIs.csv" 
 			df_withlabels.to_csv(output_current_file,mode = 'w', index=False)
 
 			all_non_zero_entries.append(df_withlabels)
@@ -94,12 +97,12 @@ for sub in subject_list:
 result_df = pd.concat(all_non_zero_entries)
 
 
-group_dir = base_dir + "/main_workflow/grouped_results"
+group_dir = base_dir + "/main_workflow/grouped_results/test11avr"
 if not os.path.exists(group_dir):  
     os.makedirs(group_dir) 
 
 # Write the result DataFrame to a new CSV file
-output_file = group_dir + "/SC_ROIs_all.csv" 
+output_file = group_dir + f"/{metric}_ROIs_all.csv" 
 print(output_file) 
 result_df.to_csv(output_file,mode = 'w', index=False)
 

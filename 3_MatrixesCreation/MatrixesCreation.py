@@ -17,7 +17,7 @@ subject_raw = sys.argv[1]
 session_raw = sys.argv[2]
 source_dir = sys.argv[3]
 
-sys.path.append(source_dir + '/code')
+sys.path.append(source_dir + '/dmri-pipeline')
 from run_parameters import *
 
 subject_list = subject_raw.split(',')
