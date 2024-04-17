@@ -265,8 +265,15 @@ tckgen.inputs.algorithm = tckgen_algorithm_param
 tckgen.inputs.select = tckgen_ntracks_param
 tckgen.inputs.backtrack = tckgen_backtrack_param
 
+tckgenDet = Node(mrt.Tractography(),name = 'tckgenDet')
+tckgenDet.inputs.algorithm = 'FACT'
+tckgenDet.inputs.select = tckgen_ntracks_param
+
 tcksift2 = Node(cmp_mrt.FilterTractogram(),name = 'tcksift2')
 tcksift2.inputs.out_file = 'sift_tracks.tck'
+
+tcksift2Det = Node(cmp_mrt.FilterTractogram(),name = 'tcksift2Det')
+tcksift2Det.inputs.out_file = 'sift_tracks.tck'
 
 #tcksift2.inputs.out_tracks = 'sift_tracks.tck'
 
@@ -308,9 +315,17 @@ wf_tractography.connect(gmwmi,'out_file',tckgen,'seed_gmwmi')
 wf_tractography.connect(transform5tt,'out_file',tckgen,'act_file')
 wf_tractography.connect(dwi2fod,'wm_odf',tckgen,'in_file')
 
+wf_tractography.connect(gmwmi,'out_file',tckgenDet,'seed_gmwmi')
+wf_tractography.connect(transform5tt,'out_file',tckgenDet,'act_file')
+wf_tractography.connect(dwi2fod,'wm_odf',tckgenDet,'in_file')
+
 wf_tractography.connect(tckgen,'out_file',tcksift2,'in_tracks')
 wf_tractography.connect(transform5tt,'out_file',tcksift2,'act_file')
 wf_tractography.connect(dwi2fod,'wm_odf',tcksift2,'in_fod')
+
+wf_tractography.connect(tckgenDet,'out_file',tcksift2Det,'in_tracks')
+wf_tractography.connect(transform5tt,'out_file',tcksift2Det,'act_file')
+wf_tractography.connect(dwi2fod,'wm_odf',tcksift2Det,'in_fod')
 
 #######################################################################
 ############          Connectome construction          ################
@@ -334,10 +349,14 @@ tck2connectome = MapNode(mrt.BuildConnectome(),name = 'tck2connectome',iterfield
 tck2connectome.inputs.zero_diagonal = True
 tck2connectome.inputs.out_file = "connectome.csv"
 
+tck2connectomeDet = MapNode(mrt.BuildConnectome(),name = 'tck2connectomeDet',iterfield=['in_parc'])
+tck2connectomeDet.inputs.zero_diagonal = True
+tck2connectomeDet.inputs.out_file = "connectome.csv"
 #connectome.connect(tcksift2,'out_tracks',tck2connectome,'in_file')
 
 connectome.connect(labelconvert,'out_file',transform_parcels,'in_files')
 connectome.connect(transform_parcels,'out_file',tck2connectome,'in_parc')
+connectome.connect(transform_parcels,'out_file',tck2connectomeDet,'in_parc')
 
 ######################################################################
 ######            Data Sink                           ################
@@ -378,6 +397,8 @@ main_wf.connect(wf_dc,'sf.anat',wf_tractography,'transformT1.in_files')
 main_wf.connect(fs_workflow,'fs_reconall.aparc_aseg',connectome,'labelconvert.in_file')
 main_wf.connect(wf_tractography,'transformconvert.out_transform',connectome,'transform_parcels.linear_transform')
 main_wf.connect(wf_tractography,'tcksift2.out_tracks',connectome,'tck2connectome.in_file')
+main_wf.connect(wf_tractography,'tcksift2Det.out_tracks',connectome,'tck2connectomeDet.in_file')
+
 # main_wf.connect(custom_path, 'custom_path', datasink, 'base_directory')
 
 # join_DC = Node(Merge(3), name='join_DC')
