@@ -20,6 +20,7 @@ source_dir = sys.argv[3]
 
 sys.path.append(source_dir + '/dmri-pipeline')
 from run_parameters import *
+from add_connectome_schaefer import *
 
 subject_list = subject_raw.split(',')
 ses_list = session_raw.split(',')
@@ -87,7 +88,7 @@ for sub in subject_list:
 
 
 		if parcellate_schaefer:
-			print("parcellate schaefer")
+			add_schaefer_parcellation(source_dir,sub,ses)
 
 
 		for gen_met in tckgen_method:
