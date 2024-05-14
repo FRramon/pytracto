@@ -10,10 +10,10 @@ Uses nipype workflows, on interfaces of Mrtrix3, FSL, freesurfer, ANTs and other
 
 ### Neuroimaging sofware requirements : 
 
-- mrtrix3 (installed with condo install mrtrix3)
-- FSL
-- Freesurfer 7.4.1
-- ANTs
+- mrtrix3 (installed with `conda install -c mrtrix3 mrtrix3`)
+- FSL [^1]
+- Freesurfer 7.4.1 [^2]
+- ANTs [^3]
 
 ### Python packages requirements :
 
@@ -29,7 +29,10 @@ To install :
 
 Navigate in pytracto path and type in terminal:
 
-`pip install .` or `python setup.py install`
+`pip install .` or ```python setup.py install```
 
 Pytracto is then *installed*.
 
+[^1]: [ https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallationl]
+[^2]: [ https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall]
+[^3]: [https://github.com/ANTsX/ANTs/wiki/Compiling-ANTs-on-Linux-and-Mac-OS]
