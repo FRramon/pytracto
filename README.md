@@ -26,6 +26,7 @@ For secondary packages, run
 To install : 
 
 `git clone https://github.com/FRramon/pytracto.git`
+
 `cd pytracto`
 
 Navigate in pytracto path and type in terminal:
