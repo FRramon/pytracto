@@ -2,7 +2,8 @@
 
 ## Python package for diffusion MRI tractography and connectivity
 
-**Author : François Ramon**
+Author : **François Ramon**
+Mail : francois.ramon@ghu-paris.fr
 
 Uses nipype workflows, on interfaces of Mrtrix3, FSL, freesurfer, ANTs and other neuroimaging softwares
 
