@@ -1,6 +1,7 @@
 Metadata-Version: 2.1
 Name: pytracto
 Version: 0.1
+License-File: LICENSE.txt
 Requires-Dist: python-on-whales>=0.71
 Requires-Dist: pybids>=0.16
 Requires-Dist: nipype>=1.8.6

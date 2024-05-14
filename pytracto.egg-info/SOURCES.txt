@@ -1,5 +1,6 @@
 .DS_Store
 FreeSurferColorLUT.txt
+LICENSE.txt
 MNI_FA_template.nii.gz
 README.md
 Schaefer2018_400Parcels_7Networks_order_LUT.txt
@@ -64,4 +65,6 @@ tractography/odd_workflow.py
 tractography/pipeline_parameters.py
 tractography/synth_workflow.py
 tractography/tractography_utils.py
+tractography/__pycache__/__init__.cpython-311.pyc
+tractography/__pycache__/odd_workflow.cpython-311.pyc
 tractography/__pycache__/pipeline_parameters.cpython-311.pyc
