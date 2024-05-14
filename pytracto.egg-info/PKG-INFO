@@ -1,3 +1,8 @@
 Metadata-Version: 2.1
 Name: pytracto
 Version: 0.1
+Requires-Dist: python-on-whales>=0.71
+Requires-Dist: pybids>=0.16
+Requires-Dist: nipype>=1.8.6
+Requires-Dist: dmri-amico>=2.0.1
+Requires-Dist: connectomemapper>=3.1

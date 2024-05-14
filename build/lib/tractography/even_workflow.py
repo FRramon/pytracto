@@ -9,7 +9,6 @@ import cmtklib.interfaces.mrtrix3 as cmp_mrt
 import os
 import sys
 
-from tractography.pipeline_parameters import *
 
 
 from nipype import config, logging
@@ -34,7 +33,7 @@ logging.update_logging(config)
 ############# DC : Node Definition #######################
 
 
-def execute_even_workflow(data_dir,base_directory,out_dir,tckgen_ntracks_param,subject_list,ses_list):
+def execute_even_workflow(data_dir,base_directory,out_dir,tckgen_ntracks_param,subject_list,ses_list,**kwargs):
 
     infosource = Node(IdentityInterface(fields=['subject_id','ses_id']),
                       name="infosource")
@@ -89,7 +88,7 @@ def execute_even_workflow(data_dir,base_directory,out_dir,tckgen_ntracks_param,s
 
     os.environ["SUBJECTS_DIR"] = data_dir
     fs_reconall = Node(ReconAll(),name = "fs_reconall")
-    fs_reconall.inputs.directive = reconall_param
+    fs_reconall.inputs.directive = kwargs.get('reconall_param')
     #.inputs.subjects_dir = data_dir
     fs_workflow = Workflow(name = 'fs_workflow',base_dir = base_directory)
     fs_workflow.config['execution']['use_caching'] = 'True'
@@ -149,13 +148,13 @@ def execute_even_workflow(data_dir,base_directory,out_dir,tckgen_ntracks_param,s
     dwpreproc.inputs.rpe_options = 'pair'
     dwpreproc.inputs.out_file = "preproc.mif"
     #preproc.inputs.out_grad_mrtrix = "grad.b"    # export final gradient table in MRtrix format
-    dwpreproc.inputs.eddy_options = eddyoptions_param   # linear second level model and replace outliers
+    dwpreproc.inputs.eddy_options = kwargs.get('eddyoptions_param')   # linear second level model and replace outliers
     dwpreproc.inputs.pe_dir = 'PA'
 
 
     # Unbias
     biascorrect = Node(mrt.DWIBiasCorrect(),name = 'biascorrect')
-    biascorrect.inputs.use_ants = useants_param
+    biascorrect.inputs.use_ants = kwargs.get('useants_param')
     biascorrect.inputs.out_file = 'biascorrect.mif'
 
     ##########           Preproc Connecting the WF         ##########
@@ -200,7 +199,7 @@ def execute_even_workflow(data_dir,base_directory,out_dir,tckgen_ntracks_param,s
 
     # DWI2response 
     dwiresponse = Node(mrt.ResponseSD(),name = 'dwiresponse')
-    dwiresponse.inputs.algorithm = fod_algorithm_param
+    dwiresponse.inputs.algorithm = kwargs.get('fod_algorithm_param')
     dwiresponse.inputs.csf_file = 'wm.txt'
     dwiresponse.inputs.gm_file = 'gm.txt'
     dwiresponse.inputs.csf_file = 'csf.txt'
@@ -208,14 +207,14 @@ def execute_even_workflow(data_dir,base_directory,out_dir,tckgen_ntracks_param,s
 
     #dwi2fod msmt_csd ${pref}_dwi_preproc.mif -mask ${pref}_mask_preproc.mif ${pref}_wm.txt ${pref}_wmfod.mif ${pref}_gm.txt ${pref}_gmfod.mif ${pref}_csf.txt ${pref}_csffod.mif
     dwi2fod = Node(mrt.ConstrainedSphericalDeconvolution(),name = "dwi2fod")
-    dwi2fod.inputs.algorithm = csd_algorithm_param
+    dwi2fod.inputs.algorithm = kwargs.get('csd_algorithm_param')
     dwi2fod.inputs.wm_txt = 'wm.txt' # ici faire le lien avec dwiresp
     dwi2fod.inputs.wm_odf = 'wm.mif'
     dwi2fod.inputs.csf_odf = "csf.mif"
     dwi2fod.inputs.gm_odf = "gm.mif"
 
     gen5tt = Node(mrt.Generate5tt(),name = 'gen5tt')
-    gen5tt.inputs.algorithm = tt_algorithm_param
+    gen5tt.inputs.algorithm = kwargs.get('tt_algorithm_param')
     gen5tt.inputs.out_file = '5tt.mif'
 
     #dwiextract ${pref}_dwi_preproc.mif - -bzero | mrmath - mean ${pref}_mean_b0_preprocessed.mif -axis 3
@@ -238,8 +237,8 @@ def execute_even_workflow(data_dir,base_directory,out_dir,tckgen_ntracks_param,s
 
     #flirt -in ${pref}_mean_b0_preprocessed.nii.gz -ref ${pref}_5tt_vol0.nii.gz -interp nearestneighbour -dof 6 -omat ${pref}_diff2struct_fsl.mat
     flirt = Node(fsl.FLIRT(),name = 'flirt')
-    flirt.inputs.dof = flirt_dof_param
-    flirt.inputs.interp = flirt_interp_param
+    flirt.inputs.dof = kwargs.get('flirt_dof_param')
+    flirt.inputs.interp = kwargs.get('flirt_interp_param')
     flirt.inputs.out_matrix_file = 'diff2struct_fsl.mat'
 
     #transformconvert ${pref}_diff2struct_fsl.mat ${pref}_mean_b0_preprocessed.nii.gz ${pref}_5tt_nocoreg.nii.gz flirt_import ${pref}_diff2struct_mrtrix.txt
@@ -261,13 +260,13 @@ def execute_even_workflow(data_dir,base_directory,out_dir,tckgen_ntracks_param,s
 
     #tckgen -act ${pref}_5tt_coreg.mif -backtrack -seed_gmwmi ${pref}_gmwmSeed_coreg.mif -select 10000000 ${pref}_wmfod_norm.mif ${pref}_tracks_10mio.tck
     tckgen = Node(mrt.Tractography(),name = 'tckgen')
-    tckgen.inputs.algorithm = tckgen_algorithm_param
-    tckgen.inputs.select = tckgen_ntracks_param
-    tckgen.inputs.backtrack = tckgen_backtrack_param
+    tckgen.inputs.algorithm = kwargs.get('tckgen_algorithm_param')
+    tckgen.inputs.select = kwargs.get('tckgen_ntracks_param')
+    tckgen.inputs.backtrack = kwargs.get('tckgen_backtrack_param')
 
     tckgenDet = Node(mrt.Tractography(),name = 'tckgenDet')
     tckgenDet.inputs.algorithm = 'SD_Stream'
-    tckgenDet.inputs.select = tckgen_ntracks_param
+    tckgenDet.inputs.select = kwargs.get('tckgen_ntracks_param')
 
     tcksift2 = Node(cmp_mrt.FilterTractogram(),name = 'tcksift2')
     tcksift2.inputs.out_file = 'sift_tracks.tck'
@@ -338,8 +337,8 @@ def execute_even_workflow(data_dir,base_directory,out_dir,tckgen_ntracks_param,s
     #labelconvert $datadir/anat/$sub_id/mri/aparc.a2009s+aseg.mgz $FREESURFER_HOME/FreeSurferColorLUT.txt ~/miniconda3/share/mrtrix3/labelconvert/fs_a2009s.txt $datadir/results/${sub_id}_${ses_id}_parcels_destrieux.mif -force
 
     labelconvert = MapNode(mrt.LabelConvert(),name = 'labelconvert',iterfield=['in_file'])
-    labelconvert.inputs.in_config = labelconvert_param
-    labelconvert.inputs.in_lut = fs_lut_param
+    labelconvert.inputs.in_config = kwargs.get('labelconvert_param')
+    labelconvert.inputs.in_lut = kwargs.get('fs_lut_param')
 
     transform_parcels = MapNode(mrt.MRTransform(),name = 'transform_parcels',iterfield=['in_files'])
     transform_parcels.inputs.out_file="parcels_coreg.mif"
