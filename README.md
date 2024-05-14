@@ -34,6 +34,6 @@ Navigate in pytracto path and type in terminal:
 
 Pytracto is then *installed*.
 
-[^1]: [ https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallationl]
+[^1]: [ https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation]
 [^2]: [ https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall]
 [^3]: [https://github.com/ANTsX/ANTs/wiki/Compiling-ANTs-on-Linux-and-Mac-OS]
