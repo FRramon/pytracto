@@ -12,24 +12,39 @@ from collections import Counter
 import json
 
 
-# Function to Check if the path specified 
-# specified is a valid directory 
-def isEmpty(path): 
-    if os.path.exists(path) and not os.path.isfile(path): 
-        #print(os.listdir(path))
-        # Checking if the directory is empty or not 
-        if not os.listdir(path): 
-            return True
-        else: 
-            return False 
-    else: 
-        return True
+# Function to Check if the path specified
+# specified is a valid directory
+def isEmpty(path: str):
+	"""
+	Function to check if a directory exists and is empty
+
+	Args:
+		path (str): path to folder
+	"""
+	if os.path.exists(path) and not os.path.isfile(path): 
+		#print(os.listdir(path)
+		# Checking if the directory is empty or not
+		if not os.listdir(path): 
+			return True
+		else: 
+			return False 
+	else: 
+		return True
 
 
-def get_list_sessions(base_dir,groups,session):
+def get_list_sessions(base_dir:str,groups:str,session:int):
+	"""
+	Function to get the subject list that attended to a specific session
+
+	Args:
+		base_dir (str): base directory
+		groups (str): group of subject to be processed (either patients, temoins etc. )
+		session (int): session to be processed
+	"""
 
 	# Get subjects ids which participated in session i
 
+	
 	source_data_dir = os.path.join(base_dir,'nifti3',groups)
 
 	subjects_raw = os.listdir(source_data_dir)
@@ -55,7 +70,16 @@ def get_list_sessions(base_dir,groups,session):
 
 	return result_list
 
-def get_list_sessions_inverse_phase(base_dir,groups,session):
+def get_list_sessions_inverse_phase(base_dir: str,groups: str,session: int):
+	"""
+	Get the list of subject that underwent session i and were aquired an inverse phase
+
+	Args:
+		base_dir (str): base directory
+		groups (str): group of subject to be processed (either patients, temoins etc. )
+		session (int): session to be processed
+
+	"""
 
 	# Get subjects ids which participated in session i
 	source_data_dir = os.path.join(base_dir,'nifti3',groups)
@@ -123,10 +147,21 @@ def get_list_sessions_inverse_phase(base_dir,groups,session):
 
 	return haveSes,have_even,have_odd,have_not
 
-def check_dimensions_problems(source_dir,base_dir,groups,session):
+def check_dimensions_problems(source_dir: str,base_dir: str,groups: str,session: int):
+	"""
+	Get the list of subject in session i that have a dimensionality issue in their images.
+
+	Args:
+		source_dir (str): source directory (parent folder of dicom directory)
+		base_dir (str): base directory
+		groups (str): group of subject to be processed (either patients, temoins etc. )
+		session (int): session to be processed
+
+	"""
+
 	session = "V" + str(session)
 	# Get subjects ids which participated in session i
-	source_data_dir = os.path.join(source_dir,'Patients')
+	source_data_dir = os.path.join(source_dir,groups)
 
 	subjects = os.listdir(source_data_dir)
 	
@@ -173,7 +208,17 @@ def check_dimensions_problems(source_dir,base_dir,groups,session):
 	return haveProblem
 			
 
-def get_ids_by_sessions(source_dir,base_dir,groups,session):
+def get_ids_by_sessions(source_dir : str,base_dir :str,groups :str,session :int):
+	"""
+	Get subject identifiers that went into session i, had or not inverse phase, had or not a dimension issue.
+
+	Args:
+		source_dir (str): source directory (parent folder of dicom directory)
+		base_dir (str): base directory
+		groups (str): group of subject to be processed (either patients, temoins etc. )
+		session (int): session to be processed
+
+	"""
 	haveSes,have_even,have_odd,have_not = get_list_sessions_inverse_phase(base_dir,groups,session)
 	haveProblem = check_dimensions_problems(source_dir,base_dir,groups,session)
 
