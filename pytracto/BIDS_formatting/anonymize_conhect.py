@@ -16,6 +16,9 @@ def anonymize_conhect(base_dir: str):
 	"""
 	Takes a path to a dataset organized as {subject_id}/Vi, and convert it to sub-i/ses-i.
 	Produce an equivalence table with correspondence between subject_ids
+
+	Args:
+		base_dir (str):  base directory 
 	"""
 
 	print('running anonymize_conhect')
@@ -83,6 +86,9 @@ def anonymize_conhect(base_dir: str):
 def correct_names(base_dir: str):
 	"""
 	Convert subject ids to sub-{i} in a given dataset.
+
+	Args:
+		base_dir (str): base directory
 	"""
 	print('running name correction')
 	# Examine content of the folder and select with a regular expression the right format file

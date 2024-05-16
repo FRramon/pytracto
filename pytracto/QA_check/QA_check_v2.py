@@ -72,7 +72,17 @@ def execute_qa_check(data_dir: str,source_dir : str,base_dir: str,start: int,gro
     """
     This function is an interactive program for quality assessment of the outputs of the dMRI pipeline. 
     It creates an excel with steps qualities.
+
+    Args: 
+        data_dir (str): directory that points to the pipeline's output directory
+        source_dir (str): source directory where dicom are located
+        base_dir (str): base directory
+        start (int): line in the excel to (re) start
+        group (str): group of subjects (either patients, temoins etc. )
+        ses_list (list[int]): list of sessions to be processed
+
     """
+    
     columns = ['Group', 'subject_id', 'session_id','anat','dwiAP','dwiPA','rsfmri','fmap','PE_direction','topup','topupquality','5tt mask','5tt quality','gmwmi','gmwmi quality', 'anat2diff quality','streamline reg quality']
 
     df = pd.DataFrame(columns=columns)

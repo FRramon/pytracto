@@ -41,14 +41,14 @@ def execute_synth_workflow(data_dir:str,base_directory:str,out_dir:str,tckgen_nt
       Workflow for diffusion MRI tractography and connectivity matrixes creation. 
       Particularly adapted for subjects without inverse phase
 
-      Arguments: 
-      data_dir : str, path to nifti files
-      base_directory : str, father branch of data_dir
-      out_dir : chosen output folder
-      tckgen_ntracks_param : str, TO REMOVE
-      subject_list : list, subjects list in the format ['01','02','03']
-      ses_list: list, session list in the format [1,2,3]
-      **kwargs: keywords argument for specific pipeline parameters
+      Args: 
+            data_dir (str): path to nifti files
+            base_directory (str): father branch of data_dir
+            out_dir (str): chosen output folder
+            tckgen_ntracks_param (int): TO REMOVE
+            subject_list (list[str]): subjects list in the format ['01','02','03']
+            ses_list (list[int]): session list in the format [1,2,3]
+            **kwargs: keywords argument for specific pipeline parameters
 
     """
     infosource = Node(IdentityInterface(fields=['subject_id','ses_id']),

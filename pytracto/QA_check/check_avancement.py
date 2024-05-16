@@ -27,9 +27,16 @@ def fill_list(L, step_file):
         L.append(False)
     return L
 
-def main(base_dir: str ,source_dir: str ,group: str, ses_list :str, output_file: str):
+def main(base_dir: str ,source_dir: str ,group: str, ses_list :list, output_file: str):
     """
     Function to generate a csv file of computation progress during the execution of the pipeline.
+
+    Args:
+        base_dir (str): base directory
+        source_dir (str): source directory (parent folder of dicom directory)
+        group (str): group of subjects to be processed (either patients, temoins etc. )
+        ses_list (list[int]): list of sessions to be processed
+        output_file (str): filename for the output file
     """
     progress_report = []
 

@@ -5,6 +5,11 @@ import os
 def add_schaefer_parcellation (base_dir: str,sub: str,ses: str):
 	"""
 	This function performs a schaefer parcellation on a subject that already underwent freesurfer's recon-all.
+
+	Args:
+		base_dir (str): base directory
+		sub (str): subject id to be processed (unique)
+		ses (str): session id to be processed (unique)
 	"""
 
 	subject_id = 'sub-' + sub

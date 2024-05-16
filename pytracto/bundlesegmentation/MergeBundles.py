@@ -26,6 +26,11 @@ from matplotlib.colors import ListedColormap
 def create_intersection_image(bundle_dir: str, mask_paths: str, output_path: str):
 	"""
 	Create a 72 channels image for each 72 segmented masks by tractseg
+
+	Args:
+		bundle_dir (str): directory where are located Tractseg outputs
+		mask_path (str): children directory of bundle_dir
+		output_path (str): path for writing the stacked image
 	"""
     # Load all the masks into a NumPy array
 	print(mask_paths[1])
@@ -38,6 +43,9 @@ def create_intersection_image(bundle_dir: str, mask_paths: str, output_path: str
 def create_equivalence_table(bundle_dir: str):
 	"""
 	Create an equivalence table between bundle id and bundle name
+
+	Args:
+		bundle_dir (str): directory where are located Tractseg outputs
 	"""
 	n = len(os.listdir(bundle_dir))
 	indexes = [i for i in range(n)]
@@ -53,6 +61,13 @@ def create_equivalence_table(bundle_dir: str):
 def gen_sphere(x0: int,y0: int,z0: int,radius: int):
 	"""
 	Generate a sphere of center (x0,y0,z0) and radii radius. In a np array of size 145,174,145
+
+	Args:
+		x0 (int): x coordinate for the center of the sphere
+		y0 (int): y coordinate for the center of the sphere
+		z0 (int): z coordinate for the center of the sphere
+		radius (int): radius of the sphere
+
 	"""
 
 	size1,size2,size3 = 145,174,145 
@@ -84,6 +99,15 @@ def gen_sphere(x0: int,y0: int,z0: int,radius: int):
 def get_masked_infos(stack,sphere_mask,x0 : int,y0 : int,z0 : int,radius : int):
 	"""
 	Mask the 72 mask image into the sphere mask space
+
+	Args:
+		stack (numpy array): stacked image
+		sphere_mask (numpy array): mask of the sphere in the dimension of the original image
+		x0 (int): x coordinate for the center of the sphere
+		y0 (int): y coordinate for the center of the sphere
+		z0 (int): z coordinate for the center of the sphere
+		radius (int): radius of the sphere
+
 	"""
     # stack = np.load(data_dir + '/stacked_mask.npy',allow_pickle=True).astype(np.int_)
     # sphere_mask = np.load('/mnt/CONHECT_data/code/test_sphere/sphere_mask.npy')
@@ -108,6 +132,14 @@ def get_masked_infos(stack,sphere_mask,x0 : int,y0 : int,z0 : int,radius : int):
 def main_merge_bundles(bundle_dir:str,output_path:str,x0:int,y0:int,z0:int,radius:int):
 	"""
 	Main function to generate a sphere mask for a given center (x0,y0,z0) and radii (radius), mask the bundles created by tractseg with the sphere mask. And access the proportion of each bundle in the sphere. 
+	
+	Args:
+		bundle_dir (str): directory where are located Tractseg outputs
+		output_path (str): path for writing outputs
+		x0 (int): x coordinate for the center of the sphere
+		y0 (int): y coordinate for the center of the sphere
+		z0 (int): z coordinate for the center of the sphere
+		radius (int): radius of the sphere
 	"""
 	mask_paths = os.listdir(bundle_dir)
 

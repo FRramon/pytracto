@@ -37,6 +37,9 @@ def execute_bids_formatting(base_dir: str):
     execute bids formatting given a base directory 
     + For next release the heuristic.
 
+    Args:
+        base_dir (str):  base directory
+
     """
    
     source_data_dir = os.path.join(base_dir,"data")

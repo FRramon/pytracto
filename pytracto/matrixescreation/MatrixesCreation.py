@@ -33,6 +33,11 @@ def build_connectivity_matrixes(source_dir: str,subject_list: list,ses_list:list
 	Matrixes for atlas Destrieux & Schaefer
 	Matrixes for generative method probabilistic and deterministic
 	Matrixes for microstructural parameters : SC, FA, MD, ADC, RD, AD, NDI, ODI, FWF
+
+	Args:
+		source_dir (str): source directory where the DICOM are located
+		subject_list (list[str]): list of subjects to be processed
+		ses_list (list[int]): list of sessions to be processed
 	"""
 
 	for sub in subject_list:

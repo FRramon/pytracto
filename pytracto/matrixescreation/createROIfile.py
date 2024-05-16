@@ -10,12 +10,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import subprocess
 
-source_dir = '/mnt/POOL_IRM08/CONHECT'
-ses_list = [1,3]
-group = "Patients"
-dicom_dir = "/mnt/POOL_IRM06/CONHECT/ConhectDatabase"
+# source_dir = '/mnt/POOL_IRM08/CONHECT'
+# ses_list = [1,3]
+# group = "Patients"
+# dicom_dir = "/mnt/POOL_IRM06/CONHECT/ConhectDatabase"
 
-sys.path.append(source_dir + '/dmri-pipeline')
+#sys.path.append(source_dir + '/dmri-pipeline')
 from pytracto.tractography.tractography_utils import *
 
 
@@ -44,6 +44,12 @@ from pytracto.tractography.tractography_utils import *
 def create_roi_file(source_dir: str,dicom_dir: str,ses_list: list,group: str):
 	"""
 	This function create a xlsx file containing information of all connectivity matrixes for all subjects/sessions in a group.
+
+	Args:
+		source_dir (str): source directory (parent folder of dicom_dir)
+		dicom_dir (str): directory where the DICOM are located
+		ses_list (list[str]): list of sessions to be processed
+		group (str): group of patients (either patients, temoins etc. )
 	"""
 	if group == 'Patients':
 		result_dir = os.path.join(source_dir , 'full_results','main_workflow','connectome')

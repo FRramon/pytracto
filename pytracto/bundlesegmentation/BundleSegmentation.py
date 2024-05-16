@@ -46,6 +46,11 @@ def bundle_segmentation(source_dir: str,subject_list: list,ses_list: list):
 	DWI images are first registered to MNI152 space using a FA map.
 	Tractseg segments into 72 bundles, using a U-net architecture
 	All 72 bundles are registered back to subject DWI space using inverse transform
+
+	Args:
+		source_dir (str): source directory of the DICOM
+		subject_list (list[str]): list of subjects
+		ses_list (list[int]): list of sessions
 	"""
 
 	mni_file = source_dir + '/code/MNI_FA_template.nii.gz'

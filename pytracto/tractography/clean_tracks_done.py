@@ -14,6 +14,10 @@ def clean_tracks_done(source_dir: str,pipe_name: str):
 	"""
 	Warning : Function to delete file tracked.tck if sift was ran. 
 	Warning : if the pipeline is rerun, it will do again tracks generation.
+
+	Args: 
+		source_dir (str): parent folder of dicom directory
+		pipe_name (str): name of the folder of the output
 	"""
 
 	wf_tractography_path = os.path.join(source_dir,pipe_name,'main_workflow','wf_tractography')

@@ -9,6 +9,7 @@ def create_key(template, outtype=('nii.gz',), annotation_classes=None):
 
    """
    Function to create a identificator between series description and nifti filename
+
    """
    if template is None or not template:
       raise ValueError('Template must be a valid format string')
