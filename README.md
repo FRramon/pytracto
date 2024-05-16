@@ -36,6 +36,16 @@ Navigate in pytracto path and type in terminal:
 
 Pytracto is then *installed*.
 
+## Documentation
+
+A first documentation is available [here](https://frramon.github.io/pytracto/pytracto.html)
+
+## Usage
+
+Typical usage make use of two scripts:
+-	run_parameters.py a file containing dictionaries of parameters to be use along the pipeline
+-	run_pipeline.py, a file containing commands to execute pipelines.
+
 [^1]: [ https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation]
 [^2]: [ https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall]
 [^3]: [https://github.com/ANTsX/ANTs/wiki/Compiling-ANTs-on-Linux-and-Mac-OS]
