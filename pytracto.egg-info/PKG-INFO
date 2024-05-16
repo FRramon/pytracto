@@ -1,7 +1,12 @@
 Metadata-Version: 2.1
 Name: pytracto
 Version: 0.1
-License-File: LICENSE.txt
+Summary: A python package for diffusion MRI tractography and connectivity, using interfaces of mrtrix3, fsl, freesurfer, ants, connectomemapper
+Author: François Ramon
+Author-email: francois.ramon@orange.fr
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
 Requires-Dist: python-on-whales>=0.71
 Requires-Dist: pybids>=0.16
 Requires-Dist: nipype>=1.8.6

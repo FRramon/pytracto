@@ -1,0 +1,1017 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>pytracto.tractography.odd_workflow API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>pytracto.tractography.odd_workflow</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from nipype import SelectFiles, Node, Workflow, DataSink, IdentityInterface, MapNode
+from nipype.interfaces.utility import Merge, Function
+from bids.layout import BIDSLayout
+import nipype.interfaces.mrtrix3 as mrt
+from nipype.interfaces import fsl
+from nipype.interfaces.fsl import ExtractROI
+from nipype.interfaces.freesurfer import ReconAll
+import cmtklib.interfaces.mrtrix3 as cmp_mrt
+import os
+import sys
+
+from pytracto.tractography.pipeline_parameters import *
+
+from nipype import config, logging
+config.enable_debug_mode()
+logging.update_logging(config)
+
+##########################################################
+###########      Data Conversion       ###################
+##########################################################
+
+# data_dir = sys.argv[1]
+# subject_raw = sys.argv[2]
+# session_raw = sys.argv[3]
+# base_directory = sys.argv[4]
+# out_dir = sys.argv[5]
+
+# print(data_dir)
+# print(base_directory)
+# print(out_dir)
+
+# tckgen_ntracks_param = int(sys.argv[6])
+
+# subject_list = subject_raw.split(&#39;,&#39;)
+# ses_list = session_raw.split(&#39;,&#39;)
+
+############# DC : Node Definition #######################
+
+
+def execute_odd_workflow(data_dir: str, base_directory: str, out_dir: str,
+                         tckgen_ntracks_param: int, subject_list: list, ses_list: list, **kwargs):
+    &#34;&#34;&#34;
+    Workflow for diffusion MRI tractography and connectivity matrixes creation.
+    Particularly adapted for subjects with 3PA/1AP or 3AP/1PA
+
+    Arguments:
+    data_dir : str, path to nifti files
+    base_directory : str, father branch of data_dir
+    out_dir : chosen output folder
+    tckgen_ntracks_param : str, TO REMOVE
+    subject_list : list, subjects list in the format [&#39;01&#39;,&#39;02&#39;,&#39;03&#39;]
+    ses_list: list, session list in the format [1,2,3]
+    **kwargs: keywords argument for specific pipeline parameters
+
+    &#34;&#34;&#34;
+
+    infosource = Node(IdentityInterface(fields=[&#39;subject_id&#39;, &#39;ses_id&#39;]),
+                      name=&#34;infosource&#34;)
+    infosource.iterables = [(&#39;subject_id&#39;, subject_list), (&#39;ses_id&#39;, ses_list)]
+
+    templates = {&#39;anat&#39;: &#39;sub-{subject_id}/ses-{ses_id}/anat/sub-{subject_id}_ses-{ses_id}_T1w.nii.gz&#39;,
+                 &#39;dwiPA&#39;: &#39;sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.nii.gz&#39;,
+                 &#39;bvalPA&#39;: &#39;sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.bval&#39;,
+                 &#39;bvecPA&#39;: &#39;sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.bvec&#39;,
+                 &#39;dwiAP&#39;: &#39;sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-AP_dwi.nii.gz&#39;,
+                 &#39;bvalAP&#39;: &#39;sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-AP_dwi.bval&#39;,
+                 &#39;bvecAP&#39;: &#39;sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-AP_dwi.bvec&#39;
+                 }
+
+    sf = Node(SelectFiles(templates),
+              name=&#39;sf&#39;)
+    sf.inputs.base_directory = data_dir
+
+    # Conversion des DWI PA en .mif (utilisation du nifti, bvec et bval) +
+    # Concatenation
+    mrconvertPA = MapNode(mrt.MRConvert(), name=&#34;mrconvertPA&#34;, iterfield=[
+                          &#39;in_file&#39;, &#39;in_bvec&#39;, &#39;in_bval&#39;])
+    mrcatPA = Node(mrt.MRCat(), name=&#34;mrcatPA&#34;)
+
+    # Conversion du DWI AP en .mif avec le nifti, bvec, bval
+    mrconvertAP = Node(mrt.MRConvert(), name=&#34;mrconvertAP&#34;)
+
+    ############# DC : Connecting the WF #######################
+
+    wf_dc = Workflow(name=&#34;wf_dc&#34;, base_dir=base_directory)
+    wf_dc.config[&#39;execution&#39;][&#39;use_caching&#39;] = &#39;True&#39;
+    wf_dc.config[&#39;execution&#39;][&#39;hash_method&#39;] = &#39;content&#39;
+
+    wf_dc.connect(infosource, &#34;subject_id&#34;, sf, &#34;subject_id&#34;)
+    wf_dc.connect(infosource, &#34;ses_id&#34;, sf, &#34;ses_id&#34;)
+
+    wf_dc.connect(sf, &#39;dwiPA&#39;, mrconvertPA, &#39;in_file&#39;)
+    wf_dc.connect(sf, &#39;bvecPA&#39;, mrconvertPA, &#39;in_bvec&#39;)
+    wf_dc.connect(sf, &#39;bvalPA&#39;, mrconvertPA, &#39;in_bval&#39;)
+
+    wf_dc.connect(sf, &#39;dwiAP&#39;, mrconvertAP, &#39;in_file&#39;)
+    wf_dc.connect(sf, &#39;bvecAP&#39;, mrconvertAP, &#39;in_bvec&#39;)
+    wf_dc.connect(sf, &#39;bvalAP&#39;, mrconvertAP, &#39;in_bval&#39;)
+
+    wf_dc.connect(mrconvertPA, &#39;out_file&#39;, mrcatPA, &#39;in_files&#39;)
+
+    ############################################################
+    ########          Freesurfer  Workflow           ###########
+    ############################################################
+
+    os.environ[&#34;SUBJECTS_DIR&#34;] = data_dir
+    fs_reconall = Node(ReconAll(), name=&#34;fs_reconall&#34;)
+    fs_reconall.inputs.directive = kwargs.get(&#39;reconall_param&#39;)
+    # .inputs.subjects_dir = data_dir
+    fs_workflow = Workflow(name=&#39;fs_workflow&#39;, base_dir=base_directory)
+    fs_workflow.config[&#39;execution&#39;][&#39;use_caching&#39;] = &#39;True&#39;
+    fs_workflow.config[&#39;execution&#39;][&#39;hash_method&#39;] = &#39;content&#39;
+
+    fs_workflow.connect(infosource, &#39;subject_id&#39;,
+                        fs_reconall, &#39;subject_id&#39;)
+    fs_workflow.connect(sf, &#39;anat&#39;, fs_reconall, &#39;T1_files&#39;)
+
+    ############################################################
+    ########          Preprocessing Workflow           #########
+    ############################################################
+
+    ##########       Preproc: Node definition       ############
+
+    ############# Denoising + Unring #############
+    denoise = Node(mrt.DWIDenoise(), name=&#39;denoise&#39;)
+    unring = Node(mrt.MRDeGibbs(), name=&#39;unring&#39;)
+
+    # extract b=0 channels from the DWI PA:
+    b0PA_extract = Node(mrt.DWIExtract(), name=&#39;b0PA_extract&#39;)
+    b0PA_extract.inputs.bzero = True
+    b0PA_extract.inputs.out_file = &#39;b0PA.mif&#39;
+
+    # Mean b=0 PA
+    avg_b0PA = Node(mrt.MRMath(), name=&#39;avg_b0PA&#39;)
+    avg_b0PA.inputs.operation = &#39;mean&#39;
+    avg_b0PA.inputs.axis = 3
+    avg_b0PA.inputs.out_file = &#39;avg_b0PA.mif&#39;
+
+    # extract b=0 channels from the DWI PA:
+
+    b0AP_extract = Node(mrt.DWIExtract(), name=&#39;b0AP_extract&#39;)
+    b0AP_extract.inputs.bzero = True
+    b0AP_extract.inputs.out_file = &#39;b0AP.mif&#39;
+
+    # Concat B=0 in reverse phase directions
+    merger_preproc = Node(Merge(2), name=&#39;merger&#39;)
+    mrcatb0 = Node(mrt.MRCat(), name=&#39;mrcatb0&#39;)
+    mrcatb0.inputs.axis = 3
+
+    ### Topup -&gt; Eddy ###
+
+    # # dwifslpreproc ${pref}_dwi_den_unr.mif ${pref}_dwi_den_unr_preproc.mif -pe_dir PA -rpe_pair -se_epi ${pref}_b0_pair.mif -eddy_options &#34; --slm=linear &#34;
+    # dwifslpreproc
+    # /mnt/CONHECT_data/pipeline_tmp/main_workflow/preproc/_ses_id_001_subject_id_01/unring/concatenated_denoised_unr.mif
+    # preproc.mif -rpe_pair -eddy_options &#34;--slm=linear&#34; -se_epi
+    # /mnt/CONHECT_data/pipeline_tmp/main_workflow/preproc/_ses_id_001_subject_id_01/mrcatb0/concatenated.mif
+    # -pe_dir j
+
+    dwpreproc = Node(mrt.DWIPreproc(), name=&#39;dwpreproc&#39;)
+    dwpreproc.inputs.rpe_options = &#39;pair&#39;
+    dwpreproc.inputs.out_file = &#34;preproc.mif&#34;
+    # preproc.inputs.out_grad_mrtrix = &#34;grad.b&#34;    # export final gradient table in MRtrix format
+    # linear second level model and replace outliers
+    dwpreproc.inputs.eddy_options = kwargs.get(&#39;eddyoptions_param&#39;)
+    dwpreproc.inputs.pe_dir = &#39;PA&#39;
+
+    # Unbias
+    biascorrect = Node(mrt.DWIBiasCorrect(), name=&#39;biascorrect&#39;)
+    biascorrect.inputs.use_ants = kwargs.get(&#39;useants_param&#39;)
+    biascorrect.inputs.out_file = &#39;biascorrect.mif&#39;
+
+    ##########           Preproc Connecting the WF         ##########
+
+    wf_preproc = Workflow(name=&#39;preproc&#39;, base_dir=base_directory)
+    wf_preproc.config[&#39;execution&#39;][&#39;use_caching&#39;] = &#39;True&#39;
+    wf_preproc.config[&#39;execution&#39;][&#39;hash_method&#39;] = &#39;content&#39;
+
+    wf_preproc.connect(denoise, &#39;out_file&#39;, unring, &#39;in_file&#39;)
+    wf_preproc.connect(unring, &#39;out_file&#39;, b0PA_extract, &#39;in_file&#39;)
+    wf_preproc.connect(b0PA_extract, &#39;out_file&#39;, avg_b0PA, &#39;in_file&#39;)
+    wf_preproc.connect(avg_b0PA, &#39;out_file&#39;, merger_preproc, &#39;in1&#39;)
+    wf_preproc.connect(b0AP_extract, &#39;out_file&#39;, merger_preproc, &#39;in2&#39;)
+    wf_preproc.connect(merger_preproc, &#39;out&#39;, mrcatb0, &#39;in_files&#39;)
+    wf_preproc.connect(unring, &#39;out_file&#39;, dwpreproc, &#39;in_file&#39;)
+    wf_preproc.connect(mrcatb0, &#39;out_file&#39;, dwpreproc, &#39;in_epi&#39;)
+    wf_preproc.connect(dwpreproc, &#39;out_file&#39;, biascorrect, &#39;in_file&#39;)
+
+    ##################################################################
+    #########            Tractography             ####################
+    ##################################################################
+
+    ############    Tractography: Nodes definition       #############
+
+    # # Estimation du brain mask : FSL bet
+    # convert_mask2nii = Node(mrt.MRConvert(),name = &#34;convert_mask2nii&#34;)
+    # convert_mask2nii.inputs.out_file = &#34;dwi_preproc.nii&#34;
+
+    # bet_mask = Node(fsl.BET(),name = &#39;bet_mask&#39;)
+    # bet_mask.inputs.mask = True
+    # # bet_mask.inputs.mask_file = &#39;mask.nii&#39;
+
+    # convert_mask2mif = Node(mrt.MRConvert(),name = &#34;convert_mask2mif&#34;)
+    # convert_mask2mif.inputs.out_file = &#39;mask_preproc.mif&#39;
+
+    brainmask = Node(mrt.BrainMask(), name=&#39;brainmask&#39;)
+    brainmask.out_file = &#39;brainmask.mif&#39;
+
+    # DWI2response
+    dwiresponse = Node(mrt.ResponseSD(), name=&#39;dwiresponse&#39;)
+    dwiresponse.inputs.algorithm = kwargs.get(&#39;fod_algorithm_param&#39;)
+    dwiresponse.inputs.csf_file = &#39;wm.txt&#39;
+    dwiresponse.inputs.gm_file = &#39;gm.txt&#39;
+    dwiresponse.inputs.csf_file = &#39;csf.txt&#39;
+
+    # dwi2fod msmt_csd ${pref}_dwi_preproc.mif -mask ${pref}_mask_preproc.mif
+    # ${pref}_wm.txt ${pref}_wmfod.mif ${pref}_gm.txt ${pref}_gmfod.mif
+    # ${pref}_csf.txt ${pref}_csffod.mif
+    dwi2fod = Node(mrt.ConstrainedSphericalDeconvolution(), name=&#34;dwi2fod&#34;)
+    dwi2fod.inputs.algorithm = kwargs.get(&#39;csd_algorithm_param&#39;)
+    dwi2fod.inputs.wm_txt = &#39;wm.txt&#39;  # ici faire le lien avec dwiresp
+    dwi2fod.inputs.wm_odf = &#39;wm.mif&#39;
+    dwi2fod.inputs.csf_odf = &#34;csf.mif&#34;
+    dwi2fod.inputs.gm_odf = &#34;gm.mif&#34;
+
+    gen5tt = Node(mrt.Generate5tt(), name=&#39;gen5tt&#39;)
+    gen5tt.inputs.algorithm = kwargs.get(&#39;tt_algorithm_param&#39;)
+    gen5tt.inputs.out_file = &#39;5tt.mif&#39;
+
+    # dwiextract ${pref}_dwi_preproc.mif - -bzero | mrmath - mean
+    # ${pref}_mean_b0_preprocessed.mif -axis 3
+    b0_extract = Node(mrt.DWIExtract(), name=&#39;b0_extract&#39;)
+    b0_extract.inputs.bzero = True
+    b0_extract.inputs.out_file = &#39;b0_extract.mif&#39;
+
+    avg_b0 = Node(mrt.MRMath(), name=&#39;avg_b0&#39;)
+    avg_b0.inputs.operation = &#39;mean&#39;
+    avg_b0.inputs.axis = 3
+    avg_b0.inputs.out_file = &#39;avg_b0.mif&#39;
+
+    convertb02nii = Node(mrt.MRConvert(), name=&#39;convertb02nii&#39;)
+    convertb02nii.inputs.out_file = &#39;b0.nii.gz&#39;
+    convert5tt2nii = Node(mrt.MRConvert(), name=&#39;convert5tt2nii&#39;)
+    convert5tt2nii.inputs.out_file = &#39;5tt.nii.gz&#39;
+
+    # fslroi ${pref}_5tt_nocoreg.nii.gz ${pref}_5tt_vol0.nii.gz 0 1 #Extract
+    # the first volume of the 5tt dataset (since flirt can only use 3D images,
+    # not 4D images)
+    fslroi = Node(fsl.ExtractROI(roi_file=&#39;5tt_vol0.nii.gz&#39;,
+                                 t_min=0, t_size=1), name=&#39;fslroi&#39;)
+
+    # flirt -in ${pref}_mean_b0_preprocessed.nii.gz -ref
+    # ${pref}_5tt_vol0.nii.gz -interp nearestneighbour -dof 6 -omat
+    # ${pref}_diff2struct_fsl.mat
+    flirt = Node(fsl.FLIRT(), name=&#39;flirt&#39;)
+    flirt.inputs.dof = kwargs.get(&#39;flirt_dof_param&#39;)
+    flirt.inputs.interp = kwargs.get(&#39;flirt_interp_param&#39;)
+    flirt.inputs.out_matrix_file = &#39;diff2struct_fsl.mat&#39;
+
+    # transformconvert ${pref}_diff2struct_fsl.mat
+    # ${pref}_mean_b0_preprocessed.nii.gz ${pref}_5tt_nocoreg.nii.gz
+    # flirt_import ${pref}_diff2struct_mrtrix.txt
+    transformconvert = Node(
+        mrt.TransformFSLConvert(), name=&#39;transformconvert&#39;)
+    transformconvert.inputs.flirt_import = True
+
+    # mrtransform ${pref}_5tt_nocoreg.mif -linear ${pref}_diff2struct_mrtrix.txt -inverse ${pref}_5tt_coreg.mif
+    # mrtransform ${pref}_T1_raw.mif -linear ${pref}_diff2struct_mrtrix.txt
+    # -inverse ${pref}_T1_coreg.mif
+    transform5tt = Node(mrt.MRTransform(), name=&#39;transform5tt&#39;)
+    # transform5tt.inputs.invert=True
+    transform5tt.inputs.out_file = &#34;5tt_coreg.mif&#34;
+    transformT1 = Node(mrt.MRTransform(), name=&#39;transformT1&#39;)
+    # transformT1.inputs.invert=True
+    transformT1.inputs.out_file = &#34;T1_coreg.mif&#34;
+
+    # gmwmi
+    gmwmi = Node(cmp_mrt.GenerateGMWMInterface(), name=&#39;gmwmi&#39;)
+    gmwmi.inputs.out_file = &#39;gmwmi.mif&#39;
+
+    # tckgen -act ${pref}_5tt_coreg.mif -backtrack -seed_gmwmi
+    # ${pref}_gmwmSeed_coreg.mif -select 10000000 ${pref}_wmfod_norm.mif
+    # ${pref}_tracks_10mio.tck
+    tckgen = Node(mrt.Tractography(), name=&#39;tckgen&#39;)
+    tckgen.inputs.algorithm = kwargs.get(&#39;tckgen_algorithm_param&#39;)
+    tckgen.inputs.select = kwargs.get(&#39;tckgen_ntracks_param&#39;)
+    tckgen.inputs.backtrack = kwargs.get(&#39;tckgen_backtrack_param&#39;)
+
+    tckgenDet = Node(mrt.Tractography(), name=&#39;tckgenDet&#39;)
+    tckgenDet.inputs.algorithm = &#39;SD_Stream&#39;
+    tckgenDet.inputs.select = kwargs.get(&#39;tckgen_ntracks_param&#39;)
+    # tckgenDet.inputs.backtrack = tckgen_backtrack_param
+
+    tcksift2 = Node(cmp_mrt.FilterTractogram(), name=&#39;tcksift2&#39;)
+    tcksift2.inputs.out_file = &#39;sift_tracks.tck&#39;
+
+    tcksift2Det = Node(cmp_mrt.FilterTractogram(), name=&#39;tcksift2Det&#39;)
+    tcksift2Det.inputs.out_file = &#39;sift_tracks.tck&#39;
+
+    # tcksift2.inputs.out_tracks = &#39;sift_tracks.tck&#39;
+
+    # tcksift2.inputs.out_weights = &#39;finaltracks.tck&#39;
+
+    #############     Tractography: Connecting the WF    ##################
+
+    wf_tractography = Workflow(
+        name=&#34;wf_tractography&#34;, base_dir=base_directory)
+    wf_tractography.config[&#39;execution&#39;][&#39;use_caching&#39;] = &#39;True&#39;
+    wf_tractography.config[&#39;execution&#39;][&#39;hash_method&#39;] = &#39;content&#39;
+
+    wf_tractography.connect(b0_extract, &#39;out_file&#39;, avg_b0, &#39;in_file&#39;)
+    wf_tractography.connect(avg_b0, &#39;out_file&#39;, convertb02nii, &#39;in_file&#39;)
+
+    wf_tractography.connect(gen5tt, &#39;out_file&#39;, convert5tt2nii, &#39;in_file&#39;)
+
+    wf_tractography.connect(convert5tt2nii, &#39;out_file&#39;, fslroi, &#39;in_file&#39;)
+    wf_tractography.connect(convertb02nii, &#39;out_file&#39;, flirt, &#39;in_file&#39;)
+    wf_tractography.connect(fslroi, &#39;roi_file&#39;, flirt, &#39;reference&#39;)
+
+    wf_tractography.connect(convertb02nii, &#39;out_file&#39;,
+                            transformconvert, &#39;in_file&#39;)
+    wf_tractography.connect(flirt, &#39;out_matrix_file&#39;,
+                            transformconvert, &#39;in_transform&#39;)
+    wf_tractography.connect(
+        convert5tt2nii, &#39;out_file&#39;, transformconvert, &#39;reference&#39;)
+
+    wf_tractography.connect(gen5tt, &#39;out_file&#39;, transform5tt, &#39;in_files&#39;)
+
+    wf_tractography.connect(
+        transformconvert, &#39;out_transform&#39;, transform5tt, &#39;linear_transform&#39;)
+    wf_tractography.connect(
+        transformconvert, &#39;out_transform&#39;, transformT1, &#39;linear_transform&#39;)
+
+    wf_tractography.connect(transform5tt, &#39;out_file&#39;, gmwmi, &#39;in_file&#39;)
+
+    wf_tractography.connect(dwiresponse, &#39;wm_file&#39;, dwi2fod, &#39;wm_txt&#39;)
+    wf_tractography.connect(dwiresponse, &#39;gm_file&#39;, dwi2fod, &#39;gm_txt&#39;)
+    wf_tractography.connect(dwiresponse, &#39;csf_file&#39;, dwi2fod, &#39;csf_txt&#39;)
+    wf_tractography.connect(brainmask, &#39;out_file&#39;, dwi2fod, &#39;mask_file&#39;)
+
+    wf_tractography.connect(gmwmi, &#39;out_file&#39;, tckgen, &#39;seed_gmwmi&#39;)
+    wf_tractography.connect(transform5tt, &#39;out_file&#39;, tckgen, &#39;act_file&#39;)
+    wf_tractography.connect(dwi2fod, &#39;wm_odf&#39;, tckgen, &#39;in_file&#39;)
+
+    wf_tractography.connect(gmwmi, &#39;out_file&#39;, tckgenDet, &#39;seed_gmwmi&#39;)
+    wf_tractography.connect(transform5tt, &#39;out_file&#39;, tckgenDet, &#39;act_file&#39;)
+    wf_tractography.connect(dwi2fod, &#39;wm_odf&#39;, tckgenDet, &#39;in_file&#39;)
+
+    wf_tractography.connect(tckgen, &#39;out_file&#39;, tcksift2, &#39;in_tracks&#39;)
+    wf_tractography.connect(transform5tt, &#39;out_file&#39;, tcksift2, &#39;act_file&#39;)
+    wf_tractography.connect(dwi2fod, &#39;wm_odf&#39;, tcksift2, &#39;in_fod&#39;)
+
+    wf_tractography.connect(tckgenDet, &#39;out_file&#39;,
+                            tcksift2Det, &#39;in_tracks&#39;)
+    wf_tractography.connect(transform5tt, &#39;out_file&#39;,
+                            tcksift2Det, &#39;act_file&#39;)
+    wf_tractography.connect(dwi2fod, &#39;wm_odf&#39;, tcksift2Det, &#39;in_fod&#39;)
+
+    #######################################################################
+    ############          Connectome construction          ################
+    #######################################################################
+
+    connectome = Workflow(name=&#39;connectome&#39;, base_dir=base_directory)
+    connectome.config[&#39;execution&#39;][&#39;use_caching&#39;] = &#39;True&#39;
+    connectome.config[&#39;execution&#39;][&#39;hash_method&#39;] = &#39;content&#39;
+
+    # labelconvert $datadir/anat/$sub_id/mri/aparc.a2009s+aseg.mgz
+    # $FREESURFER_HOME/FreeSurferColorLUT.txt
+    # ~/miniconda3/share/mrtrix3/labelconvert/fs_a2009s.txt
+    # $datadir/results/${sub_id}_${ses_id}_parcels_destrieux.mif -force
+
+    labelconvert = MapNode(
+        mrt.LabelConvert(), name=&#39;labelconvert&#39;, iterfield=[&#39;in_file&#39;])
+    labelconvert.inputs.in_config = kwargs.get(&#39;labelconvert_param&#39;)
+    labelconvert.inputs.in_lut = kwargs.get(&#39;fs_lut_param&#39;)
+
+    transform_parcels = MapNode(
+        mrt.MRTransform(), name=&#39;transform_parcels&#39;, iterfield=[&#39;in_files&#39;])
+    transform_parcels.inputs.out_file = &#34;parcels_coreg.mif&#34;
+
+    # tck2connectome –symmetric –zero_diagonal tracks_10mio.tck
+    # ${sub_id}_${ses_id}_parcels_destrieux.mif
+    # ${sub_id}_${ses_id}_sc_connectivity_matrix.csv –out_assignment
+    # ${sub_id}_${ses_id}_sc_assignments.csv -force
+    tck2connectome = MapNode(mrt.BuildConnectome(
+    ), name=&#39;tck2connectome&#39;, iterfield=[&#39;in_parc&#39;])
+    tck2connectome.inputs.zero_diagonal = True
+    tck2connectome.inputs.out_file = &#34;connectome.csv&#34;
+
+    tck2connectomeDet = MapNode(mrt.BuildConnectome(
+    ), name=&#39;tck2connectomeDet&#39;, iterfield=[&#39;in_parc&#39;])
+    tck2connectomeDet.inputs.zero_diagonal = True
+    tck2connectomeDet.inputs.out_file = &#34;connectome.csv&#34;
+
+    # connectome.connect(tcksift2,&#39;out_tracks&#39;,tck2connectome,&#39;in_file&#39;)
+
+    connectome.connect(labelconvert, &#39;out_file&#39;,transform_parcels, &#39;in_files&#39;)
+    connectome.connect(transform_parcels, &#39;out_file&#39;,tck2connectome, &#39;in_parc&#39;)
+    connectome.connect(transform_parcels, &#39;out_file&#39;,
+                        tck2connectomeDet, &#39;in_parc&#39;)
+
+       ######################################################################
+       ######            Data Sink                           ################
+       ######################################################################
+
+    def custom_output_path(out_dir, sub_id, ses_id):
+        import os
+        return os.path.join(out_dir, f&#34;sub-{sub_id}/ses-{ses_id}&#34;)
+
+    datasink = Node(DataSink(), name=&#34;datasink&#34;)
+    datasink.inputs.parameterization = False
+    datasink.inputs.base_directory = out_dir
+
+    custom_path = Node(Function(input_names=[&#34;out_dir&#34;, &#34;sub_id&#34;, &#34;ses_id&#34;],
+                                output_names=[&#34;custom_path&#34;],
+                                function=custom_output_path),
+                        name=&#34;custom_path&#34;)
+
+    #######################################################################
+    #########         Connecting Workflows together        ################
+    #######################################################################
+
+    main_wf = Workflow(name=&#34;main_workflow&#34;, base_dir=base_directory)
+    main_wf.config[&#39;execution&#39;][&#39;use_caching&#39;] = &#39;True&#39;
+    main_wf.config[&#39;execution&#39;][&#39;hash_method&#39;] = &#39;content&#39;
+
+        # main_wf.connect(wf_dc,&#39;infosource.subject_id&#39;,custom_path,&#39;sub_id&#39;)
+        # main_wf.connect(wf_dc,&#39;infosource.ses_id&#39;,custom_path,&#39;ses_id&#39;)
+
+    main_wf.connect(wf_dc, &#39;mrcatPA.out_file&#39;,
+                    wf_preproc, &#39;denoise.in_file&#39;)
+    main_wf.connect(wf_dc, &#39;mrconvertAP.out_file&#39;,
+                    wf_preproc, &#39;b0AP_extract.in_file&#39;)
+    main_wf.connect(wf_preproc, &#39;biascorrect.out_file&#39;,
+                    wf_tractography, &#39;brainmask.in_file&#39;)
+    main_wf.connect(wf_preproc, &#39;biascorrect.out_file&#39;,
+                    wf_tractography, &#39;b0_extract.in_file&#39;)
+    main_wf.connect(wf_preproc, &#39;biascorrect.out_file&#39;,
+                    wf_tractography, &#39;dwiresponse.in_file&#39;)
+    main_wf.connect(wf_preproc, &#39;biascorrect.out_file&#39;,
+                    wf_tractography, &#39;dwi2fod.in_file&#39;)
+    main_wf.connect(wf_dc, &#39;sf.anat&#39;, wf_tractography, &#39;gen5tt.in_file&#39;)
+    main_wf.connect(wf_dc, &#39;sf.anat&#39;, wf_tractography,
+                        &#39;transformT1.in_files&#39;)
+    main_wf.connect(fs_workflow, &#39;fs_reconall.aparc_aseg&#39;,
+                    connectome, &#39;labelconvert.in_file&#39;)
+    main_wf.connect(wf_tractography, &#39;transformconvert.out_transform&#39;,
+                    connectome, &#39;transform_parcels.linear_transform&#39;)
+    main_wf.connect(wf_tractography, &#39;tcksift2.out_tracks&#39;,
+                    connectome, &#39;tck2connectome.in_file&#39;)
+    main_wf.connect(wf_tractography, &#39;tcksift2Det.out_tracks&#39;,
+                    connectome, &#39;tck2connectomeDet.in_file&#39;)
+
+        # main_wf.connect(custom_path, &#39;custom_path&#39;, datasink, &#39;base_directory&#39;)
+
+        # join_DC = Node(Merge(3), name=&#39;join_DC&#39;)
+        # main_wf.connect(wf_dc, &#39;mrcatPA.out_file&#39;, join_DC, &#39;in1&#39;)
+        # main_wf.connect(wf_dc, &#39;mrconvertAP.out_file&#39;, join_DC, &#39;in2&#39;)
+        # main_wf.connect(wf_dc,&#39;sf.anat&#39;,join_DC,&#39;in3&#39;)
+        # main_wf.connect(join_DC,&#39;out&#39;,datasink,&#39;1_DataConversion&#39;)
+
+        # main_wf.connect(wf_preproc,&#39;biascorrect.out_file&#39;,datasink,&#39;2_Preprocessing&#39;)
+
+        # join_FOD = Node(Merge(4), name=&#39;join_FOD&#39;)
+        # main_wf.connect(wf_tractography,&#39;dwiresponse.wm_file&#39;,join_FOD,&#39;in1&#39;)
+        # main_wf.connect(wf_tractography,&#39;dwi2fod.wm_odf&#39;,join_FOD,&#39;in2&#39;)
+        # main_wf.connect(wf_tractography,&#39;transform5tt.out_file&#39;,join_FOD,&#39;in3&#39;)
+        # main_wf.connect(wf_tractography,&#39;transformT1.out_file&#39;,join_FOD,&#39;in4&#39;)
+        # main_wf.connect(join_FOD,&#39;out&#39;,datasink,&#39;3_FODestimation&#39;)
+
+        # join_Tracto = Node(Merge(2), name=&#39;join_Tracto&#39;)
+        # main_wf.connect(wf_tractography,&#39;tckgen.out_file&#39;,join_Tracto,&#39;in1&#39;)
+        # main_wf.connect(wf_tractography,&#39;tcksift2.out_tracks&#39;,join_Tracto,&#39;in2&#39;)
+        # main_wf.connect(join_Tracto,&#39;out&#39;,datasink,&#39;4_Tractography&#39;)
+
+        # main_wf.connect(connectome,&#39;tck2connectome.out_file&#39;,datasink,&#39;5_Connectome&#39;)
+
+    main_wf.write_graph(graph2use=&#39;colored&#39;,
+                        dotfilename=&#39;./mult_11_12.dot&#39;)
+    wf_tractography.write_graph(
+        graph2use=&#39;orig&#39;, dotfilename=&#39;./graph_tractography.dot&#39;)
+    wf_dc.write_graph(graph2use=&#39;orig&#39;, dotfilename=&#39;./graph_dc.dot&#39;)
+    connectome.write_graph(
+        graph2use=&#39;orig&#39;, dotfilename=&#39;./graph_connectome.dot&#39;)
+
+    main_wf.run(plugin=plugin_processing, plugin_args={&#39;n_procs&#39;: 12})</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="pytracto.tractography.odd_workflow.execute_odd_workflow"><code class="name flex">
+<span>def <span class="ident">execute_odd_workflow</span></span>(<span>data_dir: str, base_directory: str, out_dir: str, tckgen_ntracks_param: int, subject_list: list, ses_list: list, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Workflow for diffusion MRI tractography and connectivity matrixes creation.
+Particularly adapted for subjects with 3PA/1AP or 3AP/1PA</p>
+<p>Arguments:
+data_dir : str, path to nifti files
+base_directory : str, father branch of data_dir
+out_dir : chosen output folder
+tckgen_ntracks_param : str, TO REMOVE
+subject_list : list, subjects list in the format ['01','02','03']
+ses_list: list, session list in the format [1,2,3]
+**kwargs: keywords argument for specific pipeline parameters</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def execute_odd_workflow(data_dir: str, base_directory: str, out_dir: str,
+                         tckgen_ntracks_param: int, subject_list: list, ses_list: list, **kwargs):
+    &#34;&#34;&#34;
+    Workflow for diffusion MRI tractography and connectivity matrixes creation.
+    Particularly adapted for subjects with 3PA/1AP or 3AP/1PA
+
+    Arguments:
+    data_dir : str, path to nifti files
+    base_directory : str, father branch of data_dir
+    out_dir : chosen output folder
+    tckgen_ntracks_param : str, TO REMOVE
+    subject_list : list, subjects list in the format [&#39;01&#39;,&#39;02&#39;,&#39;03&#39;]
+    ses_list: list, session list in the format [1,2,3]
+    **kwargs: keywords argument for specific pipeline parameters
+
+    &#34;&#34;&#34;
+
+    infosource = Node(IdentityInterface(fields=[&#39;subject_id&#39;, &#39;ses_id&#39;]),
+                      name=&#34;infosource&#34;)
+    infosource.iterables = [(&#39;subject_id&#39;, subject_list), (&#39;ses_id&#39;, ses_list)]
+
+    templates = {&#39;anat&#39;: &#39;sub-{subject_id}/ses-{ses_id}/anat/sub-{subject_id}_ses-{ses_id}_T1w.nii.gz&#39;,
+                 &#39;dwiPA&#39;: &#39;sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.nii.gz&#39;,
+                 &#39;bvalPA&#39;: &#39;sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.bval&#39;,
+                 &#39;bvecPA&#39;: &#39;sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.bvec&#39;,
+                 &#39;dwiAP&#39;: &#39;sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-AP_dwi.nii.gz&#39;,
+                 &#39;bvalAP&#39;: &#39;sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-AP_dwi.bval&#39;,
+                 &#39;bvecAP&#39;: &#39;sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-AP_dwi.bvec&#39;
+                 }
+
+    sf = Node(SelectFiles(templates),
+              name=&#39;sf&#39;)
+    sf.inputs.base_directory = data_dir
+
+    # Conversion des DWI PA en .mif (utilisation du nifti, bvec et bval) +
+    # Concatenation
+    mrconvertPA = MapNode(mrt.MRConvert(), name=&#34;mrconvertPA&#34;, iterfield=[
+                          &#39;in_file&#39;, &#39;in_bvec&#39;, &#39;in_bval&#39;])
+    mrcatPA = Node(mrt.MRCat(), name=&#34;mrcatPA&#34;)
+
+    # Conversion du DWI AP en .mif avec le nifti, bvec, bval
+    mrconvertAP = Node(mrt.MRConvert(), name=&#34;mrconvertAP&#34;)
+
+    ############# DC : Connecting the WF #######################
+
+    wf_dc = Workflow(name=&#34;wf_dc&#34;, base_dir=base_directory)
+    wf_dc.config[&#39;execution&#39;][&#39;use_caching&#39;] = &#39;True&#39;
+    wf_dc.config[&#39;execution&#39;][&#39;hash_method&#39;] = &#39;content&#39;
+
+    wf_dc.connect(infosource, &#34;subject_id&#34;, sf, &#34;subject_id&#34;)
+    wf_dc.connect(infosource, &#34;ses_id&#34;, sf, &#34;ses_id&#34;)
+
+    wf_dc.connect(sf, &#39;dwiPA&#39;, mrconvertPA, &#39;in_file&#39;)
+    wf_dc.connect(sf, &#39;bvecPA&#39;, mrconvertPA, &#39;in_bvec&#39;)
+    wf_dc.connect(sf, &#39;bvalPA&#39;, mrconvertPA, &#39;in_bval&#39;)
+
+    wf_dc.connect(sf, &#39;dwiAP&#39;, mrconvertAP, &#39;in_file&#39;)
+    wf_dc.connect(sf, &#39;bvecAP&#39;, mrconvertAP, &#39;in_bvec&#39;)
+    wf_dc.connect(sf, &#39;bvalAP&#39;, mrconvertAP, &#39;in_bval&#39;)
+
+    wf_dc.connect(mrconvertPA, &#39;out_file&#39;, mrcatPA, &#39;in_files&#39;)
+
+    ############################################################
+    ########          Freesurfer  Workflow           ###########
+    ############################################################
+
+    os.environ[&#34;SUBJECTS_DIR&#34;] = data_dir
+    fs_reconall = Node(ReconAll(), name=&#34;fs_reconall&#34;)
+    fs_reconall.inputs.directive = kwargs.get(&#39;reconall_param&#39;)
+    # .inputs.subjects_dir = data_dir
+    fs_workflow = Workflow(name=&#39;fs_workflow&#39;, base_dir=base_directory)
+    fs_workflow.config[&#39;execution&#39;][&#39;use_caching&#39;] = &#39;True&#39;
+    fs_workflow.config[&#39;execution&#39;][&#39;hash_method&#39;] = &#39;content&#39;
+
+    fs_workflow.connect(infosource, &#39;subject_id&#39;,
+                        fs_reconall, &#39;subject_id&#39;)
+    fs_workflow.connect(sf, &#39;anat&#39;, fs_reconall, &#39;T1_files&#39;)
+
+    ############################################################
+    ########          Preprocessing Workflow           #########
+    ############################################################
+
+    ##########       Preproc: Node definition       ############
+
+    ############# Denoising + Unring #############
+    denoise = Node(mrt.DWIDenoise(), name=&#39;denoise&#39;)
+    unring = Node(mrt.MRDeGibbs(), name=&#39;unring&#39;)
+
+    # extract b=0 channels from the DWI PA:
+    b0PA_extract = Node(mrt.DWIExtract(), name=&#39;b0PA_extract&#39;)
+    b0PA_extract.inputs.bzero = True
+    b0PA_extract.inputs.out_file = &#39;b0PA.mif&#39;
+
+    # Mean b=0 PA
+    avg_b0PA = Node(mrt.MRMath(), name=&#39;avg_b0PA&#39;)
+    avg_b0PA.inputs.operation = &#39;mean&#39;
+    avg_b0PA.inputs.axis = 3
+    avg_b0PA.inputs.out_file = &#39;avg_b0PA.mif&#39;
+
+    # extract b=0 channels from the DWI PA:
+
+    b0AP_extract = Node(mrt.DWIExtract(), name=&#39;b0AP_extract&#39;)
+    b0AP_extract.inputs.bzero = True
+    b0AP_extract.inputs.out_file = &#39;b0AP.mif&#39;
+
+    # Concat B=0 in reverse phase directions
+    merger_preproc = Node(Merge(2), name=&#39;merger&#39;)
+    mrcatb0 = Node(mrt.MRCat(), name=&#39;mrcatb0&#39;)
+    mrcatb0.inputs.axis = 3
+
+    ### Topup -&gt; Eddy ###
+
+    # # dwifslpreproc ${pref}_dwi_den_unr.mif ${pref}_dwi_den_unr_preproc.mif -pe_dir PA -rpe_pair -se_epi ${pref}_b0_pair.mif -eddy_options &#34; --slm=linear &#34;
+    # dwifslpreproc
+    # /mnt/CONHECT_data/pipeline_tmp/main_workflow/preproc/_ses_id_001_subject_id_01/unring/concatenated_denoised_unr.mif
+    # preproc.mif -rpe_pair -eddy_options &#34;--slm=linear&#34; -se_epi
+    # /mnt/CONHECT_data/pipeline_tmp/main_workflow/preproc/_ses_id_001_subject_id_01/mrcatb0/concatenated.mif
+    # -pe_dir j
+
+    dwpreproc = Node(mrt.DWIPreproc(), name=&#39;dwpreproc&#39;)
+    dwpreproc.inputs.rpe_options = &#39;pair&#39;
+    dwpreproc.inputs.out_file = &#34;preproc.mif&#34;
+    # preproc.inputs.out_grad_mrtrix = &#34;grad.b&#34;    # export final gradient table in MRtrix format
+    # linear second level model and replace outliers
+    dwpreproc.inputs.eddy_options = kwargs.get(&#39;eddyoptions_param&#39;)
+    dwpreproc.inputs.pe_dir = &#39;PA&#39;
+
+    # Unbias
+    biascorrect = Node(mrt.DWIBiasCorrect(), name=&#39;biascorrect&#39;)
+    biascorrect.inputs.use_ants = kwargs.get(&#39;useants_param&#39;)
+    biascorrect.inputs.out_file = &#39;biascorrect.mif&#39;
+
+    ##########           Preproc Connecting the WF         ##########
+
+    wf_preproc = Workflow(name=&#39;preproc&#39;, base_dir=base_directory)
+    wf_preproc.config[&#39;execution&#39;][&#39;use_caching&#39;] = &#39;True&#39;
+    wf_preproc.config[&#39;execution&#39;][&#39;hash_method&#39;] = &#39;content&#39;
+
+    wf_preproc.connect(denoise, &#39;out_file&#39;, unring, &#39;in_file&#39;)
+    wf_preproc.connect(unring, &#39;out_file&#39;, b0PA_extract, &#39;in_file&#39;)
+    wf_preproc.connect(b0PA_extract, &#39;out_file&#39;, avg_b0PA, &#39;in_file&#39;)
+    wf_preproc.connect(avg_b0PA, &#39;out_file&#39;, merger_preproc, &#39;in1&#39;)
+    wf_preproc.connect(b0AP_extract, &#39;out_file&#39;, merger_preproc, &#39;in2&#39;)
+    wf_preproc.connect(merger_preproc, &#39;out&#39;, mrcatb0, &#39;in_files&#39;)
+    wf_preproc.connect(unring, &#39;out_file&#39;, dwpreproc, &#39;in_file&#39;)
+    wf_preproc.connect(mrcatb0, &#39;out_file&#39;, dwpreproc, &#39;in_epi&#39;)
+    wf_preproc.connect(dwpreproc, &#39;out_file&#39;, biascorrect, &#39;in_file&#39;)
+
+    ##################################################################
+    #########            Tractography             ####################
+    ##################################################################
+
+    ############    Tractography: Nodes definition       #############
+
+    # # Estimation du brain mask : FSL bet
+    # convert_mask2nii = Node(mrt.MRConvert(),name = &#34;convert_mask2nii&#34;)
+    # convert_mask2nii.inputs.out_file = &#34;dwi_preproc.nii&#34;
+
+    # bet_mask = Node(fsl.BET(),name = &#39;bet_mask&#39;)
+    # bet_mask.inputs.mask = True
+    # # bet_mask.inputs.mask_file = &#39;mask.nii&#39;
+
+    # convert_mask2mif = Node(mrt.MRConvert(),name = &#34;convert_mask2mif&#34;)
+    # convert_mask2mif.inputs.out_file = &#39;mask_preproc.mif&#39;
+
+    brainmask = Node(mrt.BrainMask(), name=&#39;brainmask&#39;)
+    brainmask.out_file = &#39;brainmask.mif&#39;
+
+    # DWI2response
+    dwiresponse = Node(mrt.ResponseSD(), name=&#39;dwiresponse&#39;)
+    dwiresponse.inputs.algorithm = kwargs.get(&#39;fod_algorithm_param&#39;)
+    dwiresponse.inputs.csf_file = &#39;wm.txt&#39;
+    dwiresponse.inputs.gm_file = &#39;gm.txt&#39;
+    dwiresponse.inputs.csf_file = &#39;csf.txt&#39;
+
+    # dwi2fod msmt_csd ${pref}_dwi_preproc.mif -mask ${pref}_mask_preproc.mif
+    # ${pref}_wm.txt ${pref}_wmfod.mif ${pref}_gm.txt ${pref}_gmfod.mif
+    # ${pref}_csf.txt ${pref}_csffod.mif
+    dwi2fod = Node(mrt.ConstrainedSphericalDeconvolution(), name=&#34;dwi2fod&#34;)
+    dwi2fod.inputs.algorithm = kwargs.get(&#39;csd_algorithm_param&#39;)
+    dwi2fod.inputs.wm_txt = &#39;wm.txt&#39;  # ici faire le lien avec dwiresp
+    dwi2fod.inputs.wm_odf = &#39;wm.mif&#39;
+    dwi2fod.inputs.csf_odf = &#34;csf.mif&#34;
+    dwi2fod.inputs.gm_odf = &#34;gm.mif&#34;
+
+    gen5tt = Node(mrt.Generate5tt(), name=&#39;gen5tt&#39;)
+    gen5tt.inputs.algorithm = kwargs.get(&#39;tt_algorithm_param&#39;)
+    gen5tt.inputs.out_file = &#39;5tt.mif&#39;
+
+    # dwiextract ${pref}_dwi_preproc.mif - -bzero | mrmath - mean
+    # ${pref}_mean_b0_preprocessed.mif -axis 3
+    b0_extract = Node(mrt.DWIExtract(), name=&#39;b0_extract&#39;)
+    b0_extract.inputs.bzero = True
+    b0_extract.inputs.out_file = &#39;b0_extract.mif&#39;
+
+    avg_b0 = Node(mrt.MRMath(), name=&#39;avg_b0&#39;)
+    avg_b0.inputs.operation = &#39;mean&#39;
+    avg_b0.inputs.axis = 3
+    avg_b0.inputs.out_file = &#39;avg_b0.mif&#39;
+
+    convertb02nii = Node(mrt.MRConvert(), name=&#39;convertb02nii&#39;)
+    convertb02nii.inputs.out_file = &#39;b0.nii.gz&#39;
+    convert5tt2nii = Node(mrt.MRConvert(), name=&#39;convert5tt2nii&#39;)
+    convert5tt2nii.inputs.out_file = &#39;5tt.nii.gz&#39;
+
+    # fslroi ${pref}_5tt_nocoreg.nii.gz ${pref}_5tt_vol0.nii.gz 0 1 #Extract
+    # the first volume of the 5tt dataset (since flirt can only use 3D images,
+    # not 4D images)
+    fslroi = Node(fsl.ExtractROI(roi_file=&#39;5tt_vol0.nii.gz&#39;,
+                                 t_min=0, t_size=1), name=&#39;fslroi&#39;)
+
+    # flirt -in ${pref}_mean_b0_preprocessed.nii.gz -ref
+    # ${pref}_5tt_vol0.nii.gz -interp nearestneighbour -dof 6 -omat
+    # ${pref}_diff2struct_fsl.mat
+    flirt = Node(fsl.FLIRT(), name=&#39;flirt&#39;)
+    flirt.inputs.dof = kwargs.get(&#39;flirt_dof_param&#39;)
+    flirt.inputs.interp = kwargs.get(&#39;flirt_interp_param&#39;)
+    flirt.inputs.out_matrix_file = &#39;diff2struct_fsl.mat&#39;
+
+    # transformconvert ${pref}_diff2struct_fsl.mat
+    # ${pref}_mean_b0_preprocessed.nii.gz ${pref}_5tt_nocoreg.nii.gz
+    # flirt_import ${pref}_diff2struct_mrtrix.txt
+    transformconvert = Node(
+        mrt.TransformFSLConvert(), name=&#39;transformconvert&#39;)
+    transformconvert.inputs.flirt_import = True
+
+    # mrtransform ${pref}_5tt_nocoreg.mif -linear ${pref}_diff2struct_mrtrix.txt -inverse ${pref}_5tt_coreg.mif
+    # mrtransform ${pref}_T1_raw.mif -linear ${pref}_diff2struct_mrtrix.txt
+    # -inverse ${pref}_T1_coreg.mif
+    transform5tt = Node(mrt.MRTransform(), name=&#39;transform5tt&#39;)
+    # transform5tt.inputs.invert=True
+    transform5tt.inputs.out_file = &#34;5tt_coreg.mif&#34;
+    transformT1 = Node(mrt.MRTransform(), name=&#39;transformT1&#39;)
+    # transformT1.inputs.invert=True
+    transformT1.inputs.out_file = &#34;T1_coreg.mif&#34;
+
+    # gmwmi
+    gmwmi = Node(cmp_mrt.GenerateGMWMInterface(), name=&#39;gmwmi&#39;)
+    gmwmi.inputs.out_file = &#39;gmwmi.mif&#39;
+
+    # tckgen -act ${pref}_5tt_coreg.mif -backtrack -seed_gmwmi
+    # ${pref}_gmwmSeed_coreg.mif -select 10000000 ${pref}_wmfod_norm.mif
+    # ${pref}_tracks_10mio.tck
+    tckgen = Node(mrt.Tractography(), name=&#39;tckgen&#39;)
+    tckgen.inputs.algorithm = kwargs.get(&#39;tckgen_algorithm_param&#39;)
+    tckgen.inputs.select = kwargs.get(&#39;tckgen_ntracks_param&#39;)
+    tckgen.inputs.backtrack = kwargs.get(&#39;tckgen_backtrack_param&#39;)
+
+    tckgenDet = Node(mrt.Tractography(), name=&#39;tckgenDet&#39;)
+    tckgenDet.inputs.algorithm = &#39;SD_Stream&#39;
+    tckgenDet.inputs.select = kwargs.get(&#39;tckgen_ntracks_param&#39;)
+    # tckgenDet.inputs.backtrack = tckgen_backtrack_param
+
+    tcksift2 = Node(cmp_mrt.FilterTractogram(), name=&#39;tcksift2&#39;)
+    tcksift2.inputs.out_file = &#39;sift_tracks.tck&#39;
+
+    tcksift2Det = Node(cmp_mrt.FilterTractogram(), name=&#39;tcksift2Det&#39;)
+    tcksift2Det.inputs.out_file = &#39;sift_tracks.tck&#39;
+
+    # tcksift2.inputs.out_tracks = &#39;sift_tracks.tck&#39;
+
+    # tcksift2.inputs.out_weights = &#39;finaltracks.tck&#39;
+
+    #############     Tractography: Connecting the WF    ##################
+
+    wf_tractography = Workflow(
+        name=&#34;wf_tractography&#34;, base_dir=base_directory)
+    wf_tractography.config[&#39;execution&#39;][&#39;use_caching&#39;] = &#39;True&#39;
+    wf_tractography.config[&#39;execution&#39;][&#39;hash_method&#39;] = &#39;content&#39;
+
+    wf_tractography.connect(b0_extract, &#39;out_file&#39;, avg_b0, &#39;in_file&#39;)
+    wf_tractography.connect(avg_b0, &#39;out_file&#39;, convertb02nii, &#39;in_file&#39;)
+
+    wf_tractography.connect(gen5tt, &#39;out_file&#39;, convert5tt2nii, &#39;in_file&#39;)
+
+    wf_tractography.connect(convert5tt2nii, &#39;out_file&#39;, fslroi, &#39;in_file&#39;)
+    wf_tractography.connect(convertb02nii, &#39;out_file&#39;, flirt, &#39;in_file&#39;)
+    wf_tractography.connect(fslroi, &#39;roi_file&#39;, flirt, &#39;reference&#39;)
+
+    wf_tractography.connect(convertb02nii, &#39;out_file&#39;,
+                            transformconvert, &#39;in_file&#39;)
+    wf_tractography.connect(flirt, &#39;out_matrix_file&#39;,
+                            transformconvert, &#39;in_transform&#39;)
+    wf_tractography.connect(
+        convert5tt2nii, &#39;out_file&#39;, transformconvert, &#39;reference&#39;)
+
+    wf_tractography.connect(gen5tt, &#39;out_file&#39;, transform5tt, &#39;in_files&#39;)
+
+    wf_tractography.connect(
+        transformconvert, &#39;out_transform&#39;, transform5tt, &#39;linear_transform&#39;)
+    wf_tractography.connect(
+        transformconvert, &#39;out_transform&#39;, transformT1, &#39;linear_transform&#39;)
+
+    wf_tractography.connect(transform5tt, &#39;out_file&#39;, gmwmi, &#39;in_file&#39;)
+
+    wf_tractography.connect(dwiresponse, &#39;wm_file&#39;, dwi2fod, &#39;wm_txt&#39;)
+    wf_tractography.connect(dwiresponse, &#39;gm_file&#39;, dwi2fod, &#39;gm_txt&#39;)
+    wf_tractography.connect(dwiresponse, &#39;csf_file&#39;, dwi2fod, &#39;csf_txt&#39;)
+    wf_tractography.connect(brainmask, &#39;out_file&#39;, dwi2fod, &#39;mask_file&#39;)
+
+    wf_tractography.connect(gmwmi, &#39;out_file&#39;, tckgen, &#39;seed_gmwmi&#39;)
+    wf_tractography.connect(transform5tt, &#39;out_file&#39;, tckgen, &#39;act_file&#39;)
+    wf_tractography.connect(dwi2fod, &#39;wm_odf&#39;, tckgen, &#39;in_file&#39;)
+
+    wf_tractography.connect(gmwmi, &#39;out_file&#39;, tckgenDet, &#39;seed_gmwmi&#39;)
+    wf_tractography.connect(transform5tt, &#39;out_file&#39;, tckgenDet, &#39;act_file&#39;)
+    wf_tractography.connect(dwi2fod, &#39;wm_odf&#39;, tckgenDet, &#39;in_file&#39;)
+
+    wf_tractography.connect(tckgen, &#39;out_file&#39;, tcksift2, &#39;in_tracks&#39;)
+    wf_tractography.connect(transform5tt, &#39;out_file&#39;, tcksift2, &#39;act_file&#39;)
+    wf_tractography.connect(dwi2fod, &#39;wm_odf&#39;, tcksift2, &#39;in_fod&#39;)
+
+    wf_tractography.connect(tckgenDet, &#39;out_file&#39;,
+                            tcksift2Det, &#39;in_tracks&#39;)
+    wf_tractography.connect(transform5tt, &#39;out_file&#39;,
+                            tcksift2Det, &#39;act_file&#39;)
+    wf_tractography.connect(dwi2fod, &#39;wm_odf&#39;, tcksift2Det, &#39;in_fod&#39;)
+
+    #######################################################################
+    ############          Connectome construction          ################
+    #######################################################################
+
+    connectome = Workflow(name=&#39;connectome&#39;, base_dir=base_directory)
+    connectome.config[&#39;execution&#39;][&#39;use_caching&#39;] = &#39;True&#39;
+    connectome.config[&#39;execution&#39;][&#39;hash_method&#39;] = &#39;content&#39;
+
+    # labelconvert $datadir/anat/$sub_id/mri/aparc.a2009s+aseg.mgz
+    # $FREESURFER_HOME/FreeSurferColorLUT.txt
+    # ~/miniconda3/share/mrtrix3/labelconvert/fs_a2009s.txt
+    # $datadir/results/${sub_id}_${ses_id}_parcels_destrieux.mif -force
+
+    labelconvert = MapNode(
+        mrt.LabelConvert(), name=&#39;labelconvert&#39;, iterfield=[&#39;in_file&#39;])
+    labelconvert.inputs.in_config = kwargs.get(&#39;labelconvert_param&#39;)
+    labelconvert.inputs.in_lut = kwargs.get(&#39;fs_lut_param&#39;)
+
+    transform_parcels = MapNode(
+        mrt.MRTransform(), name=&#39;transform_parcels&#39;, iterfield=[&#39;in_files&#39;])
+    transform_parcels.inputs.out_file = &#34;parcels_coreg.mif&#34;
+
+    # tck2connectome –symmetric –zero_diagonal tracks_10mio.tck
+    # ${sub_id}_${ses_id}_parcels_destrieux.mif
+    # ${sub_id}_${ses_id}_sc_connectivity_matrix.csv –out_assignment
+    # ${sub_id}_${ses_id}_sc_assignments.csv -force
+    tck2connectome = MapNode(mrt.BuildConnectome(
+    ), name=&#39;tck2connectome&#39;, iterfield=[&#39;in_parc&#39;])
+    tck2connectome.inputs.zero_diagonal = True
+    tck2connectome.inputs.out_file = &#34;connectome.csv&#34;
+
+    tck2connectomeDet = MapNode(mrt.BuildConnectome(
+    ), name=&#39;tck2connectomeDet&#39;, iterfield=[&#39;in_parc&#39;])
+    tck2connectomeDet.inputs.zero_diagonal = True
+    tck2connectomeDet.inputs.out_file = &#34;connectome.csv&#34;
+
+    # connectome.connect(tcksift2,&#39;out_tracks&#39;,tck2connectome,&#39;in_file&#39;)
+
+    connectome.connect(labelconvert, &#39;out_file&#39;,transform_parcels, &#39;in_files&#39;)
+    connectome.connect(transform_parcels, &#39;out_file&#39;,tck2connectome, &#39;in_parc&#39;)
+    connectome.connect(transform_parcels, &#39;out_file&#39;,
+                        tck2connectomeDet, &#39;in_parc&#39;)
+
+       ######################################################################
+       ######            Data Sink                           ################
+       ######################################################################
+
+    def custom_output_path(out_dir, sub_id, ses_id):
+        import os
+        return os.path.join(out_dir, f&#34;sub-{sub_id}/ses-{ses_id}&#34;)
+
+    datasink = Node(DataSink(), name=&#34;datasink&#34;)
+    datasink.inputs.parameterization = False
+    datasink.inputs.base_directory = out_dir
+
+    custom_path = Node(Function(input_names=[&#34;out_dir&#34;, &#34;sub_id&#34;, &#34;ses_id&#34;],
+                                output_names=[&#34;custom_path&#34;],
+                                function=custom_output_path),
+                        name=&#34;custom_path&#34;)
+
+    #######################################################################
+    #########         Connecting Workflows together        ################
+    #######################################################################
+
+    main_wf = Workflow(name=&#34;main_workflow&#34;, base_dir=base_directory)
+    main_wf.config[&#39;execution&#39;][&#39;use_caching&#39;] = &#39;True&#39;
+    main_wf.config[&#39;execution&#39;][&#39;hash_method&#39;] = &#39;content&#39;
+
+        # main_wf.connect(wf_dc,&#39;infosource.subject_id&#39;,custom_path,&#39;sub_id&#39;)
+        # main_wf.connect(wf_dc,&#39;infosource.ses_id&#39;,custom_path,&#39;ses_id&#39;)
+
+    main_wf.connect(wf_dc, &#39;mrcatPA.out_file&#39;,
+                    wf_preproc, &#39;denoise.in_file&#39;)
+    main_wf.connect(wf_dc, &#39;mrconvertAP.out_file&#39;,
+                    wf_preproc, &#39;b0AP_extract.in_file&#39;)
+    main_wf.connect(wf_preproc, &#39;biascorrect.out_file&#39;,
+                    wf_tractography, &#39;brainmask.in_file&#39;)
+    main_wf.connect(wf_preproc, &#39;biascorrect.out_file&#39;,
+                    wf_tractography, &#39;b0_extract.in_file&#39;)
+    main_wf.connect(wf_preproc, &#39;biascorrect.out_file&#39;,
+                    wf_tractography, &#39;dwiresponse.in_file&#39;)
+    main_wf.connect(wf_preproc, &#39;biascorrect.out_file&#39;,
+                    wf_tractography, &#39;dwi2fod.in_file&#39;)
+    main_wf.connect(wf_dc, &#39;sf.anat&#39;, wf_tractography, &#39;gen5tt.in_file&#39;)
+    main_wf.connect(wf_dc, &#39;sf.anat&#39;, wf_tractography,
+                        &#39;transformT1.in_files&#39;)
+    main_wf.connect(fs_workflow, &#39;fs_reconall.aparc_aseg&#39;,
+                    connectome, &#39;labelconvert.in_file&#39;)
+    main_wf.connect(wf_tractography, &#39;transformconvert.out_transform&#39;,
+                    connectome, &#39;transform_parcels.linear_transform&#39;)
+    main_wf.connect(wf_tractography, &#39;tcksift2.out_tracks&#39;,
+                    connectome, &#39;tck2connectome.in_file&#39;)
+    main_wf.connect(wf_tractography, &#39;tcksift2Det.out_tracks&#39;,
+                    connectome, &#39;tck2connectomeDet.in_file&#39;)
+
+        # main_wf.connect(custom_path, &#39;custom_path&#39;, datasink, &#39;base_directory&#39;)
+
+        # join_DC = Node(Merge(3), name=&#39;join_DC&#39;)
+        # main_wf.connect(wf_dc, &#39;mrcatPA.out_file&#39;, join_DC, &#39;in1&#39;)
+        # main_wf.connect(wf_dc, &#39;mrconvertAP.out_file&#39;, join_DC, &#39;in2&#39;)
+        # main_wf.connect(wf_dc,&#39;sf.anat&#39;,join_DC,&#39;in3&#39;)
+        # main_wf.connect(join_DC,&#39;out&#39;,datasink,&#39;1_DataConversion&#39;)
+
+        # main_wf.connect(wf_preproc,&#39;biascorrect.out_file&#39;,datasink,&#39;2_Preprocessing&#39;)
+
+        # join_FOD = Node(Merge(4), name=&#39;join_FOD&#39;)
+        # main_wf.connect(wf_tractography,&#39;dwiresponse.wm_file&#39;,join_FOD,&#39;in1&#39;)
+        # main_wf.connect(wf_tractography,&#39;dwi2fod.wm_odf&#39;,join_FOD,&#39;in2&#39;)
+        # main_wf.connect(wf_tractography,&#39;transform5tt.out_file&#39;,join_FOD,&#39;in3&#39;)
+        # main_wf.connect(wf_tractography,&#39;transformT1.out_file&#39;,join_FOD,&#39;in4&#39;)
+        # main_wf.connect(join_FOD,&#39;out&#39;,datasink,&#39;3_FODestimation&#39;)
+
+        # join_Tracto = Node(Merge(2), name=&#39;join_Tracto&#39;)
+        # main_wf.connect(wf_tractography,&#39;tckgen.out_file&#39;,join_Tracto,&#39;in1&#39;)
+        # main_wf.connect(wf_tractography,&#39;tcksift2.out_tracks&#39;,join_Tracto,&#39;in2&#39;)
+        # main_wf.connect(join_Tracto,&#39;out&#39;,datasink,&#39;4_Tractography&#39;)
+
+        # main_wf.connect(connectome,&#39;tck2connectome.out_file&#39;,datasink,&#39;5_Connectome&#39;)
+
+    main_wf.write_graph(graph2use=&#39;colored&#39;,
+                        dotfilename=&#39;./mult_11_12.dot&#39;)
+    wf_tractography.write_graph(
+        graph2use=&#39;orig&#39;, dotfilename=&#39;./graph_tractography.dot&#39;)
+    wf_dc.write_graph(graph2use=&#39;orig&#39;, dotfilename=&#39;./graph_dc.dot&#39;)
+    connectome.write_graph(
+        graph2use=&#39;orig&#39;, dotfilename=&#39;./graph_connectome.dot&#39;)
+
+    main_wf.run(plugin=plugin_processing, plugin_args={&#39;n_procs&#39;: 12})</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="pytracto.tractography" href="index.html">pytracto.tractography</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="pytracto.tractography.odd_workflow.execute_odd_workflow" href="#pytracto.tractography.odd_workflow.execute_odd_workflow">execute_odd_workflow</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

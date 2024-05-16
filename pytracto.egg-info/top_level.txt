@@ -1,6 +1,1 @@
-BIDS_formatting
-CleanResults
-NetworkAnalysis
-bundlesegmentation
-matrixescreation
-tractography
+
