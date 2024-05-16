@@ -82,7 +82,7 @@ def execute_qa_check(data_dir: str,source_dir : str,base_dir: str,start: int,gro
         ses_list (list[int]): list of sessions to be processed
 
     """
-    
+
     columns = ['Group', 'subject_id', 'session_id','anat','dwiAP','dwiPA','rsfmri','fmap','PE_direction','topup','topupquality','5tt mask','5tt quality','gmwmi','gmwmi quality', 'anat2diff quality','streamline reg quality']
 
     df = pd.DataFrame(columns=columns)
