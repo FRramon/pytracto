@@ -19,8 +19,8 @@ setup(
     'seaborn',
     'pandas',
     'numpy',
-    'matplotlib',
-    'dmri-amico @ git+https://github.com/daducci/AMICO.git#egg=dmri-amico'
+    'matplotlib'
+   # 'dmri-amico @ git+https://github.com/daducci/AMICO.git#egg=dmri-amico'
     ]
 )
 #'dmri-amico>=2.0.1'
