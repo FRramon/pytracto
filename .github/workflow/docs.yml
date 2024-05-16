@@ -1,0 +1,26 @@
+name: Build and Deploy Docs
+
+on:
+  push:
+    branches:
+      - main  # adjust this to your main branch name
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install pdoc
+      run: pip install pdoc
+
+    - name: Generate documentation
+      run: pdoc --html pytracto -o docs
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs

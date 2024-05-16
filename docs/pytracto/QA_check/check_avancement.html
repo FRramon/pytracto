@@ -26,100 +26,100 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import os
-import argparse
-import sys
-#sys.path.append(&#39;/mnt/POOL_IRM08/CONHECT/dmri-pipeline&#39;)
+<pre><code class="python"># import os
+# import argparse
+# import sys
+# #sys.path.append(&#39;/mnt/POOL_IRM08/CONHECT/dmri-pipeline&#39;)
 
-from pytracto.tractography.tractography_utils import *
+# from pytracto.tractography.tractography_utils import *
 
-# base_dir = &#39;/mnt/POOL_IRM08/CONHECT&#39;
-# source_dir = &#39;/mnt/POOL_IRM06/CONHECT/ConhectDatabase&#39;
-# # arg1 = sys.argv[1]
-# # arg2 = sys.argv[2]
+# # base_dir = &#39;/mnt/POOL_IRM08/CONHECT&#39;
+# # source_dir = &#39;/mnt/POOL_IRM06/CONHECT/ConhectDatabase&#39;
+# # # arg1 = sys.argv[1]
+# # # arg2 = sys.argv[2]
 
-# #subject_list = [&#34;0&#34; + str(i) for i in range(1,47)]
-# ses_list = [&#34;1&#34;,&#34;2&#34;,&#34;3&#34;]
+# # #subject_list = [&#34;0&#34; + str(i) for i in range(1,47)]
+# # ses_list = [&#34;1&#34;,&#34;2&#34;,&#34;3&#34;]
 
-# group = &#34;Patients&#34;
+# # group = &#34;Patients&#34;
 
-def get_percentage(L):
-    print(len(L))
-    fraction = sum(L) / len(L) * 100
-    return round(fraction, 2)
+# def get_percentage(L):
+#     print(len(L))
+#     fraction = sum(L) / len(L) * 100
+#     return round(fraction, 2)
 
-def fill_list(L, step_file):
-    if os.path.isfile(step_file):
-        L.append(True)
-    else:
-        L.append(False)
-    return L
+# def fill_list(L, step_file):
+#     if os.path.isfile(step_file):
+#         L.append(True)
+#     else:
+#         L.append(False)
+#     return L
 
-def main(base_dir: str ,source_dir: str ,group: str, ses_list :list, output_file: str):
-    &#34;&#34;&#34;
-    Function to generate a csv file of computation progress during the execution of the pipeline.
+# def main(base_dir: str ,source_dir: str ,group: str, ses_list :list, output_file: str):
+#     &#34;&#34;&#34;
+#     Function to generate a csv file of computation progress during the execution of the pipeline.
 
-    Args:
-        base_dir (str): base directory
-        source_dir (str): source directory (parent folder of dicom directory)
-        group (str): group of subjects to be processed (either patients, temoins etc. )
-        ses_list (list[int]): list of sessions to be processed
-        output_file (str): filename for the output file
-    &#34;&#34;&#34;
-    progress_report = []
+#     Args:
+#         base_dir (str): base directory
+#         source_dir (str): source directory (parent folder of dicom directory)
+#         group (str): group of subjects to be processed (either patients, temoins etc. )
+#         ses_list (list[int]): list of sessions to be processed
+#         output_file (str): filename for the output file
+#     &#34;&#34;&#34;
+#     progress_report = []
 
-    for ses in ses_list:
-        den_list, eddy_list, sift_list, tckgen_list, fs_list, preproc_list = [], [], [], [], [], []
+#     for ses in ses_list:
+#         den_list, eddy_list, sift_list, tckgen_list, fs_list, preproc_list = [], [], [], [], [], []
 
-        print(f&#34;Progress in session {ses}&#34;)
+#         print(f&#34;Progress in session {ses}&#34;)
 
-        all_subject_list = get_ids_by_sessions(source_dir,base_dir,group,int(ses))
-        subject_list =all_subject_list[2][0].split(&#39;,&#39;)
-        ses = &#34;00&#34; + ses
-        for sub in subject_list:
+#         all_subject_list = get_ids_by_sessions(source_dir,base_dir,group,int(ses))
+#         subject_list =all_subject_list[2][0].split(&#39;,&#39;)
+#         ses = &#34;00&#34; + ses
+#         for sub in subject_list:
             
-            identifier = f&#39;_ses_id_{ses}_subject_id_{sub}&#39;
-            print(identifier)
-            res_dir = os.path.join(base_dir,&#39;full_results&#39;)
-            main_workflow_dir = os.path.join(res_dir, &#39;main_workflow&#39;)
-            preproc_dir = os.path.join(main_workflow_dir, &#39;preproc&#39;, identifier)
-            tracto_dir = os.path.join(main_workflow_dir, &#39;wf_tractography&#39;, identifier)
-            connectome_dir = os.path.join(main_workflow_dir, &#39;connectome&#39;, identifier)
+#             identifier = f&#39;_ses_id_{ses}_subject_id_{sub}&#39;
+#             print(identifier)
+#             res_dir = os.path.join(base_dir,&#39;full_results&#39;)
+#             main_workflow_dir = os.path.join(res_dir, &#39;main_workflow&#39;)
+#             preproc_dir = os.path.join(main_workflow_dir, &#39;preproc&#39;, identifier)
+#             tracto_dir = os.path.join(main_workflow_dir, &#39;wf_tractography&#39;, identifier)
+#             connectome_dir = os.path.join(main_workflow_dir, &#39;connectome&#39;, identifier)
 
-            den_file = os.path.join(preproc_dir, &#34;denoise&#34;, &#34;concatenated_denoised.mif&#34;)
-            print(den_file)
-            den_list = fill_list(den_list, den_file)
+#             den_file = os.path.join(preproc_dir, &#34;denoise&#34;, &#34;concatenated_denoised.mif&#34;)
+#             print(den_file)
+#             den_list = fill_list(den_list, den_file)
 
-            eddy_file = os.path.join(preproc_dir, &#34;dwpreproc&#34;, &#34;preproc.mif&#34;)
-            eddy_list = fill_list(eddy_list, eddy_file)
+#             eddy_file = os.path.join(preproc_dir, &#34;dwpreproc&#34;, &#34;preproc.mif&#34;)
+#             eddy_list = fill_list(eddy_list, eddy_file)
 
-            preproc_file = os.path.join(preproc_dir, &#34;biascorrect&#34;, &#34;biascorrect.mif&#34;)
-            preproc_list = fill_list(preproc_list, preproc_file)
+#             preproc_file = os.path.join(preproc_dir, &#34;biascorrect&#34;, &#34;biascorrect.mif&#34;)
+#             preproc_list = fill_list(preproc_list, preproc_file)
 
-            tckgen_file = os.path.join(tracto_dir, &#34;tckgen&#34;, &#34;tracked.tck&#34;)
-            tckgen_list = fill_list(tckgen_list, tckgen_file)
+#             tckgen_file = os.path.join(tracto_dir, &#34;tckgen&#34;, &#34;tracked.tck&#34;)
+#             tckgen_list = fill_list(tckgen_list, tckgen_file)
 
-            sift_file = os.path.join(tracto_dir, &#34;tcksift2&#34;, &#34;sift_tracks.tck&#34;)
-            sift_list = fill_list(sift_list, sift_file)
-            fs_file = os.path.join(main_workflow_dir, &#34;fs_workflow&#34;, identifier, &#34;fs_reconall&#34;, sub, &#34;mri&#34;,&#34;aparc.a2009s+aseg.mgz&#34;)
-            fs_list = fill_list(fs_list, fs_file)
+#             sift_file = os.path.join(tracto_dir, &#34;tcksift2&#34;, &#34;sift_tracks.tck&#34;)
+#             sift_list = fill_list(sift_list, sift_file)
+#             fs_file = os.path.join(main_workflow_dir, &#34;fs_workflow&#34;, identifier, &#34;fs_reconall&#34;, sub, &#34;mri&#34;,&#34;aparc.a2009s+aseg.mgz&#34;)
+#             fs_list = fill_list(fs_list, fs_file)
 
-        progress_report.append(f&#34;Progress in session {ses}\n&#34;)
-        progress_report.append(&#34;T1 Processing\n&#34;)
-        progress_report.append(f&#34;    Freesurfer reconall: {get_percentage(fs_list)}%\n&#34;)
-        progress_report.append(&#34;DWI Processing\n&#34;)
-        progress_report.append(f&#34;    Denoising: {get_percentage(den_list)}%\n&#34;)
-        progress_report.append(f&#34;    Eddy preproc: {get_percentage(eddy_list)}%\n&#34;)
-        progress_report.append(f&#34;    Complete preprocessing: {get_percentage(preproc_list)}%\n&#34;)
-        progress_report.append(f&#34;    Generate tracks: {get_percentage(tckgen_list)}%\n&#34;)
-        progress_report.append(f&#34;    Complete tractography: {get_percentage(sift_list)}%\n&#34;)
-
-
-    with open(output_file, &#39;w&#39;) as f:
-        f.writelines(progress_report)
+#         progress_report.append(f&#34;Progress in session {ses}\n&#34;)
+#         progress_report.append(&#34;T1 Processing\n&#34;)
+#         progress_report.append(f&#34;    Freesurfer reconall: {get_percentage(fs_list)}%\n&#34;)
+#         progress_report.append(&#34;DWI Processing\n&#34;)
+#         progress_report.append(f&#34;    Denoising: {get_percentage(den_list)}%\n&#34;)
+#         progress_report.append(f&#34;    Eddy preproc: {get_percentage(eddy_list)}%\n&#34;)
+#         progress_report.append(f&#34;    Complete preprocessing: {get_percentage(preproc_list)}%\n&#34;)
+#         progress_report.append(f&#34;    Generate tracks: {get_percentage(tckgen_list)}%\n&#34;)
+#         progress_report.append(f&#34;    Complete tractography: {get_percentage(sift_list)}%\n&#34;)
 
 
-#main(base_dir,source_dir, group, ses_list, &#34;/home/francoisramon/Desktop/test_av.txt&#34;)</code></pre>
+#     with open(output_file, &#39;w&#39;) as f:
+#         f.writelines(progress_report)
+
+
+# #main(base_dir,source_dir, group, ses_list, &#34;/home/francoisramon/Desktop/test_av.txt&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -127,127 +127,6 @@ def main(base_dir: str ,source_dir: str ,group: str, ses_list :list, output_file
 <section>
 </section>
 <section>
-<h2 class="section-title" id="header-functions">Functions</h2>
-<dl>
-<dt id="pytracto.QA_check.check_avancement.fill_list"><code class="name flex">
-<span>def <span class="ident">fill_list</span></span>(<span>L, step_file)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def fill_list(L, step_file):
-    if os.path.isfile(step_file):
-        L.append(True)
-    else:
-        L.append(False)
-    return L</code></pre>
-</details>
-</dd>
-<dt id="pytracto.QA_check.check_avancement.get_percentage"><code class="name flex">
-<span>def <span class="ident">get_percentage</span></span>(<span>L)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_percentage(L):
-    print(len(L))
-    fraction = sum(L) / len(L) * 100
-    return round(fraction, 2)</code></pre>
-</details>
-</dd>
-<dt id="pytracto.QA_check.check_avancement.main"><code class="name flex">
-<span>def <span class="ident">main</span></span>(<span>base_dir: str, source_dir: str, group: str, ses_list: list, output_file: str)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Function to generate a csv file of computation progress during the execution of the pipeline.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>base_dir</code></strong> :&ensp;<code>str</code></dt>
-<dd>base directory</dd>
-<dt><strong><code>source_dir</code></strong> :&ensp;<code>str</code></dt>
-<dd>source directory (parent folder of dicom directory)</dd>
-<dt><strong><code>group</code></strong> :&ensp;<code>str</code></dt>
-<dd>group of subjects to be processed (either patients, temoins etc. )</dd>
-<dt><strong><code>ses_list</code></strong> :&ensp;<code>list[int]</code></dt>
-<dd>list of sessions to be processed</dd>
-<dt><strong><code>output_file</code></strong> :&ensp;<code>str</code></dt>
-<dd>filename for the output file</dd>
-</dl></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def main(base_dir: str ,source_dir: str ,group: str, ses_list :list, output_file: str):
-    &#34;&#34;&#34;
-    Function to generate a csv file of computation progress during the execution of the pipeline.
-
-    Args:
-        base_dir (str): base directory
-        source_dir (str): source directory (parent folder of dicom directory)
-        group (str): group of subjects to be processed (either patients, temoins etc. )
-        ses_list (list[int]): list of sessions to be processed
-        output_file (str): filename for the output file
-    &#34;&#34;&#34;
-    progress_report = []
-
-    for ses in ses_list:
-        den_list, eddy_list, sift_list, tckgen_list, fs_list, preproc_list = [], [], [], [], [], []
-
-        print(f&#34;Progress in session {ses}&#34;)
-
-        all_subject_list = get_ids_by_sessions(source_dir,base_dir,group,int(ses))
-        subject_list =all_subject_list[2][0].split(&#39;,&#39;)
-        ses = &#34;00&#34; + ses
-        for sub in subject_list:
-            
-            identifier = f&#39;_ses_id_{ses}_subject_id_{sub}&#39;
-            print(identifier)
-            res_dir = os.path.join(base_dir,&#39;full_results&#39;)
-            main_workflow_dir = os.path.join(res_dir, &#39;main_workflow&#39;)
-            preproc_dir = os.path.join(main_workflow_dir, &#39;preproc&#39;, identifier)
-            tracto_dir = os.path.join(main_workflow_dir, &#39;wf_tractography&#39;, identifier)
-            connectome_dir = os.path.join(main_workflow_dir, &#39;connectome&#39;, identifier)
-
-            den_file = os.path.join(preproc_dir, &#34;denoise&#34;, &#34;concatenated_denoised.mif&#34;)
-            print(den_file)
-            den_list = fill_list(den_list, den_file)
-
-            eddy_file = os.path.join(preproc_dir, &#34;dwpreproc&#34;, &#34;preproc.mif&#34;)
-            eddy_list = fill_list(eddy_list, eddy_file)
-
-            preproc_file = os.path.join(preproc_dir, &#34;biascorrect&#34;, &#34;biascorrect.mif&#34;)
-            preproc_list = fill_list(preproc_list, preproc_file)
-
-            tckgen_file = os.path.join(tracto_dir, &#34;tckgen&#34;, &#34;tracked.tck&#34;)
-            tckgen_list = fill_list(tckgen_list, tckgen_file)
-
-            sift_file = os.path.join(tracto_dir, &#34;tcksift2&#34;, &#34;sift_tracks.tck&#34;)
-            sift_list = fill_list(sift_list, sift_file)
-            fs_file = os.path.join(main_workflow_dir, &#34;fs_workflow&#34;, identifier, &#34;fs_reconall&#34;, sub, &#34;mri&#34;,&#34;aparc.a2009s+aseg.mgz&#34;)
-            fs_list = fill_list(fs_list, fs_file)
-
-        progress_report.append(f&#34;Progress in session {ses}\n&#34;)
-        progress_report.append(&#34;T1 Processing\n&#34;)
-        progress_report.append(f&#34;    Freesurfer reconall: {get_percentage(fs_list)}%\n&#34;)
-        progress_report.append(&#34;DWI Processing\n&#34;)
-        progress_report.append(f&#34;    Denoising: {get_percentage(den_list)}%\n&#34;)
-        progress_report.append(f&#34;    Eddy preproc: {get_percentage(eddy_list)}%\n&#34;)
-        progress_report.append(f&#34;    Complete preprocessing: {get_percentage(preproc_list)}%\n&#34;)
-        progress_report.append(f&#34;    Generate tracks: {get_percentage(tckgen_list)}%\n&#34;)
-        progress_report.append(f&#34;    Complete tractography: {get_percentage(sift_list)}%\n&#34;)
-
-
-    with open(output_file, &#39;w&#39;) as f:
-        f.writelines(progress_report)</code></pre>
-</details>
-</dd>
-</dl>
 </section>
 <section>
 </section>
@@ -261,13 +140,6 @@ def main(base_dir: str ,source_dir: str ,group: str, ses_list :list, output_file
 <li><h3>Super-module</h3>
 <ul>
 <li><code><a title="pytracto.QA_check" href="index.html">pytracto.QA_check</a></code></li>
-</ul>
-</li>
-<li><h3><a href="#header-functions">Functions</a></h3>
-<ul class="">
-<li><code><a title="pytracto.QA_check.check_avancement.fill_list" href="#pytracto.QA_check.check_avancement.fill_list">fill_list</a></code></li>
-<li><code><a title="pytracto.QA_check.check_avancement.get_percentage" href="#pytracto.QA_check.check_avancement.get_percentage">get_percentage</a></code></li>
-<li><code><a title="pytracto.QA_check.check_avancement.main" href="#pytracto.QA_check.check_avancement.main">main</a></code></li>
 </ul>
 </li>
 </ul>

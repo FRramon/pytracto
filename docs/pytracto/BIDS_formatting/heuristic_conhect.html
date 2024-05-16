@@ -30,23 +30,17 @@
 
 from typing import Optional
 
-# from heudiconv.utils import SeqInfo
+#from heudiconv.utils import SeqInfo
 
 
 def create_key(template, outtype=(&#39;nii.gz&#39;,), annotation_classes=None):
-
-   &#34;&#34;&#34;
-   Function to create a identificator between series description and nifti filename
-
-   &#34;&#34;&#34;
-   if template is None or not template:
-      raise ValueError(&#39;Template must be a valid format string&#39;)
-   return template, outtype, annotation_classes
+    if template is None or not template:
+        raise ValueError(&#39;Template must be a valid format string&#39;)
+    return template, outtype, annotation_classes
 
 
 def infotodict(seqinfo):
-
-   &#34;&#34;&#34;Heuristic evaluator for determining which runs belong where
+    &#34;&#34;&#34;Heuristic evaluator for determining which runs belong where
 
     allowed template fields - follow python string module:
 
@@ -54,58 +48,42 @@ def infotodict(seqinfo):
     subject: participant id
     seqitem: run number during scanning
     subindex: sub index within group
-   &#34;&#34;&#34;
+    &#34;&#34;&#34;
 
-   data = create_key(&#34;run{item:03d}&#34;)
+    data = create_key(&#34;run{item:03d}&#34;)
+    
+    t1w = create_key(&#39;sub-{subject}/{session}/anat/sub-{subject}_{session}_T1w&#39;)
+    flair = create_key(&#39;sub-{subject}/{session}/anat/sub-{subject}_{session}_FLAIR&#39;)
 
-   t1w = create_key(
-        &#39;sub-{subject}/{session}/anat/sub-{subject}_{session}_T1w&#39;)
-   flair = create_key(
-        &#39;sub-{subject}/{session}/anat/sub-{subject}_{session}_FLAIR&#39;)
+    dwi_6dirs_b2500 = create_key(&#39;sub-{subject}/{session}/dwi/sub-{subject}_{session}_acq-6dirs_dir-AP_dwi&#39;)
+    dwi_30dirs_b200 = create_key(&#39;sub-{subject}/{session}/dwi/sub-{subject}_{session}_acq-30dirs_dir-PA_dwi&#39;)
+    dwi_45dirs_b1500 = create_key(&#39;sub-{subject}/{session}/dwi/sub-{subject}_{session}_acq-45dirs_dir-PA_dwi&#39;)
+    dwi_60dirs_b2500 = create_key(&#39;sub-{subject}/{session}/dwi/sub-{subject}_{session}_acq-60dirs_dir-PA_dwi&#39;)
 
-   dwi_6dirs_b2500 = create_key(
-        &#39;sub-{subject}/{session}/dwi/sub-{subject}_{session}_acq-6dirs_dir-AP_dwi&#39;)
-   dwi_30dirs_b200 = create_key(
-        &#39;sub-{subject}/{session}/dwi/sub-{subject}_{session}_acq-30dirs_dir-PA_dwi&#39;)
-   dwi_45dirs_b1500 = create_key(
-        &#39;sub-{subject}/{session}/dwi/sub-{subject}_{session}_acq-45dirs_dir-PA_dwi&#39;)
-   dwi_60dirs_b2500 = create_key(
-        &#39;sub-{subject}/{session}/dwi/sub-{subject}_{session}_acq-60dirs_dir-PA_dwi&#39;)
+    rsfmri = create_key(&#39;sub-{subject}/{session}/func/sub-{subject}_{session}_task-rest_bold&#39;)
+    asl = create_key(&#39;sub-{subject}/{session}/perf/sub-{subject}_{session}_asl&#39;)
+    
+    info = {t1w: [], flair: [],dwi_6dirs_b2500: [],dwi_30dirs_b200: [], dwi_45dirs_b1500: [], dwi_60dirs_b2500: [], rsfmri: [], asl: []}
+    last_run = len(seqinfo)
 
-   rsfmri = create_key(
-        &#39;sub-{subject}/{session}/func/sub-{subject}_{session}_task-rest_bold&#39;)
-   asl = create_key(
-        &#39;sub-{subject}/{session}/perf/sub-{subject}_{session}_asl&#39;)
-
-   info = {
-      t1w: [],
-      flair: [],
-      dwi_6dirs_b2500: [],
-      dwi_30dirs_b200: [],
-      dwi_45dirs_b1500: [],
-      dwi_60dirs_b2500: [],
-      rsfmri: [],
-      asl: []}
-   last_run = len(seqinfo)
-
-   for idx, s in enumerate(seqinfo):
-      if (&#39;3DT1&#39; in s.series_description):
-         info[t1w].append(s.series_id)
-      if (&#39;T2 FLAIR premiere aq&#39; in s.series_description):
-         info[flair].append(s.series_id)
-      if (&#39;PEP1 DTI 6dir b2500 HB2&#39; in s.series_description):
-         info[dwi_6dirs_b2500].append(s.series_id)
-      if (&#39;PEP0 DTI 60dir b2500 HB2&#39; in s.series_description):
-         info[dwi_60dirs_b2500].append(s.series_id)
-      if (&#39;PEP0 DTI 45dir b1500 HB2&#39; in s.series_description):
-         info[dwi_45dirs_b1500].append(s.series_id)
-      if (&#39;PEP0 DTI 30dir b200 HB2&#39; in s.series_description):
-         info[dwi_30dirs_b200].append(s.series_id)
-      if (&#39;RsFMRI&#39; in s.series_description):
-         info[rsfmri].append(s.series_id)
-      if (&#39;3D ASL (non-contrast)&#39; in s.series_description):
-         info[asl].append(s.series_id)
-   return info</code></pre>
+    for idx,s in enumerate(seqinfo):
+       if (&#39;3DT1&#39; in s.series_description):
+          info[t1w].append(s.series_id)
+       if (&#39;T2 FLAIR premiere aq&#39; in s.series_description):
+          info[flair].append(s.series_id)
+       if (&#39;PEP1 DTI 6dir b2500 HB2&#39; in s.series_description):
+          info[dwi_6dirs_b2500].append(s.series_id)
+       if (&#39;PEP0 DTI 60dir b2500 HB2&#39; in s.series_description):
+          info[dwi_60dirs_b2500].append(s.series_id)
+       if (&#39;PEP0 DTI 45dir b1500 HB2&#39; in s.series_description):
+          info[dwi_45dirs_b1500].append(s.series_id)
+       if (&#39;PEP0 DTI 30dir b200 HB2&#39; in s.series_description):
+          info[dwi_30dirs_b200].append(s.series_id)
+       if (&#39;RsFMRI&#39; in s.series_description):
+          info[rsfmri].append(s.series_id)
+       if (&#39;3D ASL (non-contrast)&#39; in s.series_description):
+          info[asl].append(s.series_id)  
+    return info</code></pre>
 </details>
 </section>
 <section>
@@ -119,20 +97,15 @@ def infotodict(seqinfo):
 <span>def <span class="ident">create_key</span></span>(<span>template, outtype=('nii.gz',), annotation_classes=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Function to create a identificator between series description and nifti filename</p></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def create_key(template, outtype=(&#39;nii.gz&#39;,), annotation_classes=None):
-
-   &#34;&#34;&#34;
-   Function to create a identificator between series description and nifti filename
-
-   &#34;&#34;&#34;
-   if template is None or not template:
-      raise ValueError(&#39;Template must be a valid format string&#39;)
-   return template, outtype, annotation_classes</code></pre>
+    if template is None or not template:
+        raise ValueError(&#39;Template must be a valid format string&#39;)
+    return template, outtype, annotation_classes</code></pre>
 </details>
 </dd>
 <dt id="pytracto.BIDS_formatting.heuristic_conhect.infotodict"><code class="name flex">
@@ -150,8 +123,7 @@ subindex: sub index within group</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def infotodict(seqinfo):
-
-   &#34;&#34;&#34;Heuristic evaluator for determining which runs belong where
+    &#34;&#34;&#34;Heuristic evaluator for determining which runs belong where
 
     allowed template fields - follow python string module:
 
@@ -159,58 +131,42 @@ subindex: sub index within group</p></div>
     subject: participant id
     seqitem: run number during scanning
     subindex: sub index within group
-   &#34;&#34;&#34;
+    &#34;&#34;&#34;
 
-   data = create_key(&#34;run{item:03d}&#34;)
+    data = create_key(&#34;run{item:03d}&#34;)
+    
+    t1w = create_key(&#39;sub-{subject}/{session}/anat/sub-{subject}_{session}_T1w&#39;)
+    flair = create_key(&#39;sub-{subject}/{session}/anat/sub-{subject}_{session}_FLAIR&#39;)
 
-   t1w = create_key(
-        &#39;sub-{subject}/{session}/anat/sub-{subject}_{session}_T1w&#39;)
-   flair = create_key(
-        &#39;sub-{subject}/{session}/anat/sub-{subject}_{session}_FLAIR&#39;)
+    dwi_6dirs_b2500 = create_key(&#39;sub-{subject}/{session}/dwi/sub-{subject}_{session}_acq-6dirs_dir-AP_dwi&#39;)
+    dwi_30dirs_b200 = create_key(&#39;sub-{subject}/{session}/dwi/sub-{subject}_{session}_acq-30dirs_dir-PA_dwi&#39;)
+    dwi_45dirs_b1500 = create_key(&#39;sub-{subject}/{session}/dwi/sub-{subject}_{session}_acq-45dirs_dir-PA_dwi&#39;)
+    dwi_60dirs_b2500 = create_key(&#39;sub-{subject}/{session}/dwi/sub-{subject}_{session}_acq-60dirs_dir-PA_dwi&#39;)
 
-   dwi_6dirs_b2500 = create_key(
-        &#39;sub-{subject}/{session}/dwi/sub-{subject}_{session}_acq-6dirs_dir-AP_dwi&#39;)
-   dwi_30dirs_b200 = create_key(
-        &#39;sub-{subject}/{session}/dwi/sub-{subject}_{session}_acq-30dirs_dir-PA_dwi&#39;)
-   dwi_45dirs_b1500 = create_key(
-        &#39;sub-{subject}/{session}/dwi/sub-{subject}_{session}_acq-45dirs_dir-PA_dwi&#39;)
-   dwi_60dirs_b2500 = create_key(
-        &#39;sub-{subject}/{session}/dwi/sub-{subject}_{session}_acq-60dirs_dir-PA_dwi&#39;)
+    rsfmri = create_key(&#39;sub-{subject}/{session}/func/sub-{subject}_{session}_task-rest_bold&#39;)
+    asl = create_key(&#39;sub-{subject}/{session}/perf/sub-{subject}_{session}_asl&#39;)
+    
+    info = {t1w: [], flair: [],dwi_6dirs_b2500: [],dwi_30dirs_b200: [], dwi_45dirs_b1500: [], dwi_60dirs_b2500: [], rsfmri: [], asl: []}
+    last_run = len(seqinfo)
 
-   rsfmri = create_key(
-        &#39;sub-{subject}/{session}/func/sub-{subject}_{session}_task-rest_bold&#39;)
-   asl = create_key(
-        &#39;sub-{subject}/{session}/perf/sub-{subject}_{session}_asl&#39;)
-
-   info = {
-      t1w: [],
-      flair: [],
-      dwi_6dirs_b2500: [],
-      dwi_30dirs_b200: [],
-      dwi_45dirs_b1500: [],
-      dwi_60dirs_b2500: [],
-      rsfmri: [],
-      asl: []}
-   last_run = len(seqinfo)
-
-   for idx, s in enumerate(seqinfo):
-      if (&#39;3DT1&#39; in s.series_description):
-         info[t1w].append(s.series_id)
-      if (&#39;T2 FLAIR premiere aq&#39; in s.series_description):
-         info[flair].append(s.series_id)
-      if (&#39;PEP1 DTI 6dir b2500 HB2&#39; in s.series_description):
-         info[dwi_6dirs_b2500].append(s.series_id)
-      if (&#39;PEP0 DTI 60dir b2500 HB2&#39; in s.series_description):
-         info[dwi_60dirs_b2500].append(s.series_id)
-      if (&#39;PEP0 DTI 45dir b1500 HB2&#39; in s.series_description):
-         info[dwi_45dirs_b1500].append(s.series_id)
-      if (&#39;PEP0 DTI 30dir b200 HB2&#39; in s.series_description):
-         info[dwi_30dirs_b200].append(s.series_id)
-      if (&#39;RsFMRI&#39; in s.series_description):
-         info[rsfmri].append(s.series_id)
-      if (&#39;3D ASL (non-contrast)&#39; in s.series_description):
-         info[asl].append(s.series_id)
-   return info</code></pre>
+    for idx,s in enumerate(seqinfo):
+       if (&#39;3DT1&#39; in s.series_description):
+          info[t1w].append(s.series_id)
+       if (&#39;T2 FLAIR premiere aq&#39; in s.series_description):
+          info[flair].append(s.series_id)
+       if (&#39;PEP1 DTI 6dir b2500 HB2&#39; in s.series_description):
+          info[dwi_6dirs_b2500].append(s.series_id)
+       if (&#39;PEP0 DTI 60dir b2500 HB2&#39; in s.series_description):
+          info[dwi_60dirs_b2500].append(s.series_id)
+       if (&#39;PEP0 DTI 45dir b1500 HB2&#39; in s.series_description):
+          info[dwi_45dirs_b1500].append(s.series_id)
+       if (&#39;PEP0 DTI 30dir b200 HB2&#39; in s.series_description):
+          info[dwi_30dirs_b200].append(s.series_id)
+       if (&#39;RsFMRI&#39; in s.series_description):
+          info[rsfmri].append(s.series_id)
+       if (&#39;3D ASL (non-contrast)&#39; in s.series_description):
+          info[asl].append(s.series_id)  
+    return info</code></pre>
 </details>
 </dd>
 </dl>

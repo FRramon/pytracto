@@ -48,9 +48,6 @@ from pytracto.BIDS_formatting.heudiconv_parameters import *
 # print(base_dir)
 
 def atoi(text):
-    &#34;&#34;&#34;
-    heudiconv specific function
-    &#34;&#34;&#34;
     return int(text) if text.isdigit() else text
 def natural_keys(text):
     &#39;&#39;&#39;
@@ -60,15 +57,7 @@ def natural_keys(text):
     &#39;&#39;&#39;
     return [ atoi(c) for c in re.split(r&#39;(\d+)&#39;, text) ]
 
-def execute_bids_formatting(base_dir: str):
-    &#34;&#34;&#34;
-    execute bids formatting given a base directory 
-    + For next release the heuristic.
-
-    Args:
-        base_dir (str):  base directory
-
-    &#34;&#34;&#34;
+def execute_bids_formatting(base_dir):
    
     source_data_dir = os.path.join(base_dir,&#34;data&#34;)
 
@@ -235,42 +224,25 @@ def execute_bids_formatting(base_dir: str):
 <span>def <span class="ident">atoi</span></span>(<span>text)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>heudiconv specific function</p></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def atoi(text):
-    &#34;&#34;&#34;
-    heudiconv specific function
-    &#34;&#34;&#34;
     return int(text) if text.isdigit() else text</code></pre>
 </details>
 </dd>
 <dt id="pytracto.BIDS_formatting.heudiconv_conhect.execute_bids_formatting"><code class="name flex">
-<span>def <span class="ident">execute_bids_formatting</span></span>(<span>base_dir: str)</span>
+<span>def <span class="ident">execute_bids_formatting</span></span>(<span>base_dir)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>execute bids formatting given a base directory
-+ For next release the heuristic.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>base_dir</code></strong> :&ensp;<code>str</code></dt>
-<dd>base directory</dd>
-</dl></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def execute_bids_formatting(base_dir: str):
-    &#34;&#34;&#34;
-    execute bids formatting given a base directory 
-    + For next release the heuristic.
-
-    Args:
-        base_dir (str):  base directory
-
-    &#34;&#34;&#34;
+<pre><code class="python">def execute_bids_formatting(base_dir):
    
     source_data_dir = os.path.join(base_dir,&#34;data&#34;)
 

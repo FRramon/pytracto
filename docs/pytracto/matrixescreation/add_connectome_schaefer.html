@@ -30,15 +30,7 @@
 import os
 
 
-def add_schaefer_parcellation (base_dir: str,sub: str,ses: str):
-        &#34;&#34;&#34;
-        This function performs a schaefer parcellation on a subject that already underwent freesurfer&#39;s recon-all.
-
-        Args:
-                base_dir (str): base directory
-                sub (str): subject id to be processed (unique)
-                ses (str): session id to be processed (unique)
-        &#34;&#34;&#34;
+def add_schaefer_parcellation (base_dir,sub,ses):
 
         subject_id = &#39;sub-&#39; + sub
         session_id = &#39;ses-&#39; + ses
@@ -105,32 +97,15 @@ def add_schaefer_parcellation (base_dir: str,sub: str,ses: str):
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="pytracto.matrixescreation.add_connectome_schaefer.add_schaefer_parcellation"><code class="name flex">
-<span>def <span class="ident">add_schaefer_parcellation</span></span>(<span>base_dir: str, sub: str, ses: str)</span>
+<span>def <span class="ident">add_schaefer_parcellation</span></span>(<span>base_dir, sub, ses)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This function performs a schaefer parcellation on a subject that already underwent freesurfer's recon-all.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>base_dir</code></strong> :&ensp;<code>str</code></dt>
-<dd>base directory</dd>
-<dt><strong><code>sub</code></strong> :&ensp;<code>str</code></dt>
-<dd>subject id to be processed (unique)</dd>
-<dt><strong><code>ses</code></strong> :&ensp;<code>str</code></dt>
-<dd>session id to be processed (unique)</dd>
-</dl></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_schaefer_parcellation (base_dir: str,sub: str,ses: str):
-        &#34;&#34;&#34;
-        This function performs a schaefer parcellation on a subject that already underwent freesurfer&#39;s recon-all.
-
-        Args:
-                base_dir (str): base directory
-                sub (str): subject id to be processed (unique)
-                ses (str): session id to be processed (unique)
-        &#34;&#34;&#34;
+<pre><code class="python">def add_schaefer_parcellation (base_dir,sub,ses):
 
         subject_id = &#39;sub-&#39; + sub
         session_id = &#39;ses-&#39; + ses

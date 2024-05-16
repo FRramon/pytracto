@@ -40,15 +40,7 @@ import re
 #################################################################
 
 
-def anonymize_conhect(base_dir: str):
-        &#34;&#34;&#34;
-        Takes a path to a dataset organized as {subject_id}/Vi, and convert it to sub-i/ses-i.
-        Produce an equivalence table with correspondence between subject_ids
-
-        Args:
-                base_dir (str):  base directory 
-        &#34;&#34;&#34;
-
+def anonymize_conhect(base_dir):
         print(&#39;running anonymize_conhect&#39;)
         # Examine content of the folder and select with a regular expression the right format file
         os.chdir(base_dir)
@@ -111,13 +103,7 @@ def anonymize_conhect(base_dir: str):
 
 #anonymize_conhect(&#39;/mnt/CONHECT_data/data&#39;)
 
-def correct_names(base_dir: str):
-        &#34;&#34;&#34;
-        Convert subject ids to sub-{i} in a given dataset.
-
-        Args:
-                base_dir (str): base directory
-        &#34;&#34;&#34;
+def correct_names(base_dir):
         print(&#39;running name correction&#39;)
         # Examine content of the folder and select with a regular expression the right format file
         os.chdir(base_dir)
@@ -161,29 +147,15 @@ def correct_names(base_dir: str):
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="pytracto.BIDS_formatting.anonymize_conhect.anonymize_conhect"><code class="name flex">
-<span>def <span class="ident">anonymize_conhect</span></span>(<span>base_dir: str)</span>
+<span>def <span class="ident">anonymize_conhect</span></span>(<span>base_dir)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Takes a path to a dataset organized as {subject_id}/Vi, and convert it to sub-i/ses-i.
-Produce an equivalence table with correspondence between subject_ids</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>base_dir</code></strong> :&ensp;<code>str</code></dt>
-<dd>base directory</dd>
-</dl></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def anonymize_conhect(base_dir: str):
-        &#34;&#34;&#34;
-        Takes a path to a dataset organized as {subject_id}/Vi, and convert it to sub-i/ses-i.
-        Produce an equivalence table with correspondence between subject_ids
-
-        Args:
-                base_dir (str):  base directory 
-        &#34;&#34;&#34;
-
+<pre><code class="python">def anonymize_conhect(base_dir):
         print(&#39;running anonymize_conhect&#39;)
         # Examine content of the folder and select with a regular expression the right format file
         os.chdir(base_dir)
@@ -245,26 +217,15 @@ Produce an equivalence table with correspondence between subject_ids</p>
 </details>
 </dd>
 <dt id="pytracto.BIDS_formatting.anonymize_conhect.correct_names"><code class="name flex">
-<span>def <span class="ident">correct_names</span></span>(<span>base_dir: str)</span>
+<span>def <span class="ident">correct_names</span></span>(<span>base_dir)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Convert subject ids to sub-{i} in a given dataset.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>base_dir</code></strong> :&ensp;<code>str</code></dt>
-<dd>base directory</dd>
-</dl></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def correct_names(base_dir: str):
-        &#34;&#34;&#34;
-        Convert subject ids to sub-{i} in a given dataset.
-
-        Args:
-                base_dir (str): base directory
-        &#34;&#34;&#34;
+<pre><code class="python">def correct_names(base_dir):
         print(&#39;running name correction&#39;)
         # Examine content of the folder and select with a regular expression the right format file
         os.chdir(base_dir)

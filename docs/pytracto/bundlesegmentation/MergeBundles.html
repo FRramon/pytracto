@@ -51,30 +51,16 @@ from matplotlib.colors import ListedColormap
 
 #from pathlib import Path
 
-def create_intersection_image(bundle_dir: str, mask_paths: str, output_path: str):
-        &#34;&#34;&#34;
-        Create a 72 channels image for each 72 segmented masks by tractseg
-
-        Args:
-                bundle_dir (str): directory where are located Tractseg outputs
-                mask_path (str): children directory of bundle_dir
-                output_path (str): path for writing the stacked image
-        &#34;&#34;&#34;
+def create_intersection_image(bundle_dir, mask_paths, output_path):
     # Load all the masks into a NumPy array
-        print(mask_paths[1])
-        masks = [load_nifti(f&#39;{bundle_dir}/{path}&#39;)[0] for path in mask_paths]
-        masks = np.stack(masks, axis=-1)
-        np.save(f&#39;{bundle_dir}/stacked_mask.npy&#39;,masks)
-        return masks
+    print(mask_paths[1])
+    masks = [load_nifti(f&#39;{bundle_dir}/{path}&#39;)[0] for path in mask_paths]
+    masks = np.stack(masks, axis=-1)
+    np.save(f&#39;{bundle_dir}/stacked_mask.npy&#39;,masks)
+    return masks
 
 
-def create_equivalence_table(bundle_dir: str):
-        &#34;&#34;&#34;
-        Create an equivalence table between bundle id and bundle name
-
-        Args:
-                bundle_dir (str): directory where are located Tractseg outputs
-        &#34;&#34;&#34;
+def create_equivalence_table(bundle_dir):
         n = len(os.listdir(bundle_dir))
         indexes = [i for i in range(n)]
         labels = [X[:-7] for X in os.listdir(bundle_dir)]
@@ -86,17 +72,7 @@ def create_equivalence_table(bundle_dir: str):
         return equi
         
 
-def gen_sphere(x0: int,y0: int,z0: int,radius: int):
-        &#34;&#34;&#34;
-        Generate a sphere of center (x0,y0,z0) and radii radius. In a np array of size 145,174,145
-
-        Args:
-                x0 (int): x coordinate for the center of the sphere
-                y0 (int): y coordinate for the center of the sphere
-                z0 (int): z coordinate for the center of the sphere
-                radius (int): radius of the sphere
-
-        &#34;&#34;&#34;
+def gen_sphere(x0,y0,z0,radius):
 
         size1,size2,size3 = 145,174,145 
 
@@ -124,51 +100,28 @@ def gen_sphere(x0: int,y0: int,z0: int,radius: int):
         return AA
 
 
-def get_masked_infos(stack,sphere_mask,x0 : int,y0 : int,z0 : int,radius : int):
-        &#34;&#34;&#34;
-        Mask the 72 mask image into the sphere mask space
-
-        Args:
-                stack (numpy array): stacked image
-                sphere_mask (numpy array): mask of the sphere in the dimension of the original image
-                x0 (int): x coordinate for the center of the sphere
-                y0 (int): y coordinate for the center of the sphere
-                z0 (int): z coordinate for the center of the sphere
-                radius (int): radius of the sphere
-
-        &#34;&#34;&#34;
+def get_masked_infos(stack,sphere_mask,x0,y0,z0,radius):
     # stack = np.load(data_dir + &#39;/stacked_mask.npy&#39;,allow_pickle=True).astype(np.int_)
     # sphere_mask = np.load(&#39;/mnt/CONHECT_data/code/test_sphere/sphere_mask.npy&#39;)
 
-        print(&#39;Mask stacked data with the mask&#39;)
-        masked_stack = np.zeros_like(stack)
-        for k in range(stack.shape[3]):
-                masked_stack[:,:,:,k] = np.multiply(stack[:,:,:,k],sphere_mask)
-        print(&#39;done&#39;)
+    print(&#39;Mask stacked data with the mask&#39;)
+    masked_stack = np.zeros_like(stack)
+    for k in range(stack.shape[3]):
+        masked_stack[:,:,:,k] = np.multiply(stack[:,:,:,k],sphere_mask)
+    print(&#39;done&#39;)
 
 
-        size = np.shape(masked_stack)
-   
-        print(&#39;Truncate masked data to the smaller space&#39;)
-        masked_trunc = masked_stack[x0-radius:x0+radius+1,y0-radius:y0+radius+1,z0-radius:z0+radius+1,:]
-        print(&#39;done&#39;)
+    size = np.shape(masked_stack)
+    
+    print(&#39;Truncate masked data to the smaller space&#39;)
+    masked_trunc = masked_stack[x0-radius:x0+radius+1,y0-radius:y0+radius+1,z0-radius:z0+radius+1,:]
+    print(&#39;done&#39;)
 
-        return masked_trunc
+    return masked_trunc
 
 
 
-def main_merge_bundles(bundle_dir:str,output_path:str,x0:int,y0:int,z0:int,radius:int):
-        &#34;&#34;&#34;
-        Main function to generate a sphere mask for a given center (x0,y0,z0) and radii (radius), mask the bundles created by tractseg with the sphere mask. And access the proportion of each bundle in the sphere. 
-        
-        Args:
-                bundle_dir (str): directory where are located Tractseg outputs
-                output_path (str): path for writing outputs
-                x0 (int): x coordinate for the center of the sphere
-                y0 (int): y coordinate for the center of the sphere
-                z0 (int): z coordinate for the center of the sphere
-                radius (int): radius of the sphere
-        &#34;&#34;&#34;
+def main_merge_bundles(bundle_dir,output_path,x0,y0,z0,radius):
         mask_paths = os.listdir(bundle_dir)
 
         print(&#39;Concatenate bundle masks&#39;)
@@ -278,7 +231,6 @@ def main_merge_bundles(bundle_dir:str,output_path:str,x0:int,y0:int,z0:int,radiu
 
 
 def GetBest(bundle_dir,output_path,ROIS = list()):
-        
         Left = np.array([[75,110],[107,139],[32,71]])
         Right = np.array([[39,69],[107,139],[32,71]])
 
@@ -328,32 +280,20 @@ def GetBest(bundle_dir,output_path,ROIS = list()):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def GetBest(bundle_dir,output_path,ROIS = list()):
-        
         Left = np.array([[75,110],[107,139],[32,71]])
         Right = np.array([[39,69],[107,139],[32,71]])</code></pre>
 </details>
 </dd>
 <dt id="pytracto.bundlesegmentation.MergeBundles.create_equivalence_table"><code class="name flex">
-<span>def <span class="ident">create_equivalence_table</span></span>(<span>bundle_dir: str)</span>
+<span>def <span class="ident">create_equivalence_table</span></span>(<span>bundle_dir)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Create an equivalence table between bundle id and bundle name</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>bundle_dir</code></strong> :&ensp;<code>str</code></dt>
-<dd>directory where are located Tractseg outputs</dd>
-</dl></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def create_equivalence_table(bundle_dir: str):
-        &#34;&#34;&#34;
-        Create an equivalence table between bundle id and bundle name
-
-        Args:
-                bundle_dir (str): directory where are located Tractseg outputs
-        &#34;&#34;&#34;
+<pre><code class="python">def create_equivalence_table(bundle_dir):
         n = len(os.listdir(bundle_dir))
         indexes = [i for i in range(n)]
         labels = [X[:-7] for X in os.listdir(bundle_dir)]
@@ -366,71 +306,33 @@ def GetBest(bundle_dir,output_path,ROIS = list()):
 </details>
 </dd>
 <dt id="pytracto.bundlesegmentation.MergeBundles.create_intersection_image"><code class="name flex">
-<span>def <span class="ident">create_intersection_image</span></span>(<span>bundle_dir: str, mask_paths: str, output_path: str)</span>
+<span>def <span class="ident">create_intersection_image</span></span>(<span>bundle_dir, mask_paths, output_path)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Create a 72 channels image for each 72 segmented masks by tractseg</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>bundle_dir</code></strong> :&ensp;<code>str</code></dt>
-<dd>directory where are located Tractseg outputs</dd>
-<dt><strong><code>mask_path</code></strong> :&ensp;<code>str</code></dt>
-<dd>children directory of bundle_dir</dd>
-<dt><strong><code>output_path</code></strong> :&ensp;<code>str</code></dt>
-<dd>path for writing the stacked image</dd>
-</dl></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def create_intersection_image(bundle_dir: str, mask_paths: str, output_path: str):
-        &#34;&#34;&#34;
-        Create a 72 channels image for each 72 segmented masks by tractseg
-
-        Args:
-                bundle_dir (str): directory where are located Tractseg outputs
-                mask_path (str): children directory of bundle_dir
-                output_path (str): path for writing the stacked image
-        &#34;&#34;&#34;
+<pre><code class="python">def create_intersection_image(bundle_dir, mask_paths, output_path):
     # Load all the masks into a NumPy array
-        print(mask_paths[1])
-        masks = [load_nifti(f&#39;{bundle_dir}/{path}&#39;)[0] for path in mask_paths]
-        masks = np.stack(masks, axis=-1)
-        np.save(f&#39;{bundle_dir}/stacked_mask.npy&#39;,masks)
-        return masks</code></pre>
+    print(mask_paths[1])
+    masks = [load_nifti(f&#39;{bundle_dir}/{path}&#39;)[0] for path in mask_paths]
+    masks = np.stack(masks, axis=-1)
+    np.save(f&#39;{bundle_dir}/stacked_mask.npy&#39;,masks)
+    return masks</code></pre>
 </details>
 </dd>
 <dt id="pytracto.bundlesegmentation.MergeBundles.gen_sphere"><code class="name flex">
-<span>def <span class="ident">gen_sphere</span></span>(<span>x0: int, y0: int, z0: int, radius: int)</span>
+<span>def <span class="ident">gen_sphere</span></span>(<span>x0, y0, z0, radius)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Generate a sphere of center (x0,y0,z0) and radii radius. In a np array of size 145,174,145</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>x0</code></strong> :&ensp;<code>int</code></dt>
-<dd>x coordinate for the center of the sphere</dd>
-<dt><strong><code>y0</code></strong> :&ensp;<code>int</code></dt>
-<dd>y coordinate for the center of the sphere</dd>
-<dt><strong><code>z0</code></strong> :&ensp;<code>int</code></dt>
-<dd>z coordinate for the center of the sphere</dd>
-<dt><strong><code>radius</code></strong> :&ensp;<code>int</code></dt>
-<dd>radius of the sphere</dd>
-</dl></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def gen_sphere(x0: int,y0: int,z0: int,radius: int):
-        &#34;&#34;&#34;
-        Generate a sphere of center (x0,y0,z0) and radii radius. In a np array of size 145,174,145
-
-        Args:
-                x0 (int): x coordinate for the center of the sphere
-                y0 (int): y coordinate for the center of the sphere
-                z0 (int): z coordinate for the center of the sphere
-                radius (int): radius of the sphere
-
-        &#34;&#34;&#34;
+<pre><code class="python">def gen_sphere(x0,y0,z0,radius):
 
         size1,size2,size3 = 145,174,145 
 
@@ -459,97 +361,44 @@ def GetBest(bundle_dir,output_path,ROIS = list()):
 </details>
 </dd>
 <dt id="pytracto.bundlesegmentation.MergeBundles.get_masked_infos"><code class="name flex">
-<span>def <span class="ident">get_masked_infos</span></span>(<span>stack, sphere_mask, x0: int, y0: int, z0: int, radius: int)</span>
+<span>def <span class="ident">get_masked_infos</span></span>(<span>stack, sphere_mask, x0, y0, z0, radius)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Mask the 72 mask image into the sphere mask space</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>stack</code></strong> :&ensp;<code>numpy array</code></dt>
-<dd>stacked image</dd>
-<dt><strong><code>sphere_mask</code></strong> :&ensp;<code>numpy array</code></dt>
-<dd>mask of the sphere in the dimension of the original image</dd>
-<dt><strong><code>x0</code></strong> :&ensp;<code>int</code></dt>
-<dd>x coordinate for the center of the sphere</dd>
-<dt><strong><code>y0</code></strong> :&ensp;<code>int</code></dt>
-<dd>y coordinate for the center of the sphere</dd>
-<dt><strong><code>z0</code></strong> :&ensp;<code>int</code></dt>
-<dd>z coordinate for the center of the sphere</dd>
-<dt><strong><code>radius</code></strong> :&ensp;<code>int</code></dt>
-<dd>radius of the sphere</dd>
-</dl></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_masked_infos(stack,sphere_mask,x0 : int,y0 : int,z0 : int,radius : int):
-        &#34;&#34;&#34;
-        Mask the 72 mask image into the sphere mask space
-
-        Args:
-                stack (numpy array): stacked image
-                sphere_mask (numpy array): mask of the sphere in the dimension of the original image
-                x0 (int): x coordinate for the center of the sphere
-                y0 (int): y coordinate for the center of the sphere
-                z0 (int): z coordinate for the center of the sphere
-                radius (int): radius of the sphere
-
-        &#34;&#34;&#34;
+<pre><code class="python">def get_masked_infos(stack,sphere_mask,x0,y0,z0,radius):
     # stack = np.load(data_dir + &#39;/stacked_mask.npy&#39;,allow_pickle=True).astype(np.int_)
     # sphere_mask = np.load(&#39;/mnt/CONHECT_data/code/test_sphere/sphere_mask.npy&#39;)
 
-        print(&#39;Mask stacked data with the mask&#39;)
-        masked_stack = np.zeros_like(stack)
-        for k in range(stack.shape[3]):
-                masked_stack[:,:,:,k] = np.multiply(stack[:,:,:,k],sphere_mask)
-        print(&#39;done&#39;)
+    print(&#39;Mask stacked data with the mask&#39;)
+    masked_stack = np.zeros_like(stack)
+    for k in range(stack.shape[3]):
+        masked_stack[:,:,:,k] = np.multiply(stack[:,:,:,k],sphere_mask)
+    print(&#39;done&#39;)
 
 
-        size = np.shape(masked_stack)
-   
-        print(&#39;Truncate masked data to the smaller space&#39;)
-        masked_trunc = masked_stack[x0-radius:x0+radius+1,y0-radius:y0+radius+1,z0-radius:z0+radius+1,:]
-        print(&#39;done&#39;)
+    size = np.shape(masked_stack)
+    
+    print(&#39;Truncate masked data to the smaller space&#39;)
+    masked_trunc = masked_stack[x0-radius:x0+radius+1,y0-radius:y0+radius+1,z0-radius:z0+radius+1,:]
+    print(&#39;done&#39;)
 
-        return masked_trunc</code></pre>
+    return masked_trunc</code></pre>
 </details>
 </dd>
 <dt id="pytracto.bundlesegmentation.MergeBundles.main_merge_bundles"><code class="name flex">
-<span>def <span class="ident">main_merge_bundles</span></span>(<span>bundle_dir: str, output_path: str, x0: int, y0: int, z0: int, radius: int)</span>
+<span>def <span class="ident">main_merge_bundles</span></span>(<span>bundle_dir, output_path, x0, y0, z0, radius)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Main function to generate a sphere mask for a given center (x0,y0,z0) and radii (radius), mask the bundles created by tractseg with the sphere mask. And access the proportion of each bundle in the sphere. </p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>bundle_dir</code></strong> :&ensp;<code>str</code></dt>
-<dd>directory where are located Tractseg outputs</dd>
-<dt><strong><code>output_path</code></strong> :&ensp;<code>str</code></dt>
-<dd>path for writing outputs</dd>
-<dt><strong><code>x0</code></strong> :&ensp;<code>int</code></dt>
-<dd>x coordinate for the center of the sphere</dd>
-<dt><strong><code>y0</code></strong> :&ensp;<code>int</code></dt>
-<dd>y coordinate for the center of the sphere</dd>
-<dt><strong><code>z0</code></strong> :&ensp;<code>int</code></dt>
-<dd>z coordinate for the center of the sphere</dd>
-<dt><strong><code>radius</code></strong> :&ensp;<code>int</code></dt>
-<dd>radius of the sphere</dd>
-</dl></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def main_merge_bundles(bundle_dir:str,output_path:str,x0:int,y0:int,z0:int,radius:int):
-        &#34;&#34;&#34;
-        Main function to generate a sphere mask for a given center (x0,y0,z0) and radii (radius), mask the bundles created by tractseg with the sphere mask. And access the proportion of each bundle in the sphere. 
-        
-        Args:
-                bundle_dir (str): directory where are located Tractseg outputs
-                output_path (str): path for writing outputs
-                x0 (int): x coordinate for the center of the sphere
-                y0 (int): y coordinate for the center of the sphere
-                z0 (int): z coordinate for the center of the sphere
-                radius (int): radius of the sphere
-        &#34;&#34;&#34;
+<pre><code class="python">def main_merge_bundles(bundle_dir,output_path,x0,y0,z0,radius):
         mask_paths = os.listdir(bundle_dir)
 
         print(&#39;Concatenate bundle masks&#39;)

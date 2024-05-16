@@ -54,19 +54,7 @@ from pytracto.matrixescreation.MatrixesCreationParameters import *
 # subject_list = subject_raw.split(&#39;,&#39;)
 # ses_list = session_raw.split(&#39;,&#39;)
 
-def build_connectivity_matrixes(source_dir: str,subject_list: list,ses_list:list):
-        &#34;&#34;&#34;
-        This function takes in argument source directory, a subject and session list. 
-        It create connectivity matrixes according to a file of parameters. 
-        Matrixes for atlas Destrieux &amp; Schaefer
-        Matrixes for generative method probabilistic and deterministic
-        Matrixes for microstructural parameters : SC, FA, MD, ADC, RD, AD, NDI, ODI, FWF
-
-        Args:
-                source_dir (str): source directory where the DICOM are located
-                subject_list (list[str]): list of subjects to be processed
-                ses_list (list[int]): list of sessions to be processed
-        &#34;&#34;&#34;
+def build_connectivity_matrixes(source_dir,subject_list,ses_list):
 
         for sub in subject_list:
 
@@ -474,40 +462,15 @@ def build_connectivity_matrixes(source_dir: str,subject_list: list,ses_list:list
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="pytracto.matrixescreation.MatrixesCreation.build_connectivity_matrixes"><code class="name flex">
-<span>def <span class="ident">build_connectivity_matrixes</span></span>(<span>source_dir: str, subject_list: list, ses_list: list)</span>
+<span>def <span class="ident">build_connectivity_matrixes</span></span>(<span>source_dir, subject_list, ses_list)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This function takes in argument source directory, a subject and session list.
-It create connectivity matrixes according to a file of parameters.
-Matrixes for atlas Destrieux &amp; Schaefer
-Matrixes for generative method probabilistic and deterministic
-Matrixes for microstructural parameters : SC, FA, MD, ADC, RD, AD, NDI, ODI, FWF</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>source_dir</code></strong> :&ensp;<code>str</code></dt>
-<dd>source directory where the DICOM are located</dd>
-<dt><strong><code>subject_list</code></strong> :&ensp;<code>list[str]</code></dt>
-<dd>list of subjects to be processed</dd>
-<dt><strong><code>ses_list</code></strong> :&ensp;<code>list[int]</code></dt>
-<dd>list of sessions to be processed</dd>
-</dl></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def build_connectivity_matrixes(source_dir: str,subject_list: list,ses_list:list):
-        &#34;&#34;&#34;
-        This function takes in argument source directory, a subject and session list. 
-        It create connectivity matrixes according to a file of parameters. 
-        Matrixes for atlas Destrieux &amp; Schaefer
-        Matrixes for generative method probabilistic and deterministic
-        Matrixes for microstructural parameters : SC, FA, MD, ADC, RD, AD, NDI, ODI, FWF
-
-        Args:
-                source_dir (str): source directory where the DICOM are located
-                subject_list (list[str]): list of subjects to be processed
-                ses_list (list[int]): list of sessions to be processed
-        &#34;&#34;&#34;
+<pre><code class="python">def build_connectivity_matrixes(source_dir,subject_list,ses_list):
 
         for sub in subject_list:
 

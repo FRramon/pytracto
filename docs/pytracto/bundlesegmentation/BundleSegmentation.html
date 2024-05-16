@@ -68,18 +68,7 @@ import numpy as np
 from pytracto.bundlesegmentation.BundleSegmentationParameters import *
 
 
-def bundle_segmentation(source_dir: str,subject_list: list,ses_list: list):
-        &#34;&#34;&#34;
-        Performs bundle segmentation using tractseg.
-        DWI images are first registered to MNI152 space using a FA map.
-        Tractseg segments into 72 bundles, using a U-net architecture
-        All 72 bundles are registered back to subject DWI space using inverse transform
-
-        Args:
-                source_dir (str): source directory of the DICOM
-                subject_list (list[str]): list of subjects
-                ses_list (list[int]): list of sessions
-        &#34;&#34;&#34;
+def bundle_segmentation(source_dir,subject_list,ses_list):
 
         mni_file = source_dir + &#39;/code/MNI_FA_template.nii.gz&#39;
 
@@ -391,38 +380,15 @@ def bundle_segmentation(source_dir: str,subject_list: list,ses_list: list):
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="pytracto.bundlesegmentation.BundleSegmentation.bundle_segmentation"><code class="name flex">
-<span>def <span class="ident">bundle_segmentation</span></span>(<span>source_dir: str, subject_list: list, ses_list: list)</span>
+<span>def <span class="ident">bundle_segmentation</span></span>(<span>source_dir, subject_list, ses_list)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Performs bundle segmentation using tractseg.
-DWI images are first registered to MNI152 space using a FA map.
-Tractseg segments into 72 bundles, using a U-net architecture
-All 72 bundles are registered back to subject DWI space using inverse transform</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>source_dir</code></strong> :&ensp;<code>str</code></dt>
-<dd>source directory of the DICOM</dd>
-<dt><strong><code>subject_list</code></strong> :&ensp;<code>list[str]</code></dt>
-<dd>list of subjects</dd>
-<dt><strong><code>ses_list</code></strong> :&ensp;<code>list[int]</code></dt>
-<dd>list of sessions</dd>
-</dl></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def bundle_segmentation(source_dir: str,subject_list: list,ses_list: list):
-        &#34;&#34;&#34;
-        Performs bundle segmentation using tractseg.
-        DWI images are first registered to MNI152 space using a FA map.
-        Tractseg segments into 72 bundles, using a U-net architecture
-        All 72 bundles are registered back to subject DWI space using inverse transform
-
-        Args:
-                source_dir (str): source directory of the DICOM
-                subject_list (list[str]): list of subjects
-                ses_list (list[int]): list of sessions
-        &#34;&#34;&#34;
+<pre><code class="python">def bundle_segmentation(source_dir,subject_list,ses_list):
 
         mni_file = source_dir + &#39;/code/MNI_FA_template.nii.gz&#39;
 

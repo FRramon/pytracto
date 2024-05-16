@@ -38,12 +38,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import subprocess
 
-# source_dir = &#39;/mnt/POOL_IRM08/CONHECT&#39;
-# ses_list = [1,3]
-# group = &#34;Patients&#34;
-# dicom_dir = &#34;/mnt/POOL_IRM06/CONHECT/ConhectDatabase&#34;
+source_dir = &#39;/mnt/POOL_IRM08/CONHECT&#39;
+ses_list = [1,3]
+group = &#34;Patients&#34;
+dicom_dir = &#34;/mnt/POOL_IRM06/CONHECT/ConhectDatabase&#34;
 
-#sys.path.append(source_dir + &#39;/dmri-pipeline&#39;)
+sys.path.append(source_dir + &#39;/dmri-pipeline&#39;)
 from pytracto.tractography.tractography_utils import *
 
 
@@ -69,16 +69,7 @@ from pytracto.tractography.tractography_utils import *
 # if group_raw == &#39;HealthyVolunteers&#39;:
 #       result_dir = os.path.join(source_dir , &#39;results_test2&#39;)
 
-def create_roi_file(source_dir: str,dicom_dir: str,ses_list: list,group: str):
-        &#34;&#34;&#34;
-        This function create a xlsx file containing information of all connectivity matrixes for all subjects/sessions in a group.
-
-        Args:
-                source_dir (str): source directory (parent folder of dicom_dir)
-                dicom_dir (str): directory where the DICOM are located
-                ses_list (list[str]): list of sessions to be processed
-                group (str): group of patients (either patients, temoins etc. )
-        &#34;&#34;&#34;
+def create_roi_file(source_dir,dicom_dir,ses_list,group):
         if group == &#39;Patients&#39;:
                 result_dir = os.path.join(source_dir , &#39;full_results&#39;,&#39;main_workflow&#39;,&#39;connectome&#39;)
 
@@ -195,35 +186,15 @@ def create_roi_file(source_dir: str,dicom_dir: str,ses_list: list,group: str):
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="pytracto.matrixescreation.createROIfile.create_roi_file"><code class="name flex">
-<span>def <span class="ident">create_roi_file</span></span>(<span>source_dir: str, dicom_dir: str, ses_list: list, group: str)</span>
+<span>def <span class="ident">create_roi_file</span></span>(<span>source_dir, dicom_dir, ses_list, group)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>This function create a xlsx file containing information of all connectivity matrixes for all subjects/sessions in a group.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>source_dir</code></strong> :&ensp;<code>str</code></dt>
-<dd>source directory (parent folder of dicom_dir)</dd>
-<dt><strong><code>dicom_dir</code></strong> :&ensp;<code>str</code></dt>
-<dd>directory where the DICOM are located</dd>
-<dt><strong><code>ses_list</code></strong> :&ensp;<code>list[str]</code></dt>
-<dd>list of sessions to be processed</dd>
-<dt><strong><code>group</code></strong> :&ensp;<code>str</code></dt>
-<dd>group of patients (either patients, temoins etc. )</dd>
-</dl></div>
+<div class="desc"></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def create_roi_file(source_dir: str,dicom_dir: str,ses_list: list,group: str):
-        &#34;&#34;&#34;
-        This function create a xlsx file containing information of all connectivity matrixes for all subjects/sessions in a group.
-
-        Args:
-                source_dir (str): source directory (parent folder of dicom_dir)
-                dicom_dir (str): directory where the DICOM are located
-                ses_list (list[str]): list of sessions to be processed
-                group (str): group of patients (either patients, temoins etc. )
-        &#34;&#34;&#34;
+<pre><code class="python">def create_roi_file(source_dir,dicom_dir,ses_list,group):
         if group == &#39;Patients&#39;:
                 result_dir = os.path.join(source_dir , &#39;full_results&#39;,&#39;main_workflow&#39;,&#39;connectome&#39;)
 

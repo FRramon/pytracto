@@ -26,381 +26,381 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from tkinter import *
-import subprocess
-import os
-import signal
-import pandas as pd
-import sys
+<pre><code class="python"># from tkinter import *
+# import subprocess
+# import os
+# import signal
+# import pandas as pd
+# import sys
 
-# code_dir = &#39;/mnt/POOL_IRM08/CONHECT/dmri-pipeline&#39;
-# sys.path.append(code_dir)
-from pytracto.tractography.tractography_utils import *
+# # code_dir = &#39;/mnt/POOL_IRM08/CONHECT/dmri-pipeline&#39;
+# # sys.path.append(code_dir)
+# from pytracto.tractography.tractography_utils import *
 
 
-# def clickNormal():
-#     global phase_encoding_dir
-#     phase_encoding_dir = &#34;Normal&#34;
-#     root.destroy()
-#     #close opened image
-#     return phase_encoding_dir
+# # def clickNormal():
+# #     global phase_encoding_dir
+# #     phase_encoding_dir = &#34;Normal&#34;
+# #     root.destroy()
+# #     #close opened image
+# #     return phase_encoding_dir
 
-# def clickAbnormal():
-#     global phase_encoding_dir
-#     phase_encoding_dir = &#34;Abnormal&#34;
-#     root.destroy()
-#     #close opened image
-#     return phase_encoding_dir
+# # def clickAbnormal():
+# #     global phase_encoding_dir
+# #     phase_encoding_dir = &#34;Abnormal&#34;
+# #     root.destroy()
+# #     #close opened image
+# #     return phase_encoding_dir
     
-# def click2PA():
-#     global phase_encoding_dir
-#     phase_encoding_dir = &#34;2 PA&#34;
+# # def click2PA():
+# #     global phase_encoding_dir
+# #     phase_encoding_dir = &#34;2 PA&#34;
+# #     root.destroy()
+# #     #close opened image
+# #     return phase_encoding_dir
+    
+# # def click2AP():
+# #     global phase_encoding_dir
+# #     phase_encoding_dir = &#34;2 AP&#34;
+# #     root.destroy()
+# #     #close opened image
+# #     return phase_encoding_dir
+
+# def clickA():
+#     global quality
+#     quality = &#34;A&#34;
 #     root.destroy()
 #     #close opened image
-#     return phase_encoding_dir
-    
-# def click2AP():
-#     global phase_encoding_dir
-#     phase_encoding_dir = &#34;2 AP&#34;
+#     return quality
+
+
+# def clickB():
+#     global quality
+#     quality = &#34;B&#34;
 #     root.destroy()
 #     #close opened image
-#     return phase_encoding_dir
+#     return quality
 
-def clickA():
-    global quality
-    quality = &#34;A&#34;
-    root.destroy()
-    #close opened image
-    return quality
+# def clickC():
+#     global quality
+#     quality = &#34;C&#34;
+#     root.destroy()
+#     #close opened image
+#     return quality
 
 
-def clickB():
-    global quality
-    quality = &#34;B&#34;
-    root.destroy()
-    #close opened image
-    return quality
+# # data_dir= &#39;/mnt/POOL_IRM08/CONHECT/full_results&#39;
+# # source_dir = &#39;/mnt/POOL_IRM06/CONHECT/ConhectDatabase&#39;
+# # base_dir = &#39;/mnt/POOL_IRM08/CONHECT&#39;
+# # start = 0
+# # group = [&#39;Patients&#39;]
+# # ses_list = [1]
 
-def clickC():
-    global quality
-    quality = &#34;C&#34;
-    root.destroy()
-    #close opened image
-    return quality
+# def execute_qa_check(data_dir: str,source_dir : str,base_dir: str,start: int,group: str,ses_list: list):
+#     &#34;&#34;&#34;
+#     This function is an interactive program for quality assessment of the outputs of the dMRI pipeline. 
+#     It creates an excel with steps qualities.
 
+#     Args: 
+#         data_dir (str): directory that points to the pipeline&#39;s output directory
+#         source_dir (str): source directory where dicom are located
+#         base_dir (str): base directory
+#         start (int): line in the excel to (re) start
+#         group (str): group of subjects (either patients, temoins etc. )
+#         ses_list (list[int]): list of sessions to be processed
 
-# data_dir= &#39;/mnt/POOL_IRM08/CONHECT/full_results&#39;
-# source_dir = &#39;/mnt/POOL_IRM06/CONHECT/ConhectDatabase&#39;
-# base_dir = &#39;/mnt/POOL_IRM08/CONHECT&#39;
-# start = 0
-# group = [&#39;Patients&#39;]
-# ses_list = [1]
+#     &#34;&#34;&#34;
 
-def execute_qa_check(data_dir: str,source_dir : str,base_dir: str,start: int,group: str,ses_list: list):
-    &#34;&#34;&#34;
-    This function is an interactive program for quality assessment of the outputs of the dMRI pipeline. 
-    It creates an excel with steps qualities.
+#     columns = [&#39;Group&#39;, &#39;subject_id&#39;, &#39;session_id&#39;,&#39;anat&#39;,&#39;dwiAP&#39;,&#39;dwiPA&#39;,&#39;rsfmri&#39;,&#39;fmap&#39;,&#39;PE_direction&#39;,&#39;topup&#39;,&#39;topupquality&#39;,&#39;5tt mask&#39;,&#39;5tt quality&#39;,&#39;gmwmi&#39;,&#39;gmwmi quality&#39;, &#39;anat2diff quality&#39;,&#39;streamline reg quality&#39;]
 
-    Args: 
-        data_dir (str): directory that points to the pipeline&#39;s output directory
-        source_dir (str): source directory where dicom are located
-        base_dir (str): base directory
-        start (int): line in the excel to (re) start
-        group (str): group of subjects (either patients, temoins etc. )
-        ses_list (list[int]): list of sessions to be processed
+#     df = pd.DataFrame(columns=columns)
 
-    &#34;&#34;&#34;
-    
-    columns = [&#39;Group&#39;, &#39;subject_id&#39;, &#39;session_id&#39;,&#39;anat&#39;,&#39;dwiAP&#39;,&#39;dwiPA&#39;,&#39;rsfmri&#39;,&#39;fmap&#39;,&#39;PE_direction&#39;,&#39;topup&#39;,&#39;topupquality&#39;,&#39;5tt mask&#39;,&#39;5tt quality&#39;,&#39;gmwmi&#39;,&#39;gmwmi quality&#39;, &#39;anat2diff quality&#39;,&#39;streamline reg quality&#39;]
+#     # # Create a dictionary with the data for the new row
 
-    df = pd.DataFrame(columns=columns)
 
-    # # Create a dictionary with the data for the new row
 
+#     for g in group:
 
+#         for ses in ses_list:
 
-    for g in group:
+#             result_list_Ses,result_list_even,result_list_odd,result_list_not, haveProblem = get_ids_by_sessions(source_dir,base_dir,g,ses)
 
-        for ses in ses_list:
+#             #print(subjects_list)
 
-            result_list_Ses,result_list_even,result_list_odd,result_list_not, haveProblem = get_ids_by_sessions(source_dir,base_dir,g,ses)
+#             subjects_list = result_list_Ses[0].split(&#39;,&#39;)
 
-            #print(subjects_list)
+#             print(subjects_list)
 
-            subjects_list = result_list_Ses[0].split(&#39;,&#39;)
+#             ## Loop over patient ##
 
-            print(subjects_list)
 
-            ## Loop over patient ##
+#             for sub in subjects_list:
 
 
-            for sub in subjects_list:
+#                 has_fmap = 0
+#                 has_anat = 0
+#                 has_dwiAP = 0
+#                 has_dwiPA = 0
+#                 has_rsfmri = 0
+#                 phase_encoding_dir = &#34;NA&#34;
 
+#                 subject_id = &#39;sub-&#39; + sub
+#                 session_id = &#39;ses-00&#39; + str(ses)
+#                 identifier = &#39;_ses_id_00&#39; + str(ses) + &#39;_subject_id_&#39; + sub
 
-                has_fmap = 0
-                has_anat = 0
-                has_dwiAP = 0
-                has_dwiPA = 0
-                has_rsfmri = 0
-                phase_encoding_dir = &#34;NA&#34;
+#                 print(identifier)
 
-                subject_id = &#39;sub-&#39; + sub
-                session_id = &#39;ses-00&#39; + str(ses)
-                identifier = &#39;_ses_id_00&#39; + str(ses) + &#39;_subject_id_&#39; + sub
+#                 tracto_dir = os.path.join(data_dir,&#39;main_workflow&#39;,&#39;wf_tractography&#39;,identifier)
+#                 connectome_dir=  os.path.join(data_dir,&#39;main_workflow&#39;,&#39;connectome&#39;,identifier)
+#                 preproc_dir = os.path.join(data_dir,&#39;main_workflow&#39;,&#39;preproc&#39;,identifier)
 
-                print(identifier)
 
-                tracto_dir = os.path.join(data_dir,&#39;main_workflow&#39;,&#39;wf_tractography&#39;,identifier)
-                connectome_dir=  os.path.join(data_dir,&#39;main_workflow&#39;,&#39;connectome&#39;,identifier)
-                preproc_dir = os.path.join(data_dir,&#39;main_workflow&#39;,&#39;preproc&#39;,identifier)
+#     ################################# CHECK FOR TOPUP &amp; TOPUP QUALITY #############################################
 
 
-    ################################# CHECK FOR TOPUP &amp; TOPUP QUALITY #############################################
+#                 if os.path.isfile(f&#34;{preproc_dir}/dwpreproc/preproc.mif&#34;):
 
+#                     has_topup = 1
 
-                if os.path.isfile(f&#34;{preproc_dir}/dwpreproc/preproc.mif&#34;):
+#                     quality = &#34;NA&#34;
 
-                    has_topup = 1
+#                     ## Open chosen image (mricron, mango, mrview, fsleyes, matplotlib.pyplot.imshow or nilearn.plotting ...) ##
 
-                    quality = &#34;NA&#34;
+#                     command_view = f&#34;mrview {base_dir}/nifti3/{g}/{subject_id}/{session_id}/anat/{subject_id}_{session_id}_T1w.nii.gz -overlay.load {preproc_dir}/dwpreproc/preproc.mif&#34;# -overlay.opacity 0.6 -overlay.colour 0,0,255 &#34;
 
-                    ## Open chosen image (mricron, mango, mrview, fsleyes, matplotlib.pyplot.imshow or nilearn.plotting ...) ##
 
-                    command_view = f&#34;mrview {base_dir}/nifti3/{g}/{subject_id}/{session_id}/anat/{subject_id}_{session_id}_T1w.nii.gz -overlay.load {preproc_dir}/dwpreproc/preproc.mif&#34;# -overlay.opacity 0.6 -overlay.colour 0,0,255 &#34;
+#                     pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
+#                            shell=True, preexec_fn=os.setsid) 
 
 
-                    pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
-                           shell=True, preexec_fn=os.setsid) 
+#                     root = Tk()
+#                     root.title(&#34;T1 registration to diffusion space quality ?&#34;)
+#                     root.geometry(&#34;500x160&#34;)
+#                     button1 = Button(root,text=&#39;A&#39;, command=clickA)
+#                     button1.pack()
+#                     button2 = Button(root,text=&#39;B&#39;, command=clickB)
+#                     button2.pack()
+#                     button3 = Button(root,text=&#39;C&#39;, command=clickC)
+#                     button3.pack()
 
 
-                    root = Tk()
-                    root.title(&#34;T1 registration to diffusion space quality ?&#34;)
-                    root.geometry(&#34;500x160&#34;)
-                    button1 = Button(root,text=&#39;A&#39;, command=clickA)
-                    button1.pack()
-                    button2 = Button(root,text=&#39;B&#39;, command=clickB)
-                    button2.pack()
-                    button3 = Button(root,text=&#39;C&#39;, command=clickC)
-                    button3.pack()
+#                     root.mainloop()
 
+#                     os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
 
-                    root.mainloop()
+#                     topup_quality = quality
 
-                    os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
+#                     print(topup_quality)
 
-                    topup_quality = quality
 
-                    print(topup_quality)
+#     ################################# CHECK FOR 5TT AND 5TT QUALITY #############################################
 
 
-    ################################# CHECK FOR 5TT AND 5TT QUALITY #############################################
 
+#                 if os.path.isfile(f&#34;{tracto_dir}/gen5tt/5tt.mif&#34;) and os.path.isfile(f&#34;{preproc_dir}/biascorrect/biascorrect.mif&#34;):
 
+#                     has_5tt = 1
 
-                if os.path.isfile(f&#34;{tracto_dir}/gen5tt/5tt.mif&#34;) and os.path.isfile(f&#34;{preproc_dir}/biascorrect/biascorrect.mif&#34;):
+#                     quality = &#34;NA&#34;
 
-                    has_5tt = 1
+#                     ## Open chosen image (mricron, mango, mrview, fsleyes, matplotlib.pyplot.imshow or nilearn.plotting ...) ##
 
-                    quality = &#34;NA&#34;
+#                     command_view = f&#34;mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/gen5tt/5tt.mif -overlay.opacity 0.6 -overlay.colour 0,0,255 -overlay.intensity 0,15000&#34;
 
-                    ## Open chosen image (mricron, mango, mrview, fsleyes, matplotlib.pyplot.imshow or nilearn.plotting ...) ##
 
-                    command_view = f&#34;mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/gen5tt/5tt.mif -overlay.opacity 0.6 -overlay.colour 0,0,255 -overlay.intensity 0,15000&#34;
+#                     pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
+#                            shell=True, preexec_fn=os.setsid) 
 
 
-                    pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
-                           shell=True, preexec_fn=os.setsid) 
+#                     root = Tk()
+#                     root.title(&#34;gray matter / white matter interface quality ?&#34;)
+#                     root.geometry(&#34;500x160&#34;)
+#                     button1 = Button(root,text=&#39;A&#39;, command=clickA)
+#                     button1.pack()
+#                     button2 = Button(root,text=&#39;B&#39;, command=clickB)
+#                     button2.pack()
+#                     button3 = Button(root,text=&#39;C&#39;, command=clickC)
+#                     button3.pack()
 
 
-                    root = Tk()
-                    root.title(&#34;gray matter / white matter interface quality ?&#34;)
-                    root.geometry(&#34;500x160&#34;)
-                    button1 = Button(root,text=&#39;A&#39;, command=clickA)
-                    button1.pack()
-                    button2 = Button(root,text=&#39;B&#39;, command=clickB)
-                    button2.pack()
-                    button3 = Button(root,text=&#39;C&#39;, command=clickC)
-                    button3.pack()
+#                     root.mainloop()
 
+#                     os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
 
-                    root.mainloop()
+#                     m5tt_quality = quality
 
-                    os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
+#                     print(m5tt_quality)
+#     ################################# CHECK FOR GMWMI &amp; GMWMI QUALITY #############################################
 
-                    m5tt_quality = quality
 
-                    print(m5tt_quality)
-    ################################# CHECK FOR GMWMI &amp; GMWMI QUALITY #############################################
 
+#                 if os.path.isfile(f&#34;{tracto_dir}/gmwmi/gmwmi.mif&#34;) and os.path.isfile(f&#34;{preproc_dir}/biascorrect/biascorrect.mif&#34;):
 
+#                     has_gmwmi = 1
 
-                if os.path.isfile(f&#34;{tracto_dir}/gmwmi/gmwmi.mif&#34;) and os.path.isfile(f&#34;{preproc_dir}/biascorrect/biascorrect.mif&#34;):
+#                     quality = &#34;NA&#34;
 
-                    has_gmwmi = 1
+#                     ## Open chosen image (mricron, mango, mrview, fsleyes, matplotlib.pyplot.imshow or nilearn.plotting ...) ##
 
-                    quality = &#34;NA&#34;
+#                     command_view = f&#34;mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/gmwmi/gmwmi.mif -overlay.opacity 0.6 -overlay.colour 0,0,255 -overlay.intensity 0,15000&#34;
 
-                    ## Open chosen image (mricron, mango, mrview, fsleyes, matplotlib.pyplot.imshow or nilearn.plotting ...) ##
 
-                    command_view = f&#34;mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/gmwmi/gmwmi.mif -overlay.opacity 0.6 -overlay.colour 0,0,255 -overlay.intensity 0,15000&#34;
+#                     pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
+#                            shell=True, preexec_fn=os.setsid) 
 
 
-                    pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
-                           shell=True, preexec_fn=os.setsid) 
+#                     root = Tk()
+#                     root.title(&#34;gray matter / white matter interface quality ?&#34;)
+#                     root.geometry(&#34;500x160&#34;)
+#                     button1 = Button(root,text=&#39;A&#39;, command=clickA)
+#                     button1.pack()
+#                     button2 = Button(root,text=&#39;B&#39;, command=clickB)
+#                     button2.pack()
+#                     button3 = Button(root,text=&#39;C&#39;, command=clickC)
+#                     button3.pack()
 
 
-                    root = Tk()
-                    root.title(&#34;gray matter / white matter interface quality ?&#34;)
-                    root.geometry(&#34;500x160&#34;)
-                    button1 = Button(root,text=&#39;A&#39;, command=clickA)
-                    button1.pack()
-                    button2 = Button(root,text=&#39;B&#39;, command=clickB)
-                    button2.pack()
-                    button3 = Button(root,text=&#39;C&#39;, command=clickC)
-                    button3.pack()
+#                     root.mainloop()
 
+#                     os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
 
-                    root.mainloop()
+#                     gmwmi_quality = quality
 
-                    os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
+#                     print(gmwmi_quality)
 
-                    gmwmi_quality = quality
 
-                    print(gmwmi_quality)
+#     ################################# CHECK FOR ANAT2DIFF REGISTRATION QUALITY #############################################
 
 
-    ################################# CHECK FOR ANAT2DIFF REGISTRATION QUALITY #############################################
+#                 if os.path.isfile(f&#34;{tracto_dir}/transformT1/T1_coreg.mif&#34;) and os.path.isfile(f&#34;{preproc_dir}/biascorrect/biascorrect.mif&#34;):
 
+#                     #has_fmap = 1
 
-                if os.path.isfile(f&#34;{tracto_dir}/transformT1/T1_coreg.mif&#34;) and os.path.isfile(f&#34;{preproc_dir}/biascorrect/biascorrect.mif&#34;):
+#                     quality = &#34;NA&#34;
 
-                    #has_fmap = 1
+#                     ## Open chosen image (mricron, mango, mrview, fsleyes, matplotlib.pyplot.imshow or nilearn.plotting ...) ##
 
-                    quality = &#34;NA&#34;
+#                     command_view = f&#34;mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/transformT1/T1_coreg.mif -overlay.opacity 0.6 -overlay.colour 0,0,255 -overlay.intensity 0,15000&#34;
 
-                    ## Open chosen image (mricron, mango, mrview, fsleyes, matplotlib.pyplot.imshow or nilearn.plotting ...) ##
 
-                    command_view = f&#34;mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/transformT1/T1_coreg.mif -overlay.opacity 0.6 -overlay.colour 0,0,255 -overlay.intensity 0,15000&#34;
+#                     pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
+#                            shell=True, preexec_fn=os.setsid) 
 
 
-                    pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
-                           shell=True, preexec_fn=os.setsid) 
+#                     root = Tk()
+#                     root.title(&#34;T1 registration to diffusion space quality ?&#34;)
+#                     root.geometry(&#34;500x160&#34;)
+#                     button1 = Button(root,text=&#39;A&#39;, command=clickA)
+#                     button1.pack()
+#                     button2 = Button(root,text=&#39;B&#39;, command=clickB)
+#                     button2.pack()
+#                     button3 = Button(root,text=&#39;C&#39;, command=clickC)
+#                     button3.pack()
 
 
-                    root = Tk()
-                    root.title(&#34;T1 registration to diffusion space quality ?&#34;)
-                    root.geometry(&#34;500x160&#34;)
-                    button1 = Button(root,text=&#39;A&#39;, command=clickA)
-                    button1.pack()
-                    button2 = Button(root,text=&#39;B&#39;, command=clickB)
-                    button2.pack()
-                    button3 = Button(root,text=&#39;C&#39;, command=clickC)
-                    button3.pack()
+#                     root.mainloop()
 
+#                     os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
 
-                    root.mainloop()
+#                     anat2diff_quality = quality
 
-                    os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
+#                     print(anat2diff_quality)
 
-                    anat2diff_quality = quality
 
-                    print(anat2diff_quality)
+#     ################################# CHECK FOR PROB STREAMLINE REGISTRATION QUALITY #############################################
 
 
-    ################################# CHECK FOR PROB STREAMLINE REGISTRATION QUALITY #############################################
+#                 if os.path.isfile(f&#34;{tracto_dir}/tcksift2/sift_tracks.tck&#34;) and os.path.isfile(f&#34;{preproc_dir}/biascorrect/biascorrect.mif&#34;):
 
+#                     has_probsift = 1
 
-                if os.path.isfile(f&#34;{tracto_dir}/tcksift2/sift_tracks.tck&#34;) and os.path.isfile(f&#34;{preproc_dir}/biascorrect/biascorrect.mif&#34;):
+#                     quality = &#34;NA&#34;
 
-                    has_probsift = 1
+#                     ## Open chosen image (mricron, mango, mrview, fsleyes, matplotlib.pyplot.imshow or nilearn.plotting ...) ##
 
-                    quality = &#34;NA&#34;
+#                     command_view = f&#34;mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/transformT1/T1_coreg.mif -overlay.opacity 0.6 -overlay.colour 0,0,255 -overlay.intensity 0,15000&#34;
 
-                    ## Open chosen image (mricron, mango, mrview, fsleyes, matplotlib.pyplot.imshow or nilearn.plotting ...) ##
 
-                    command_view = f&#34;mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/transformT1/T1_coreg.mif -overlay.opacity 0.6 -overlay.colour 0,0,255 -overlay.intensity 0,15000&#34;
+#                     pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
+#                            shell=True, preexec_fn=os.setsid) 
 
 
-                    pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
-                           shell=True, preexec_fn=os.setsid) 
+#                     root = Tk()
+#                     root.title(&#34;T1 registration to diffusion space quality ?&#34;)
+#                     root.geometry(&#34;500x160&#34;)
+#                     button1 = Button(root,text=&#39;A&#39;, command=clickA)
+#                     button1.pack()
+#                     button2 = Button(root,text=&#39;B&#39;, command=clickB)
+#                     button2.pack()
+#                     button3 = Button(root,text=&#39;C&#39;, command=clickC)
+#                     button3.pack()
 
 
-                    root = Tk()
-                    root.title(&#34;T1 registration to diffusion space quality ?&#34;)
-                    root.geometry(&#34;500x160&#34;)
-                    button1 = Button(root,text=&#39;A&#39;, command=clickA)
-                    button1.pack()
-                    button2 = Button(root,text=&#39;B&#39;, command=clickB)
-                    button2.pack()
-                    button3 = Button(root,text=&#39;C&#39;, command=clickC)
-                    button3.pack()
+#                     root.mainloop()
 
+#                     os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
 
-                    root.mainloop()
+#                     anat2diff_quality = quality
 
-                    os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
+#                     print(anat2diff_quality)
 
-                    anat2diff_quality = quality
 
-                    print(anat2diff_quality)
+#     ################################# CHECK FOR DET STREAMLINE REGISTRATION QUALITY #############################################
 
 
-    ################################# CHECK FOR DET STREAMLINE REGISTRATION QUALITY #############################################
+#                 if os.path.isfile(f&#34;{tracto_dir}/tcksift2Det/sift_tracks.tck&#34;) and os.path.isfile(f&#34;{preproc_dir}/biascorrect/biascorrect.mif&#34;):
 
+#                     has_detsift = 1
 
-                if os.path.isfile(f&#34;{tracto_dir}/tcksift2Det/sift_tracks.tck&#34;) and os.path.isfile(f&#34;{preproc_dir}/biascorrect/biascorrect.mif&#34;):
+#                     quality = &#34;NA&#34;
 
-                    has_detsift = 1
+#                     ## Open chosen image (mricron, mango, mrview, fsleyes, matplotlib.pyplot.imshow or nilearn.plotting ...) ##
 
-                    quality = &#34;NA&#34;
+#                     command_view = f&#34;mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/transformT1/T1_coreg.mif -overlay.opacity 0.6 -overlay.colour 0,0,255 -overlay.intensity 0,15000&#34;
 
-                    ## Open chosen image (mricron, mango, mrview, fsleyes, matplotlib.pyplot.imshow or nilearn.plotting ...) ##
 
-                    command_view = f&#34;mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/transformT1/T1_coreg.mif -overlay.opacity 0.6 -overlay.colour 0,0,255 -overlay.intensity 0,15000&#34;
+#                     pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
+#                            shell=True, preexec_fn=os.setsid) 
 
 
-                    pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
-                           shell=True, preexec_fn=os.setsid) 
+#                     root = Tk()
+#                     root.title(&#34;T1 registration to diffusion space quality ?&#34;)
+#                     root.geometry(&#34;500x160&#34;)
+#                     button1 = Button(root,text=&#39;A&#39;, command=clickA)
+#                     button1.pack()
+#                     button2 = Button(root,text=&#39;B&#39;, command=clickB)
+#                     button2.pack()
+#                     button3 = Button(root,text=&#39;C&#39;, command=clickC)
+#                     button3.pack()
 
 
-                    root = Tk()
-                    root.title(&#34;T1 registration to diffusion space quality ?&#34;)
-                    root.geometry(&#34;500x160&#34;)
-                    button1 = Button(root,text=&#39;A&#39;, command=clickA)
-                    button1.pack()
-                    button2 = Button(root,text=&#39;B&#39;, command=clickB)
-                    button2.pack()
-                    button3 = Button(root,text=&#39;C&#39;, command=clickC)
-                    button3.pack()
+#                     root.mainloop()
 
+#                     os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
 
-                    root.mainloop()
+#                     anat2diff_quality = quality
 
-                    os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
+#                     print(anat2diff_quality)
 
-                    anat2diff_quality = quality
+#                 # if os.path.isfile(f&#34;{ses_dir}/{ses}/anat/{sub}_{ses}_T1w.nii.gz&#34;):
+#                 #     has_anat = 1
+#                 # if os.path.isfile(f&#34;{ses_dir}/{ses}/dwi/{sub}_{ses}_acq-6dirs_dir-AP_dwi.nii.gz&#34;):
+#                 #     has_dwiAP = 1
+#                 # if os.path.isfile(f&#34;{ses_dir}/{ses}/dwi/{sub}_{ses}_acq-60dirs_dir-PA_dwi.nii.gz&#34;):
+#                 #     has_dwiPA = 1
+#                 # if os.path.isfile(f&#34;{ses_dir}/{ses}/func/{sub}_{ses}_task-rest_bold.nii.gz&#34;):
+#                 #     has_rsfmri = 1
 
-                    print(anat2diff_quality)
 
-                # if os.path.isfile(f&#34;{ses_dir}/{ses}/anat/{sub}_{ses}_T1w.nii.gz&#34;):
-                #     has_anat = 1
-                # if os.path.isfile(f&#34;{ses_dir}/{ses}/dwi/{sub}_{ses}_acq-6dirs_dir-AP_dwi.nii.gz&#34;):
-                #     has_dwiAP = 1
-                # if os.path.isfile(f&#34;{ses_dir}/{ses}/dwi/{sub}_{ses}_acq-60dirs_dir-PA_dwi.nii.gz&#34;):
-                #     has_dwiPA = 1
-                # if os.path.isfile(f&#34;{ses_dir}/{ses}/func/{sub}_{ses}_task-rest_bold.nii.gz&#34;):
-                #     has_rsfmri = 1
+#                 row_iter = {&#39;Group&#39;: g, &#39;subject_id&#39;: sub,&#39;session_id&#39;: ses,&#39;anat&#39;:has_anat,&#39;dwiAP&#39;: has_dwiAP,&#39;dwiPA&#39;:has_dwiPA,&#39;rsfmri&#39;:has_rsfmri,&#39;fmap&#39; : has_fmap,&#39;PE_direction&#39;:phase_encoding_dir}
+#                 df = df._append(row_iter,ignore_index=True)
+#                # row_iter = pd.DataFrame(row_iter)
 
+#                 #df = pd.concat([df,row_iter],ignore_index=True)
 
-                row_iter = {&#39;Group&#39;: g, &#39;subject_id&#39;: sub,&#39;session_id&#39;: ses,&#39;anat&#39;:has_anat,&#39;dwiAP&#39;: has_dwiAP,&#39;dwiPA&#39;:has_dwiPA,&#39;rsfmri&#39;:has_rsfmri,&#39;fmap&#39; : has_fmap,&#39;PE_direction&#39;:phase_encoding_dir}
-                df = df._append(row_iter,ignore_index=True)
-               # row_iter = pd.DataFrame(row_iter)
 
-                #df = pd.concat([df,row_iter],ignore_index=True)
 
-
-
-    df.to_csv(&#34;/mnt/POOL_IRM08/CONHECT/irm_inventory_conhect_patients.csv&#34;) ### To change
+#     df.to_csv(&#34;/mnt/POOL_IRM08/CONHECT/irm_inventory_conhect_patients.csv&#34;) ### To change
         </code></pre>
 </details>
 </section>
@@ -409,384 +409,6 @@ def execute_qa_check(data_dir: str,source_dir : str,base_dir: str,start: int,gro
 <section>
 </section>
 <section>
-<h2 class="section-title" id="header-functions">Functions</h2>
-<dl>
-<dt id="pytracto.QA_check.QA_check_v2.clickA"><code class="name flex">
-<span>def <span class="ident">clickA</span></span>(<span>)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def clickA():
-    global quality
-    quality = &#34;A&#34;
-    root.destroy()
-    #close opened image
-    return quality</code></pre>
-</details>
-</dd>
-<dt id="pytracto.QA_check.QA_check_v2.clickB"><code class="name flex">
-<span>def <span class="ident">clickB</span></span>(<span>)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def clickB():
-    global quality
-    quality = &#34;B&#34;
-    root.destroy()
-    #close opened image
-    return quality</code></pre>
-</details>
-</dd>
-<dt id="pytracto.QA_check.QA_check_v2.clickC"><code class="name flex">
-<span>def <span class="ident">clickC</span></span>(<span>)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def clickC():
-    global quality
-    quality = &#34;C&#34;
-    root.destroy()
-    #close opened image
-    return quality</code></pre>
-</details>
-</dd>
-<dt id="pytracto.QA_check.QA_check_v2.execute_qa_check"><code class="name flex">
-<span>def <span class="ident">execute_qa_check</span></span>(<span>data_dir: str, source_dir: str, base_dir: str, start: int, group: str, ses_list: list)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>This function is an interactive program for quality assessment of the outputs of the dMRI pipeline.
-It creates an excel with steps qualities.</p>
-<p>Args:
-data_dir (str): directory that points to the pipeline's output directory
-source_dir (str): source directory where dicom are located
-base_dir (str): base directory
-start (int): line in the excel to (re) start
-group (str): group of subjects (either patients, temoins etc. )
-ses_list (list[int]): list of sessions to be processed</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def execute_qa_check(data_dir: str,source_dir : str,base_dir: str,start: int,group: str,ses_list: list):
-    &#34;&#34;&#34;
-    This function is an interactive program for quality assessment of the outputs of the dMRI pipeline. 
-    It creates an excel with steps qualities.
-
-    Args: 
-        data_dir (str): directory that points to the pipeline&#39;s output directory
-        source_dir (str): source directory where dicom are located
-        base_dir (str): base directory
-        start (int): line in the excel to (re) start
-        group (str): group of subjects (either patients, temoins etc. )
-        ses_list (list[int]): list of sessions to be processed
-
-    &#34;&#34;&#34;
-    
-    columns = [&#39;Group&#39;, &#39;subject_id&#39;, &#39;session_id&#39;,&#39;anat&#39;,&#39;dwiAP&#39;,&#39;dwiPA&#39;,&#39;rsfmri&#39;,&#39;fmap&#39;,&#39;PE_direction&#39;,&#39;topup&#39;,&#39;topupquality&#39;,&#39;5tt mask&#39;,&#39;5tt quality&#39;,&#39;gmwmi&#39;,&#39;gmwmi quality&#39;, &#39;anat2diff quality&#39;,&#39;streamline reg quality&#39;]
-
-    df = pd.DataFrame(columns=columns)
-
-    # # Create a dictionary with the data for the new row
-
-
-
-    for g in group:
-
-        for ses in ses_list:
-
-            result_list_Ses,result_list_even,result_list_odd,result_list_not, haveProblem = get_ids_by_sessions(source_dir,base_dir,g,ses)
-
-            #print(subjects_list)
-
-            subjects_list = result_list_Ses[0].split(&#39;,&#39;)
-
-            print(subjects_list)
-
-            ## Loop over patient ##
-
-
-            for sub in subjects_list:
-
-
-                has_fmap = 0
-                has_anat = 0
-                has_dwiAP = 0
-                has_dwiPA = 0
-                has_rsfmri = 0
-                phase_encoding_dir = &#34;NA&#34;
-
-                subject_id = &#39;sub-&#39; + sub
-                session_id = &#39;ses-00&#39; + str(ses)
-                identifier = &#39;_ses_id_00&#39; + str(ses) + &#39;_subject_id_&#39; + sub
-
-                print(identifier)
-
-                tracto_dir = os.path.join(data_dir,&#39;main_workflow&#39;,&#39;wf_tractography&#39;,identifier)
-                connectome_dir=  os.path.join(data_dir,&#39;main_workflow&#39;,&#39;connectome&#39;,identifier)
-                preproc_dir = os.path.join(data_dir,&#39;main_workflow&#39;,&#39;preproc&#39;,identifier)
-
-
-    ################################# CHECK FOR TOPUP &amp; TOPUP QUALITY #############################################
-
-
-                if os.path.isfile(f&#34;{preproc_dir}/dwpreproc/preproc.mif&#34;):
-
-                    has_topup = 1
-
-                    quality = &#34;NA&#34;
-
-                    ## Open chosen image (mricron, mango, mrview, fsleyes, matplotlib.pyplot.imshow or nilearn.plotting ...) ##
-
-                    command_view = f&#34;mrview {base_dir}/nifti3/{g}/{subject_id}/{session_id}/anat/{subject_id}_{session_id}_T1w.nii.gz -overlay.load {preproc_dir}/dwpreproc/preproc.mif&#34;# -overlay.opacity 0.6 -overlay.colour 0,0,255 &#34;
-
-
-                    pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
-                           shell=True, preexec_fn=os.setsid) 
-
-
-                    root = Tk()
-                    root.title(&#34;T1 registration to diffusion space quality ?&#34;)
-                    root.geometry(&#34;500x160&#34;)
-                    button1 = Button(root,text=&#39;A&#39;, command=clickA)
-                    button1.pack()
-                    button2 = Button(root,text=&#39;B&#39;, command=clickB)
-                    button2.pack()
-                    button3 = Button(root,text=&#39;C&#39;, command=clickC)
-                    button3.pack()
-
-
-                    root.mainloop()
-
-                    os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
-
-                    topup_quality = quality
-
-                    print(topup_quality)
-
-
-    ################################# CHECK FOR 5TT AND 5TT QUALITY #############################################
-
-
-
-                if os.path.isfile(f&#34;{tracto_dir}/gen5tt/5tt.mif&#34;) and os.path.isfile(f&#34;{preproc_dir}/biascorrect/biascorrect.mif&#34;):
-
-                    has_5tt = 1
-
-                    quality = &#34;NA&#34;
-
-                    ## Open chosen image (mricron, mango, mrview, fsleyes, matplotlib.pyplot.imshow or nilearn.plotting ...) ##
-
-                    command_view = f&#34;mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/gen5tt/5tt.mif -overlay.opacity 0.6 -overlay.colour 0,0,255 -overlay.intensity 0,15000&#34;
-
-
-                    pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
-                           shell=True, preexec_fn=os.setsid) 
-
-
-                    root = Tk()
-                    root.title(&#34;gray matter / white matter interface quality ?&#34;)
-                    root.geometry(&#34;500x160&#34;)
-                    button1 = Button(root,text=&#39;A&#39;, command=clickA)
-                    button1.pack()
-                    button2 = Button(root,text=&#39;B&#39;, command=clickB)
-                    button2.pack()
-                    button3 = Button(root,text=&#39;C&#39;, command=clickC)
-                    button3.pack()
-
-
-                    root.mainloop()
-
-                    os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
-
-                    m5tt_quality = quality
-
-                    print(m5tt_quality)
-    ################################# CHECK FOR GMWMI &amp; GMWMI QUALITY #############################################
-
-
-
-                if os.path.isfile(f&#34;{tracto_dir}/gmwmi/gmwmi.mif&#34;) and os.path.isfile(f&#34;{preproc_dir}/biascorrect/biascorrect.mif&#34;):
-
-                    has_gmwmi = 1
-
-                    quality = &#34;NA&#34;
-
-                    ## Open chosen image (mricron, mango, mrview, fsleyes, matplotlib.pyplot.imshow or nilearn.plotting ...) ##
-
-                    command_view = f&#34;mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/gmwmi/gmwmi.mif -overlay.opacity 0.6 -overlay.colour 0,0,255 -overlay.intensity 0,15000&#34;
-
-
-                    pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
-                           shell=True, preexec_fn=os.setsid) 
-
-
-                    root = Tk()
-                    root.title(&#34;gray matter / white matter interface quality ?&#34;)
-                    root.geometry(&#34;500x160&#34;)
-                    button1 = Button(root,text=&#39;A&#39;, command=clickA)
-                    button1.pack()
-                    button2 = Button(root,text=&#39;B&#39;, command=clickB)
-                    button2.pack()
-                    button3 = Button(root,text=&#39;C&#39;, command=clickC)
-                    button3.pack()
-
-
-                    root.mainloop()
-
-                    os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
-
-                    gmwmi_quality = quality
-
-                    print(gmwmi_quality)
-
-
-    ################################# CHECK FOR ANAT2DIFF REGISTRATION QUALITY #############################################
-
-
-                if os.path.isfile(f&#34;{tracto_dir}/transformT1/T1_coreg.mif&#34;) and os.path.isfile(f&#34;{preproc_dir}/biascorrect/biascorrect.mif&#34;):
-
-                    #has_fmap = 1
-
-                    quality = &#34;NA&#34;
-
-                    ## Open chosen image (mricron, mango, mrview, fsleyes, matplotlib.pyplot.imshow or nilearn.plotting ...) ##
-
-                    command_view = f&#34;mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/transformT1/T1_coreg.mif -overlay.opacity 0.6 -overlay.colour 0,0,255 -overlay.intensity 0,15000&#34;
-
-
-                    pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
-                           shell=True, preexec_fn=os.setsid) 
-
-
-                    root = Tk()
-                    root.title(&#34;T1 registration to diffusion space quality ?&#34;)
-                    root.geometry(&#34;500x160&#34;)
-                    button1 = Button(root,text=&#39;A&#39;, command=clickA)
-                    button1.pack()
-                    button2 = Button(root,text=&#39;B&#39;, command=clickB)
-                    button2.pack()
-                    button3 = Button(root,text=&#39;C&#39;, command=clickC)
-                    button3.pack()
-
-
-                    root.mainloop()
-
-                    os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
-
-                    anat2diff_quality = quality
-
-                    print(anat2diff_quality)
-
-
-    ################################# CHECK FOR PROB STREAMLINE REGISTRATION QUALITY #############################################
-
-
-                if os.path.isfile(f&#34;{tracto_dir}/tcksift2/sift_tracks.tck&#34;) and os.path.isfile(f&#34;{preproc_dir}/biascorrect/biascorrect.mif&#34;):
-
-                    has_probsift = 1
-
-                    quality = &#34;NA&#34;
-
-                    ## Open chosen image (mricron, mango, mrview, fsleyes, matplotlib.pyplot.imshow or nilearn.plotting ...) ##
-
-                    command_view = f&#34;mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/transformT1/T1_coreg.mif -overlay.opacity 0.6 -overlay.colour 0,0,255 -overlay.intensity 0,15000&#34;
-
-
-                    pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
-                           shell=True, preexec_fn=os.setsid) 
-
-
-                    root = Tk()
-                    root.title(&#34;T1 registration to diffusion space quality ?&#34;)
-                    root.geometry(&#34;500x160&#34;)
-                    button1 = Button(root,text=&#39;A&#39;, command=clickA)
-                    button1.pack()
-                    button2 = Button(root,text=&#39;B&#39;, command=clickB)
-                    button2.pack()
-                    button3 = Button(root,text=&#39;C&#39;, command=clickC)
-                    button3.pack()
-
-
-                    root.mainloop()
-
-                    os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
-
-                    anat2diff_quality = quality
-
-                    print(anat2diff_quality)
-
-
-    ################################# CHECK FOR DET STREAMLINE REGISTRATION QUALITY #############################################
-
-
-                if os.path.isfile(f&#34;{tracto_dir}/tcksift2Det/sift_tracks.tck&#34;) and os.path.isfile(f&#34;{preproc_dir}/biascorrect/biascorrect.mif&#34;):
-
-                    has_detsift = 1
-
-                    quality = &#34;NA&#34;
-
-                    ## Open chosen image (mricron, mango, mrview, fsleyes, matplotlib.pyplot.imshow or nilearn.plotting ...) ##
-
-                    command_view = f&#34;mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/transformT1/T1_coreg.mif -overlay.opacity 0.6 -overlay.colour 0,0,255 -overlay.intensity 0,15000&#34;
-
-
-                    pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
-                           shell=True, preexec_fn=os.setsid) 
-
-
-                    root = Tk()
-                    root.title(&#34;T1 registration to diffusion space quality ?&#34;)
-                    root.geometry(&#34;500x160&#34;)
-                    button1 = Button(root,text=&#39;A&#39;, command=clickA)
-                    button1.pack()
-                    button2 = Button(root,text=&#39;B&#39;, command=clickB)
-                    button2.pack()
-                    button3 = Button(root,text=&#39;C&#39;, command=clickC)
-                    button3.pack()
-
-
-                    root.mainloop()
-
-                    os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
-
-                    anat2diff_quality = quality
-
-                    print(anat2diff_quality)
-
-                # if os.path.isfile(f&#34;{ses_dir}/{ses}/anat/{sub}_{ses}_T1w.nii.gz&#34;):
-                #     has_anat = 1
-                # if os.path.isfile(f&#34;{ses_dir}/{ses}/dwi/{sub}_{ses}_acq-6dirs_dir-AP_dwi.nii.gz&#34;):
-                #     has_dwiAP = 1
-                # if os.path.isfile(f&#34;{ses_dir}/{ses}/dwi/{sub}_{ses}_acq-60dirs_dir-PA_dwi.nii.gz&#34;):
-                #     has_dwiPA = 1
-                # if os.path.isfile(f&#34;{ses_dir}/{ses}/func/{sub}_{ses}_task-rest_bold.nii.gz&#34;):
-                #     has_rsfmri = 1
-
-
-                row_iter = {&#39;Group&#39;: g, &#39;subject_id&#39;: sub,&#39;session_id&#39;: ses,&#39;anat&#39;:has_anat,&#39;dwiAP&#39;: has_dwiAP,&#39;dwiPA&#39;:has_dwiPA,&#39;rsfmri&#39;:has_rsfmri,&#39;fmap&#39; : has_fmap,&#39;PE_direction&#39;:phase_encoding_dir}
-                df = df._append(row_iter,ignore_index=True)
-               # row_iter = pd.DataFrame(row_iter)
-
-                #df = pd.concat([df,row_iter],ignore_index=True)
-
-
-
-    df.to_csv(&#34;/mnt/POOL_IRM08/CONHECT/irm_inventory_conhect_patients.csv&#34;) ### To change</code></pre>
-</details>
-</dd>
-</dl>
 </section>
 <section>
 </section>
@@ -800,14 +422,6 @@ ses_list (list[int]): list of sessions to be processed</p></div>
 <li><h3>Super-module</h3>
 <ul>
 <li><code><a title="pytracto.QA_check" href="index.html">pytracto.QA_check</a></code></li>
-</ul>
-</li>
-<li><h3><a href="#header-functions">Functions</a></h3>
-<ul class="">
-<li><code><a title="pytracto.QA_check.QA_check_v2.clickA" href="#pytracto.QA_check.QA_check_v2.clickA">clickA</a></code></li>
-<li><code><a title="pytracto.QA_check.QA_check_v2.clickB" href="#pytracto.QA_check.QA_check_v2.clickB">clickB</a></code></li>
-<li><code><a title="pytracto.QA_check.QA_check_v2.clickC" href="#pytracto.QA_check.QA_check_v2.clickC">clickC</a></code></li>
-<li><code><a title="pytracto.QA_check.QA_check_v2.execute_qa_check" href="#pytracto.QA_check.QA_check_v2.execute_qa_check">execute_qa_check</a></code></li>
 </ul>
 </li>
 </ul>
