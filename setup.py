@@ -20,7 +20,7 @@ setup(
     'pandas',
     'numpy',
     'matplotlib',
-    'dmri-amico'
+    'dmri-amico @ git+https://github.com/daducci/AMICO.git#egg=dmri-amico'
     ]
 )
 #'dmri-amico>=2.0.1'
