@@ -4,8 +4,7 @@
 
 
 tckgen_method = ["Probabilistic"]
-atlas_list = ["Schaefer","Destrieux"]
-
+atlas_list = ["Schaefer", "Destrieux"]
 
 
 parcellate_schaefer = True

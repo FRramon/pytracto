@@ -14,7 +14,6 @@
 # from collections import defaultdict
 
 
-
 # sub = sys.argv[1]
 # ses = sys.argv[2]
 # source_dir = sys.argv[3]
@@ -32,18 +31,18 @@
 # def invert_non_zero_elements(matrix):
 #     # Find the non-zero elements
 #     non_zero_indices = matrix != 0
-    
+
 #     # Invert the non-zero elements
 #     inverted_elements = 1 / matrix[non_zero_indices]
-    
+
 #     # Assign the inverted elements back to the original matrix
 #     matrix[non_zero_indices] = inverted_elements
-    
+
 #     return matrix
 
 
 # def co_classification_matrix(adjacency_matrix, gamma_min, gamma_max, num_clusterings):
-    
+
 #     co_class_matrix = np.zeros((adjacency_matrix.shape[0], adjacency_matrix.shape[1]))
 
 #     for k in range(1, num_clusterings):
@@ -77,7 +76,7 @@
 
 # def get_co_classification_matrix(adjacency_matrix,gamma_min,gamma_max,num_clusterings):
 
- 
+
 #     co_class_matrix = co_classification_matrix(adjacency_matrix,gamma_min,gamma_max,num_clusterings)
 
 #     ########### Creating a DataFrame from the co-classification matrix ###########
@@ -92,7 +91,7 @@
 #     den = scipy.cluster.hierarchy.dendrogram(ClustMap.dendrogram_col.linkage,
 #                                              labels=df_coclass.index,
 #                                              color_threshold=0.60)
-    
+
 
 #     ########### Extracting clusters from dendrogram ###########
 #     clusters = get_cluster_classes(den)
@@ -113,7 +112,7 @@
 #     # print(len(clusters['C1']))
 #     # print(len(clusters['C0']))
 #     # print(len(clusters['C2']))
- 
+
 #     print(df_coclass.shape[0])
 #     print(cluster)
 
@@ -134,10 +133,8 @@
 #     return f'{random.randint(0, 255)}'
 
 
-
 # def createCustomLUT(source_dir,df_coclass):
 
-  
 
 #     n = get_cluster_number(df_coclass)
 #     print(n)
@@ -169,9 +166,7 @@
 #     print(df_LUT.head())
 
 
-
 #     return df_LUT
-
 
 
 # def main(source_dir,sub,ses,gamma_min,gamma_max,num_clusterings):
@@ -198,7 +193,6 @@
 
 #     output_file_path = source_dir + f'/results_test2/sub-{sub}/ses-{ses}/5_Connectome/sub-{sub}_ses-{ses}_customLUT.txt'
 #     df_LUT.to_csv(output_file_path, sep=' ', index=False,header=None)
-    
 
 
 # if __name__ == '__main__':

@@ -23,14 +23,14 @@
 # #     root.destroy()
 # #     #close opened image
 # #     return phase_encoding_dir
-    
+
 # # def click2PA():
 # #     global phase_encoding_dir
 # #     phase_encoding_dir = "2 PA"
 # #     root.destroy()
 # #     #close opened image
 # #     return phase_encoding_dir
-    
+
 # # def click2AP():
 # #     global phase_encoding_dir
 # #     phase_encoding_dir = "2 AP"
@@ -70,10 +70,10 @@
 
 # def execute_qa_check(data_dir: str,source_dir : str,base_dir: str,start: int,group: str,ses_list: list):
 #     """
-#     This function is an interactive program for quality assessment of the outputs of the dMRI pipeline. 
+#     This function is an interactive program for quality assessment of the outputs of the dMRI pipeline.
 #     It creates an excel with steps qualities.
 
-#     Args: 
+#     Args:
 #         data_dir (str): directory that points to the pipeline's output directory
 #         source_dir (str): source directory where dicom are located
 #         base_dir (str): base directory
@@ -88,7 +88,6 @@
 #     df = pd.DataFrame(columns=columns)
 
 #     # # Create a dictionary with the data for the new row
-
 
 
 #     for g in group:
@@ -141,8 +140,8 @@
 #                     command_view = f"mrview {base_dir}/nifti3/{g}/{subject_id}/{session_id}/anat/{subject_id}_{session_id}_T1w.nii.gz -overlay.load {preproc_dir}/dwpreproc/preproc.mif"# -overlay.opacity 0.6 -overlay.colour 0,0,255 "
 
 
-#                     pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
-#                            shell=True, preexec_fn=os.setsid) 
+#                     pro = subprocess.Popen(command_view, stdout=subprocess.PIPE,
+#                            shell=True, preexec_fn=os.setsid)
 
 
 #                     root = Tk()
@@ -158,7 +157,7 @@
 
 #                     root.mainloop()
 
-#                     os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
+#                     os.killpg(os.getpgid(pro.pid), signal.SIGTERM)
 
 #                     topup_quality = quality
 
@@ -166,7 +165,6 @@
 
 
 #     ################################# CHECK FOR 5TT AND 5TT QUALITY #############################################
-
 
 
 #                 if os.path.isfile(f"{tracto_dir}/gen5tt/5tt.mif") and os.path.isfile(f"{preproc_dir}/biascorrect/biascorrect.mif"):
@@ -180,8 +178,8 @@
 #                     command_view = f"mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/gen5tt/5tt.mif -overlay.opacity 0.6 -overlay.colour 0,0,255 -overlay.intensity 0,15000"
 
 
-#                     pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
-#                            shell=True, preexec_fn=os.setsid) 
+#                     pro = subprocess.Popen(command_view, stdout=subprocess.PIPE,
+#                            shell=True, preexec_fn=os.setsid)
 
 
 #                     root = Tk()
@@ -197,13 +195,12 @@
 
 #                     root.mainloop()
 
-#                     os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
+#                     os.killpg(os.getpgid(pro.pid), signal.SIGTERM)
 
 #                     m5tt_quality = quality
 
 #                     print(m5tt_quality)
 #     ################################# CHECK FOR GMWMI & GMWMI QUALITY #############################################
-
 
 
 #                 if os.path.isfile(f"{tracto_dir}/gmwmi/gmwmi.mif") and os.path.isfile(f"{preproc_dir}/biascorrect/biascorrect.mif"):
@@ -217,8 +214,8 @@
 #                     command_view = f"mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/gmwmi/gmwmi.mif -overlay.opacity 0.6 -overlay.colour 0,0,255 -overlay.intensity 0,15000"
 
 
-#                     pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
-#                            shell=True, preexec_fn=os.setsid) 
+#                     pro = subprocess.Popen(command_view, stdout=subprocess.PIPE,
+#                            shell=True, preexec_fn=os.setsid)
 
 
 #                     root = Tk()
@@ -234,7 +231,7 @@
 
 #                     root.mainloop()
 
-#                     os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
+#                     os.killpg(os.getpgid(pro.pid), signal.SIGTERM)
 
 #                     gmwmi_quality = quality
 
@@ -255,8 +252,8 @@
 #                     command_view = f"mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/transformT1/T1_coreg.mif -overlay.opacity 0.6 -overlay.colour 0,0,255 -overlay.intensity 0,15000"
 
 
-#                     pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
-#                            shell=True, preexec_fn=os.setsid) 
+#                     pro = subprocess.Popen(command_view, stdout=subprocess.PIPE,
+#                            shell=True, preexec_fn=os.setsid)
 
 
 #                     root = Tk()
@@ -272,7 +269,7 @@
 
 #                     root.mainloop()
 
-#                     os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
+#                     os.killpg(os.getpgid(pro.pid), signal.SIGTERM)
 
 #                     anat2diff_quality = quality
 
@@ -293,8 +290,8 @@
 #                     command_view = f"mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/transformT1/T1_coreg.mif -overlay.opacity 0.6 -overlay.colour 0,0,255 -overlay.intensity 0,15000"
 
 
-#                     pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
-#                            shell=True, preexec_fn=os.setsid) 
+#                     pro = subprocess.Popen(command_view, stdout=subprocess.PIPE,
+#                            shell=True, preexec_fn=os.setsid)
 
 
 #                     root = Tk()
@@ -310,7 +307,7 @@
 
 #                     root.mainloop()
 
-#                     os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
+#                     os.killpg(os.getpgid(pro.pid), signal.SIGTERM)
 
 #                     anat2diff_quality = quality
 
@@ -331,8 +328,8 @@
 #                     command_view = f"mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/transformT1/T1_coreg.mif -overlay.opacity 0.6 -overlay.colour 0,0,255 -overlay.intensity 0,15000"
 
 
-#                     pro = subprocess.Popen(command_view, stdout=subprocess.PIPE, 
-#                            shell=True, preexec_fn=os.setsid) 
+#                     pro = subprocess.Popen(command_view, stdout=subprocess.PIPE,
+#                            shell=True, preexec_fn=os.setsid)
 
 
 #                     root = Tk()
@@ -348,7 +345,7 @@
 
 #                     root.mainloop()
 
-#                     os.killpg(os.getpgid(pro.pid), signal.SIGTERM)  
+#                     os.killpg(os.getpgid(pro.pid), signal.SIGTERM)
 
 #                     anat2diff_quality = quality
 
@@ -371,6 +368,5 @@
 #                 #df = pd.concat([df,row_iter],ignore_index=True)
 
 
-
 #     df.to_csv("/mnt/POOL_IRM08/CONHECT/irm_inventory_conhect_patients.csv") ### To change
-        
+

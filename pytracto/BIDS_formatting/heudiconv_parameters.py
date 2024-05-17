@@ -12,8 +12,8 @@ DOheudiconv = False
 dryrun_rename = False
 dryrun_heudiconv = False
 
-converter = 'dcm2niix'  # none or dcm2niix
-heuristic_filename = 'heuristic_conhect.py'
+converter = "dcm2niix"  # none or dcm2niix
+heuristic_filename = "heuristic_conhect.py"
 
-# Group selection #### CHANGE ! 
-groups = ['Patients']
+# Group selection #### CHANGE !
+groups = ["Patients"]

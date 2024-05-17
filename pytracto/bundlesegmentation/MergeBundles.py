@@ -1,7 +1,7 @@
-#MergeBundles**
+# MergeBundles**
 import os
 import subprocess
-from sympy import primerange,factorint
+from sympy import primerange, factorint
 import dipy
 from dipy.io.image import load_nifti, save_nifti
 import matplotlib.pyplot as plt
@@ -12,251 +12,262 @@ from copy import deepcopy
 from matplotlib.colors import ListedColormap
 
 
-#data_dir = '/mnt/CONHECT_data/pipe_upto_21dec/main_workflow/bundle_segmentation/_ses_id_001_subject_id_02'
+# data_dir = '/mnt/CONHECT_data/pipe_upto_21dec/main_workflow/bundle_segmentation/_ses_id_001_subject_id_02'
 
 
 # #print(os.listdir(data_dir))
 # bundlemif_dir = data_dir + '/tractseg_output/bundles_mif'
 # if not os.path.exists(bundlemif_dir):
 # 	os.mkdir(bundlemif_dir)
-	
 
-#from pathlib import Path
+
+# from pathlib import Path
+
 
 def create_intersection_image(bundle_dir: str, mask_paths: str, output_path: str):
-	"""
-	Create a 72 channels image for each 72 segmented masks by tractseg
+    """
+    Create a 72 channels image for each 72 segmented masks by tractseg
 
-	Args:
-		bundle_dir (str): directory where are located Tractseg outputs
-		mask_path (str): children directory of bundle_dir
-		output_path (str): path for writing the stacked image
-	"""
+    Args:
+            bundle_dir (str): directory where are located Tractseg outputs
+            mask_path (str): children directory of bundle_dir
+            output_path (str): path for writing the stacked image
+    """
     # Load all the masks into a NumPy array
-	print(mask_paths[1])
-	masks = [load_nifti(f'{bundle_dir}/{path}')[0] for path in mask_paths]
-	masks = np.stack(masks, axis=-1)
-	np.save(f'{bundle_dir}/stacked_mask.npy',masks)
-	return masks
+    print(mask_paths[1])
+    masks = [load_nifti(f"{bundle_dir}/{path}")[0] for path in mask_paths]
+    masks = np.stack(masks, axis=-1)
+    np.save(f"{bundle_dir}/stacked_mask.npy", masks)
+    return masks
 
 
 def create_equivalence_table(bundle_dir: str):
-	"""
-	Create an equivalence table between bundle id and bundle name
+    """
+    Create an equivalence table between bundle id and bundle name
 
-	Args:
-		bundle_dir (str): directory where are located Tractseg outputs
-	"""
-	n = len(os.listdir(bundle_dir))
-	indexes = [i for i in range(n)]
-	labels = [X[:-7] for X in os.listdir(bundle_dir)]
-	equi = pd.DataFrame({'index' : indexes, 'label' : labels})
+    Args:
+            bundle_dir (str): directory where are located Tractseg outputs
+    """
+    n = len(os.listdir(bundle_dir))
+    indexes = [i for i in range(n)]
+    labels = [X[:-7] for X in os.listdir(bundle_dir)]
+    equi = pd.DataFrame({"index": indexes, "label": labels})
 
-	print(equi.head())
-	equi.to_csv(f'{data_dir}/equivalence_bundle_table.csv')
+    print(equi.head())
+    equi.to_csv(f"{data_dir}/equivalence_bundle_table.csv")
 
-	return equi
-	
+    return equi
 
-def gen_sphere(x0: int,y0: int,z0: int,radius: int):
-	"""
-	Generate a sphere of center (x0,y0,z0) and radii radius. In a np array of size 145,174,145
 
-	Args:
-		x0 (int): x coordinate for the center of the sphere
-		y0 (int): y coordinate for the center of the sphere
-		z0 (int): z coordinate for the center of the sphere
-		radius (int): radius of the sphere
+def gen_sphere(x0: int, y0: int, z0: int, radius: int):
+    """
+    Generate a sphere of center (x0,y0,z0) and radii radius. In a np array of size 145,174,145
 
-	"""
+    Args:
+            x0 (int): x coordinate for the center of the sphere
+            y0 (int): y coordinate for the center of the sphere
+            z0 (int): z coordinate for the center of the sphere
+            radius (int): radius of the sphere
 
-	size1,size2,size3 = 145,174,145 
+    """
 
-	A = np.zeros((size1,size2, size3)) 
+    size1, size2, size3 = 145, 174, 145
 
-	AA = deepcopy(A) 
+    A = np.zeros((size1, size2, size3))
 
-	
-	for x in range(x0-radius, x0+radius+1):
-	    for y in range(y0-radius, y0+radius+1):
-	        for z in range(z0-radius, z0+radius+1):
-	            ''' deb: measures how far a coordinate in A is far from the center. 
+    AA = deepcopy(A)
+
+    for x in range(x0 - radius, x0 + radius + 1):
+        for y in range(y0 - radius, y0 + radius + 1):
+            for z in range(z0 - radius, z0 + radius + 1):
+                """ deb: measures how far a coordinate in A is far from the center. 
 	                    deb>=0: inside the sphere.
-	                    deb<0: outside the sphere.'''   
-	            deb = radius - ((x0-x)**2 + (y0-y)**2 + (z0-z)**2)**0.5
-	            if (deb)>=0: AA[x,y,z] = 1
+	                    deb<0: outside the sphere."""
+                deb = radius - ((x0 - x) ** 2 + (y0 - y) ** 2 + (z0 - z) ** 2) ** 0.5
+                if (deb) >= 0:
+                    AA[x, y, z] = 1
 
-	np.save('/mnt/CONHECT_data/code/4_BundleSegmentation/sphere_mask.npy',AA)
+    np.save("/mnt/CONHECT_data/code/4_BundleSegmentation/sphere_mask.npy", AA)
 
-	nifti_img = nib.Nifti1Image(AA, affine=np.eye(4))
+    nifti_img = nib.Nifti1Image(AA, affine=np.eye(4))
 
-	# Save the NIfTI image to a file (replace 'output.nii.gz' with your desired filename)
-	nib.save(nifti_img, '/mnt/CONHECT_data/code/4_BundleSegmentation/sphere_mask.nii.gz')
+    # Save the NIfTI image to a file (replace 'output.nii.gz' with your desired filename)
+    nib.save(
+        nifti_img, "/mnt/CONHECT_data/code/4_BundleSegmentation/sphere_mask.nii.gz"
+    )
 
-	return AA
+    return AA
 
 
-def get_masked_infos(stack,sphere_mask,x0 : int,y0 : int,z0 : int,radius : int):
-	"""
-	Mask the 72 mask image into the sphere mask space
+def get_masked_infos(stack, sphere_mask, x0: int, y0: int, z0: int, radius: int):
+    """
+    Mask the 72 mask image into the sphere mask space
 
-	Args:
-		stack (numpy array): stacked image
-		sphere_mask (numpy array): mask of the sphere in the dimension of the original image
-		x0 (int): x coordinate for the center of the sphere
-		y0 (int): y coordinate for the center of the sphere
-		z0 (int): z coordinate for the center of the sphere
-		radius (int): radius of the sphere
+    Args:
+            stack (numpy array): stacked image
+            sphere_mask (numpy array): mask of the sphere in the dimension of the original image
+            x0 (int): x coordinate for the center of the sphere
+            y0 (int): y coordinate for the center of the sphere
+            z0 (int): z coordinate for the center of the sphere
+            radius (int): radius of the sphere
 
-	"""
+    """
     # stack = np.load(data_dir + '/stacked_mask.npy',allow_pickle=True).astype(np.int_)
     # sphere_mask = np.load('/mnt/CONHECT_data/code/test_sphere/sphere_mask.npy')
 
-	print('Mask stacked data with the mask')
-	masked_stack = np.zeros_like(stack)
-	for k in range(stack.shape[3]):
-		masked_stack[:,:,:,k] = np.multiply(stack[:,:,:,k],sphere_mask)
-	print('done')
+    print("Mask stacked data with the mask")
+    masked_stack = np.zeros_like(stack)
+    for k in range(stack.shape[3]):
+        masked_stack[:, :, :, k] = np.multiply(stack[:, :, :, k], sphere_mask)
+    print("done")
+
+    size = np.shape(masked_stack)
+
+    print("Truncate masked data to the smaller space")
+    masked_trunc = masked_stack[
+        x0 - radius : x0 + radius + 1,
+        y0 - radius : y0 + radius + 1,
+        z0 - radius : z0 + radius + 1,
+        :,
+    ]
+    print("done")
+
+    return masked_trunc
 
 
-	size = np.shape(masked_stack)
-   
-	print('Truncate masked data to the smaller space')
-	masked_trunc = masked_stack[x0-radius:x0+radius+1,y0-radius:y0+radius+1,z0-radius:z0+radius+1,:]
-	print('done')
+def main_merge_bundles(
+    bundle_dir: str, output_path: str, x0: int, y0: int, z0: int, radius: int
+):
+    """
+    Main function to generate a sphere mask for a given center (x0,y0,z0) and radii (radius), mask the bundles created by tractseg with the sphere mask. And access the proportion of each bundle in the sphere.
 
-	return masked_trunc
+    Args:
+            bundle_dir (str): directory where are located Tractseg outputs
+            output_path (str): path for writing outputs
+            x0 (int): x coordinate for the center of the sphere
+            y0 (int): y coordinate for the center of the sphere
+            z0 (int): z coordinate for the center of the sphere
+            radius (int): radius of the sphere
+    """
+    mask_paths = os.listdir(bundle_dir)
 
+    print("Concatenate bundle masks")
+    # all_masks = create_intersection_image(bundle_dir, mask_paths, output_path)
+    all_masks = np.load(f"{data_dir}/stacked_mask.npy")
 
+    print("Get intersection heatmap and save to nii")
+    summed_mask = np.sum(all_masks, axis=3)
 
-def main_merge_bundles(bundle_dir:str,output_path:str,x0:int,y0:int,z0:int,radius:int):
-	"""
-	Main function to generate a sphere mask for a given center (x0,y0,z0) and radii (radius), mask the bundles created by tractseg with the sphere mask. And access the proportion of each bundle in the sphere. 
-	
-	Args:
-		bundle_dir (str): directory where are located Tractseg outputs
-		output_path (str): path for writing outputs
-		x0 (int): x coordinate for the center of the sphere
-		y0 (int): y coordinate for the center of the sphere
-		z0 (int): z coordinate for the center of the sphere
-		radius (int): radius of the sphere
-	"""
-	mask_paths = os.listdir(bundle_dir)
+    # Save to nifti
+    summed_mask = summed_mask.astype(np.float32)
 
-	print('Concatenate bundle masks')
-	#all_masks = create_intersection_image(bundle_dir, mask_paths, output_path)
-	all_masks = np.load(f'{data_dir}/stacked_mask.npy')
-
-	print('Get intersection heatmap and save to nii')
-	summed_mask = np.sum(all_masks,axis = 3)
-
-	# Save to nifti
-	summed_mask = summed_mask.astype(np.float32)
-	
-	intersection_img = nib.Nifti1Image(summed_mask, affine=np.eye(4))
-	intersection_img.set_data_dtype(np.float32)
+    intersection_img = nib.Nifti1Image(summed_mask, affine=np.eye(4))
+    intersection_img.set_data_dtype(np.float32)
 
     # Save the Nifti image
-	nib.save(intersection_img, output_path)
+    nib.save(intersection_img, output_path)
 
-	## Generate the sphere for masking
-	sphere = gen_sphere(x0,y0,z0,radius)
+    ## Generate the sphere for masking
+    sphere = gen_sphere(x0, y0, z0, radius)
 
-	#print(sphere.shape())
-	
+    # print(sphere.shape())
 
-	#### Plot intersection img + sphere | check sphere position
-	# command = f'mrview {output_path} -voxel {x0},{y0},{z0} -overlay.load /mnt/CONHECT_data/code/4_BundleSegmentation/sphere_mask.nii.gz -mode 2'
-	# subprocess.run(command, shell = True)
+    #### Plot intersection img + sphere | check sphere position
+    # command = f'mrview {output_path} -voxel {x0},{y0},{z0} -overlay.load /mnt/CONHECT_data/code/4_BundleSegmentation/sphere_mask.nii.gz -mode 2'
+    # subprocess.run(command, shell = True)
 
+    #### Mask all_masks with sphere and plot the pie charts.
 
-	#### Mask all_masks with sphere and plot the pie charts.
+    masked_trunc = get_masked_infos(all_masks, sphere, x0, y0, z0, radius)
+    masked_sphere = sphere[
+        x0 - radius : x0 + radius + 1,
+        y0 - radius : y0 + radius + 1,
+        z0 - radius : z0 + radius + 1,
+    ]
 
-	masked_trunc = get_masked_infos(all_masks,sphere,x0,y0,z0,radius)
-	masked_sphere = sphere[x0-radius:x0+radius+1,y0-radius:y0+radius+1,z0-radius:z0+radius+1]
+    zeros_in_frame = np.count_nonzero(masked_sphere == 0)
 
-	zeros_in_frame = np.count_nonzero(masked_sphere==0)
+    masked_sum = np.sum(masked_trunc, axis=3)
 
-	masked_sum = np.sum(masked_trunc,axis = 3)
+    zeros_in_mask = np.count_nonzero(masked_sum == 0)
 
-	zeros_in_mask = np.count_nonzero(masked_sum == 0)
+    print(f"zeros in the target areas (no bundles) : {zeros_in_mask - zeros_in_frame}")
 
-	print(f"zeros in the target areas (no bundles) : {zeros_in_mask - zeros_in_frame}")
+    nvox_no_bundle = zeros_in_mask - zeros_in_frame
 
-	nvox_no_bundle = zeros_in_mask - zeros_in_frame
+    L = []
+    for k in range(masked_trunc.shape[3]):
+        L.append(np.sum(masked_trunc[:, :, :, k]))
 
+    presentBundles = [x for x in L if x != 0]
+    equi = pd.read_csv(f"{data_dir}/equivalence_bundle_table.csv")
 
-	L = []
-	for k in range(masked_trunc.shape[3]):
-	    L.append(np.sum(masked_trunc[:,:,:,k]))
+    equi["in"] = L
+    equi_chart = equi[equi["in"] > 0][["index", "label", "in"]]
 
-	
-	presentBundles = [x for x in L if x != 0]
-	equi = pd.read_csv(f'{data_dir}/equivalence_bundle_table.csv')
+    equi_chart.loc[len(equi.index)] = [len(equi.index), "Zero Bundle", nvox_no_bundle]
 
-	equi['in'] = L
-	equi_chart = equi[equi['in']>0][["index","label","in"]]
+    print(equi_chart.head())
 
-	equi_chart.loc[len(equi.index)] = [len(equi.index),'Zero Bundle', nvox_no_bundle]
+    ### Plot bundle repartition as a pie chart
 
-	print(equi_chart.head())
+    labels = equi_chart["label"]
+    sizes = equi_chart["in"]
 
-	### Plot bundle repartition as a pie chart
+    ### Axe gauche droite : x, axe avant arriere : y, axe vertical z
 
-	labels = equi_chart['label']
-	sizes = equi_chart['in']
+    slice_ax = summed_mask[:, :, z0]
+    slice_cor = summed_mask[:, y0, :]
+    slice_sag = summed_mask[x0, :, :]
+    sphere_ax = sphere[:, :, z0]
+    sphere_cor = sphere[:, y0, :]
+    sphere_sag = sphere[x0, :, :]
 
-	### Axe gauche droite : x, axe avant arriere : y, axe vertical z
+    fig, axs = plt.subplots(2, 2, figsize=(20, 10))
 
-	slice_ax = summed_mask[:,:,z0]
-	slice_cor = summed_mask[:,y0,:]
-	slice_sag = summed_mask[x0,:,:]
-	sphere_ax = sphere[:,:,z0]
-	sphere_cor = sphere[:,y0,:]
-	sphere_sag = sphere[x0,:,:]
+    # Plot the overlaid slice in the first subplot
+    axs[0, 0].imshow(np.rot90(slice_ax), cmap="gray")
+    axs[0, 0].imshow(
+        np.rot90(sphere_ax), alpha=0.9 * (np.rot90(sphere_ax) > 0), cmap="hot"
+    )
+    axs[0, 0].set_title("Overlay of axial Slice")
+    axs[0, 0].invert_xaxis()
+    axs[0, 0].set_axis_off()
 
-	fig, axs = plt.subplots(2, 2, figsize=(20, 10))
+    axs[0, 1].pie(sizes, labels=labels, autopct="%1.1f%%", startangle=90)
+    axs[0, 1].set_title("Voxel per voxel bundle composition inside the sphere")
 
-	# Plot the overlaid slice in the first subplot
-	axs[0,0].imshow(np.rot90(slice_ax),cmap = 'gray')
-	axs[0,0].imshow(np.rot90(sphere_ax),alpha = 0.9*(np.rot90(sphere_ax)>0),cmap = 'hot')
-	axs[0,0].set_title('Overlay of axial Slice')
-	axs[0,0].invert_xaxis()
-	axs[0,0].set_axis_off()
+    axs[1, 0].imshow(np.rot90(slice_cor), cmap="gray")
+    axs[1, 0].imshow(
+        np.rot90(sphere_cor), alpha=0.9 * (np.rot90(sphere_cor) > 0), cmap="hot"
+    )
+    axs[1, 0].set_title("Overlay of coronal Slice")
+    axs[1, 0].invert_xaxis()
+    axs[1, 0].set_axis_off()
 
-	axs[0,1].pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
-	axs[0,1].set_title('Voxel per voxel bundle composition inside the sphere')
+    axs[1, 1].imshow(np.rot90(slice_sag), cmap="gray")
+    axs[1, 1].imshow(
+        np.rot90(sphere_sag), alpha=0.9 * (np.rot90(sphere_sag) > 0), cmap="hot"
+    )
+    axs[1, 1].set_title("Overlay of sagittal Slice")
+    axs[1, 1].invert_xaxis()
+    axs[1, 1].set_axis_off()
 
-	axs[1,0].imshow(np.rot90(slice_cor),cmap = 'gray')
-	axs[1,0].imshow(np.rot90(sphere_cor),alpha = 0.9*(np.rot90(sphere_cor)>0),cmap = 'hot')
-	axs[1,0].set_title('Overlay of coronal Slice')
-	axs[1,0].invert_xaxis()
-	axs[1,0].set_axis_off()
-	
-	axs[1,1].imshow(np.rot90(slice_sag),cmap = 'gray')
-	axs[1,1].imshow(np.rot90(sphere_sag),alpha = 0.9*(np.rot90(sphere_sag)>0),cmap = 'hot')
-	axs[1,1].set_title('Overlay of sagittal Slice')
-	axs[1,1].invert_xaxis()
-	axs[1,1].set_axis_off()
+    plt.tight_layout()
+    plt.show()
 
-
-	plt.tight_layout()
-	plt.show()
-
-	#### Plot intersection img + sphere | check sphere position
-	command = f'mrview {output_path} -voxel {x0},{y0},{z0} -overlay.load /mnt/CONHECT_data/code/4_BundleSegmentation/sphere_mask.nii.gz -mode 2'
-	subprocess.run(command, shell = True)
-
-
-
-def GetBest(bundle_dir,output_path,ROIS = list()):
-	
-	Left = np.array([[75,110],[107,139],[32,71]])
-	Right = np.array([[39,69],[107,139],[32,71]])
+    #### Plot intersection img + sphere | check sphere position
+    command = f"mrview {output_path} -voxel {x0},{y0},{z0} -overlay.load /mnt/CONHECT_data/code/4_BundleSegmentation/sphere_mask.nii.gz -mode 2"
+    subprocess.run(command, shell=True)
 
 
-#bundle_dir = data_dir + '/tractseg_output/bundle_segmentations'
-#output_path = f"{data_dir}/intersection_test.nii.gz"
+def GetBest(bundle_dir, output_path, ROIS=list()):
+    Left = np.array([[75, 110], [107, 139], [32, 71]])
+    Right = np.array([[39, 69], [107, 139], [32, 71]])
+
+
+# bundle_dir = data_dir + '/tractseg_output/bundle_segmentations'
+# output_path = f"{data_dir}/intersection_test.nii.gz"
 
 
 # # main_merge_bundles(bundle_dir,output_path,84,127,48,5)
@@ -274,7 +285,7 @@ def GetBest(bundle_dir,output_path,ROIS = list()):
 # plt.imshow(img, interpolation='nearest')
 # plt.show()
 
-#main_merge_bundles(bundle_dir,output_path,85,123,45,4)
+# main_merge_bundles(bundle_dir,output_path,85,123,45,4)
 
 # print(masked_sum.shape)
 # img = masked_sum[:,:,5]

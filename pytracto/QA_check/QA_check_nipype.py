@@ -17,7 +17,6 @@
 # print(ses_list)
 
 
-
 # for sub in subject_list:
 
 # 	for ses in ses_list:
@@ -68,7 +67,7 @@
 # 			print(f"Running command: {bash_command}")
 # 			# Run the Bash script using subprocess
 # 			subprocess.run(bash_command, shell=True)
-			
+
 # 		if view_registration:
 # 			bash_command = f"mrview {preproc_dir}/biascorrect/biascorrect.mif -overlay.load {tracto_dir}/transformT1/T1_coreg.mif -overlay.opacity 0.3 -overlay.colourmap 2 -mode 2"
 # 			print(f"Running command: {bash_command}")
@@ -105,7 +104,7 @@
 # 		#######################################################
 
 # 		# changer pour avoir le sift --> 200k
-# 		# Create a smaller file for tractography 
+# 		# Create a smaller file for tractography
 # 		if create_smallertck:
 # 			bash_command = f"tckedit {tracto_dir}/tckgen/tracked.tck -number 200k {tracto_dir}/tckgen/smaller200ktracks.tck -force"
 # 			print(f"Running command: {bash_command}")

@@ -49,7 +49,7 @@
 #         subject_list =all_subject_list[2][0].split(',')
 #         ses = "00" + ses
 #         for sub in subject_list:
-            
+
 #             identifier = f'_ses_id_{ses}_subject_id_{sub}'
 #             print(identifier)
 #             res_dir = os.path.join(base_dir,'full_results')

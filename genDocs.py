@@ -22,7 +22,14 @@ def generate_docs_and_central_index(modules_to_process: list[str]) -> None:
 
     # Create a single base `index.html`
     with open(Path("docs", "index.html"), "w", encoding="utf-8") as index:
-        index.write(_render_template("/html.mako", modules=sorted((module.__name__, inspect.getdoc(module)) for module in modules)))
+        index.write(
+            _render_template(
+                "/html.mako",
+                modules=sorted(
+                    (module.__name__, inspect.getdoc(module)) for module in modules
+                ),
+            )
+        )
 
 
 if __name__ == "__main__":
