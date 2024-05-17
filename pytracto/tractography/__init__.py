@@ -1,5 +1,5 @@
 """
-sub module for tractography workflows
+sub module containing diffusion MRI tractography workflows
 """
 
 import os, sys
