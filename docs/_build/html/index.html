@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Indices and tables &#8212; pytracto 0.1 documentation</title>
+    <title>Pytracto &#8212; pytracto 0.1 documentation</title>
   
   
   
@@ -41,7 +41,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Pytracto" href="source/README.html" />
+    <link rel="next" title="BIDS_formatting package" href="source/BIDS_formatting.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -129,13 +129,6 @@
   <ul class="bd-navbar-elements navbar-nav">
     
                     <li class="nav-item">
-                      <a class="nav-link nav-internal" href="source/README.html">
-                        Pytracto
-                      </a>
-                    </li>
-                
-
-                    <li class="nav-item">
                       <a class="nav-link nav-internal" href="source/BIDS_formatting.html">
                         BIDS_formatting package
                       </a>
@@ -162,19 +155,19 @@
                       </a>
                     </li>
                 
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="source/QA_check.html">
+                        QA_check package
+                      </a>
+                    </li>
+                
             <li class="nav-item dropdown">
                 <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links">
                     More
                 </button>
                 <ul id="pst-nav-more-links" class="dropdown-menu">
                     
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="source/QA_check.html">
-                        QA_check package
-                      </a>
-                    </li>
-                
-
                     <li class="nav-item">
                       <a class="nav-link dropdown-item nav-internal" href="source/NetworkAnalysis.html">
                         NetworkAnalysis package
@@ -269,13 +262,6 @@ document.write(`
   <ul class="bd-navbar-elements navbar-nav">
     
                     <li class="nav-item">
-                      <a class="nav-link nav-internal" href="source/README.html">
-                        Pytracto
-                      </a>
-                    </li>
-                
-
-                    <li class="nav-item">
                       <a class="nav-link nav-internal" href="source/BIDS_formatting.html">
                         BIDS_formatting package
                       </a>
@@ -302,19 +288,19 @@ document.write(`
                       </a>
                     </li>
                 
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="source/QA_check.html">
+                        QA_check package
+                      </a>
+                    </li>
+                
             <li class="nav-item dropdown">
                 <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="pst-nav-more-links-2">
                     More
                 </button>
                 <ul id="pst-nav-more-links-2" class="dropdown-menu">
                     
-                    <li class="nav-item">
-                      <a class="nav-link dropdown-item nav-internal" href="source/QA_check.html">
-                        QA_check package
-                      </a>
-                    </li>
-                
-
                     <li class="nav-item">
                       <a class="nav-link dropdown-item nav-internal" href="source/NetworkAnalysis.html">
                         NetworkAnalysis package
@@ -372,12 +358,57 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <p>pytracto’s documentation</p>
+  <section id="pytracto">
+<h1>Pytracto<a class="headerlink" href="#pytracto" title="Link to this heading">#</a></h1>
+</section>
+<section id="python-package-for-diffusion-mri-tractography-and-connectivity">
+<h1>Python package for diffusion MRI tractography and connectivity<a class="headerlink" href="#python-package-for-diffusion-mri-tractography-and-connectivity" title="Link to this heading">#</a></h1>
+<p><strong>Author</strong>: François Ramon</p>
+<p><strong>Mail</strong>: <a class="reference external" href="mailto:francois&#46;ramon&#37;&#52;&#48;ghu-paris&#46;fr">francois<span>&#46;</span>ramon<span>&#64;</span>ghu-paris<span>&#46;</span>fr</a></p>
+<p>Uses nipype workflows, on interfaces of Mrtrix3, FSL, freesurfer, ANTs and other neuroimaging softwares</p>
+</section>
+<section id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h1>
+<section id="neuroimaging-software-requirements">
+<h2>Neuroimaging software requirements:<a class="headerlink" href="#neuroimaging-software-requirements" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>mrtrix3 (installed with <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-c</span> <span class="pre">mrtrix3</span> <span class="pre">mrtrix3</span></code>)</p></li>
+<li><p>FSL <a class="footnote-reference brackets" href="#id4" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p></li>
+<li><p>Freesurfer 7.4.1 <a class="footnote-reference brackets" href="#id5" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p></li>
+<li><p>ANTs <a class="footnote-reference brackets" href="#id6" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p></li>
+</ul>
+</section>
+<section id="python-packages-requirements">
+<h2>Python packages requirements:<a class="headerlink" href="#python-packages-requirements" title="Link to this heading">#</a></h2>
+<p>Most important packages with version such as nipype are in setup.py and automatically installed with pip install.
+For secondary packages, run</p>
+<p>`` pip install -r requirements.txt``</p>
+<p>To install:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/FRramon/pytracto.git
+<span class="nb">cd</span><span class="w"> </span>pytracto
+</pre></div>
+</div>
+<p>Navigate in pytracto path and type in terminal:</p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code> or <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code></p>
+<p>Pytracto is then <em>installed</em>.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id4" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation">https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation</a></p>
+</aside>
+<aside class="footnote brackets" id="id5" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall">https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall</a></p>
+</aside>
+<aside class="footnote brackets" id="id6" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p><a class="github reference external" href="https://github.com/ANTsX/ANTs/wiki/Compiling-ANTs-on-Linux-and-Mac-OS">ANTsX/ANTs</a></p>
+</aside>
+</aside>
 <hr class="docutils" />
 <div class="toctree-wrapper compound">
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="source/README.html">Pytracto</a></li>
 <li class="toctree-l1"><a class="reference internal" href="source/BIDS_formatting.html">BIDS_formatting package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="source/tractography.html">tractography package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="source/matrixescreation.html">matrixescreation package</a></li>
@@ -386,6 +417,8 @@ document.write(`
 <li class="toctree-l1"><a class="reference internal" href="source/NetworkAnalysis.html">NetworkAnalysis package</a></li>
 </ul>
 </div>
+</section>
+</section>
 <section id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">#</a></h1>
 <ul class="simple">
@@ -406,11 +439,11 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="right-next"
-       href="source/README.html"
+       href="source/BIDS_formatting.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Pytracto</p>
+        <p class="prev-next-title">BIDS_formatting package</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -423,6 +456,26 @@ document.write(`
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Pytracto</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#python-package-for-diffusion-mri-tractography-and-connectivity">Python package for diffusion MRI tractography and connectivity</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#neuroimaging-software-requirements">Neuroimaging software requirements:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#python-packages-requirements">Python packages requirements:</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 
