@@ -35,10 +35,10 @@ source_suffix = {
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'pydata_sphinx_theme'
+html_theme = 'sphinx_rtd_theme'
 html_static_path = ["_static"]
 
-html_theme_options = {
-    # Options specific to pydata_sphinx_theme
-    "github_url": "https://github.com/FRramon/pytracto",
-}
+# html_theme_options = {
+#     # Options specific to pydata_sphinx_theme
+#     "github_url": "https://github.com/FRramon/pytracto",
+# }
