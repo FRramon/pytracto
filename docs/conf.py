@@ -34,5 +34,9 @@ source_suffix = {
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'furo'
-html_static_path = ['_static']
+html_theme = "pydata_sphinx_theme"
+html_favicon = "_static/favicon.ico"
+html_static_path = ["_static"]
+html_logo = "_static/logo.png"
+
+html_css_files = ['theme_overrides.css']
