@@ -7,7 +7,7 @@ Pytracto
 =========
 
 Python package for diffusion MRI tractography and connectivity
-==============================================================
+--------------------------------------------------------------
 
 **Author**: François Ramon
 

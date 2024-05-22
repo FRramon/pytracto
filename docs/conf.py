@@ -8,7 +8,7 @@
 
 import os
 import sys
-import pydata_sphinx_theme
+#import pydata_sphinx_theme
 sys.path.insert(0, os.path.abspath(os.path.join('..', 'pytracto')))
 
 project = 'pytracto'
@@ -35,7 +35,7 @@ source_suffix = {
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = "pydata_sphinx_theme"
+html_theme = 'pydata_sphinx_theme'
 html_static_path = ["_static"]
 
 html_theme_options = {
