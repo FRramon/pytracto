@@ -3,19 +3,27 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to pytracto's documentation!
+
+
+pytracto's documentation
+
+
 ====================================
 
 .. toctree::
    :maxdepth: 1
    :caption: Contents:
 
+
+   source/README.md
    source/BIDS_formatting
    source/tractography
    source/matrixescreation
    source/bundlesegmentation
    source/QA_check
    source/NetworkAnalysis
+
+
 
 
 Indices and tables
