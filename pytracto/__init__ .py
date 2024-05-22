@@ -1,11 +1,18 @@
-r"""
+"""
 
-Python package for diffusion MRI tractography and connectivity
+## Python package for diffusion MRI tractography and connectivity
 
 Author : 'François Ramon'
 Mail : 'francois.ramon@ghu-paris.fr'
 
 Code on github : 'https://github.com/FRramon/pytracto'
+
+
+
+
+Warning : dmri amico
+--> github cannot import it 
+but can install it in local 
 
 """
 

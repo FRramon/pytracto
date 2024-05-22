@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tractography package &mdash; pytracto 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=2709fde1"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="matrixescreation package" href="matrixescreation.html" />
+    <link rel="prev" title="BIDS_formatting package" href="BIDS_formatting.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            pytracto
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="BIDS_formatting.html">BIDS_formatting package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">tractography package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tractography.clean_tracks_done">tractography.clean_tracks_done module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tractography.clean_tracks_done.clean_tracks_done"><code class="docutils literal notranslate"><span class="pre">clean_tracks_done()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tractography.even_workflow">tractography.even_workflow module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tractography.even_workflow.execute_even_workflow"><code class="docutils literal notranslate"><span class="pre">execute_even_workflow()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tractography.odd_workflow">tractography.odd_workflow module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tractography.odd_workflow.execute_odd_workflow"><code class="docutils literal notranslate"><span class="pre">execute_odd_workflow()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tractography.pipeline_parameters">tractography.pipeline_parameters module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tractography.synth_workflow">tractography.synth_workflow module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tractography.synth_workflow.execute_synth_workflow"><code class="docutils literal notranslate"><span class="pre">execute_synth_workflow()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tractography.tractography_utils">tractography.tractography_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tractography.tractography_utils.check_dimensions_problems"><code class="docutils literal notranslate"><span class="pre">check_dimensions_problems()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tractography.tractography_utils.get_ids_by_sessions"><code class="docutils literal notranslate"><span class="pre">get_ids_by_sessions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tractography.tractography_utils.get_list_sessions"><code class="docutils literal notranslate"><span class="pre">get_list_sessions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tractography.tractography_utils.get_list_sessions_inverse_phase"><code class="docutils literal notranslate"><span class="pre">get_list_sessions_inverse_phase()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tractography.tractography_utils.isEmpty"><code class="docutils literal notranslate"><span class="pre">isEmpty()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-tractography">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="matrixescreation.html">matrixescreation package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bundlesegmentation.html">bundlesegmentation package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QA_check.html">QA_check package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="NetworkAnalysis.html">NetworkAnalysis package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pytracto</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">tractography package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/source/tractography.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tractography-package">
+<h1>tractography package<a class="headerlink" href="#tractography-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-tractography.clean_tracks_done">
+<span id="tractography-clean-tracks-done-module"></span><h2>tractography.clean_tracks_done module<a class="headerlink" href="#module-tractography.clean_tracks_done" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tractography.clean_tracks_done.clean_tracks_done">
+<span class="sig-prename descclassname"><span class="pre">tractography.clean_tracks_done.</span></span><span class="sig-name descname"><span class="pre">clean_tracks_done</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipe_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.clean_tracks_done.clean_tracks_done" title="Link to this definition"></a></dt>
+<dd><p>Warning : Function to delete file tracked.tck if sift was ran.
+Warning : if the pipeline is rerun, it will do again tracks generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_dir</strong> (<em>str</em>) – parent folder of dicom directory</p></li>
+<li><p><strong>pipe_name</strong> (<em>str</em>) – name of the folder of the output</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-tractography.even_workflow">
+<span id="tractography-even-workflow-module"></span><h2>tractography.even_workflow module<a class="headerlink" href="#module-tractography.even_workflow" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tractography.even_workflow.execute_even_workflow">
+<span class="sig-prename descclassname"><span class="pre">tractography.even_workflow.</span></span><span class="sig-name descname"><span class="pre">execute_even_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tckgen_ntracks_param</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ses_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.even_workflow.execute_even_workflow" title="Link to this definition"></a></dt>
+<dd><p>Workflow for diffusion MRI tractography and connectivity matrixes creation.
+Particularly adapted for subjects with 2PA/2AP</p>
+<p>Arguments:
+data_dir : str, path to nifti files
+base_directory : str, father branch of data_dir
+out_dir : chosen output folder
+tckgen_ntracks_param : str, TO REMOVE
+subject_list : list, subjects list in the format [‘01’,’02’,’03’]
+ses_list: list, session list in the format [1,2,3]
+<a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs: keywords argument for specific pipeline parameters</p>
+</dd></dl>
+
+</section>
+<section id="module-tractography.odd_workflow">
+<span id="tractography-odd-workflow-module"></span><h2>tractography.odd_workflow module<a class="headerlink" href="#module-tractography.odd_workflow" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tractography.odd_workflow.execute_odd_workflow">
+<span class="sig-prename descclassname"><span class="pre">tractography.odd_workflow.</span></span><span class="sig-name descname"><span class="pre">execute_odd_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tckgen_ntracks_param</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ses_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.odd_workflow.execute_odd_workflow" title="Link to this definition"></a></dt>
+<dd><p>Workflow for diffusion MRI tractography and connectivity matrixes creation.
+Particularly adapted for subjects with 3PA/1AP or 3AP/1PA</p>
+<p>Arguments:
+data_dir : str, path to nifti files
+base_directory : str, father branch of data_dir
+out_dir : chosen output folder
+tckgen_ntracks_param : str, TO REMOVE
+subject_list : list, subjects list in the format [‘01’,’02’,’03’]
+ses_list: list, session list in the format [1,2,3]
+<a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs: keywords argument for specific pipeline parameters</p>
+</dd></dl>
+
+</section>
+<section id="module-tractography.pipeline_parameters">
+<span id="tractography-pipeline-parameters-module"></span><h2>tractography.pipeline_parameters module<a class="headerlink" href="#module-tractography.pipeline_parameters" title="Link to this heading"></a></h2>
+</section>
+<section id="module-tractography.synth_workflow">
+<span id="tractography-synth-workflow-module"></span><h2>tractography.synth_workflow module<a class="headerlink" href="#module-tractography.synth_workflow" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tractography.synth_workflow.execute_synth_workflow">
+<span class="sig-prename descclassname"><span class="pre">tractography.synth_workflow.</span></span><span class="sig-name descname"><span class="pre">execute_synth_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tckgen_ntracks_param</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ses_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.synth_workflow.execute_synth_workflow" title="Link to this definition"></a></dt>
+<dd><p>Workflow for diffusion MRI tractography and connectivity matrixes creation.
+Particularly adapted for subjects without inverse phase</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_dir</strong> (<em>str</em>) – path to nifti files</p></li>
+<li><p><strong>base_directory</strong> (<em>str</em>) – father branch of data_dir</p></li>
+<li><p><strong>out_dir</strong> (<em>str</em>) – chosen output folder</p></li>
+<li><p><strong>tckgen_ntracks_param</strong> (<em>int</em>) – TO REMOVE</p></li>
+<li><p><strong>subject_list</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – subjects list in the format [‘01’,’02’,’03’]</p></li>
+<li><p><strong>ses_list</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – session list in the format [1,2,3]</p></li>
+<li><p><strong>**kwargs</strong> – keywords argument for specific pipeline parameters</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-tractography.tractography_utils">
+<span id="tractography-tractography-utils-module"></span><h2>tractography.tractography_utils module<a class="headerlink" href="#module-tractography.tractography_utils" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="tractography.tractography_utils.check_dimensions_problems">
+<span class="sig-prename descclassname"><span class="pre">tractography.tractography_utils.</span></span><span class="sig-name descname"><span class="pre">check_dimensions_problems</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.tractography_utils.check_dimensions_problems" title="Link to this definition"></a></dt>
+<dd><p>Get the list of subject in session i that have a dimensionality issue in their images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_dir</strong> (<em>str</em>) – source directory (parent folder of dicom directory)</p></li>
+<li><p><strong>base_dir</strong> (<em>str</em>) – base directory</p></li>
+<li><p><strong>groups</strong> (<em>str</em>) – group of subject to be processed (either patients, temoins etc. )</p></li>
+<li><p><strong>session</strong> (<em>int</em>) – session to be processed</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tractography.tractography_utils.get_ids_by_sessions">
+<span class="sig-prename descclassname"><span class="pre">tractography.tractography_utils.</span></span><span class="sig-name descname"><span class="pre">get_ids_by_sessions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.tractography_utils.get_ids_by_sessions" title="Link to this definition"></a></dt>
+<dd><p>Get subject identifiers that went into session i, had or not inverse phase, had or not a dimension issue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_dir</strong> (<em>str</em>) – source directory (parent folder of dicom directory)</p></li>
+<li><p><strong>base_dir</strong> (<em>str</em>) – base directory</p></li>
+<li><p><strong>groups</strong> (<em>str</em>) – group of subject to be processed (either patients, temoins etc. )</p></li>
+<li><p><strong>session</strong> (<em>int</em>) – session to be processed</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tractography.tractography_utils.get_list_sessions">
+<span class="sig-prename descclassname"><span class="pre">tractography.tractography_utils.</span></span><span class="sig-name descname"><span class="pre">get_list_sessions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.tractography_utils.get_list_sessions" title="Link to this definition"></a></dt>
+<dd><p>Function to get the subject list that attended to a specific session</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_dir</strong> (<em>str</em>) – base directory</p></li>
+<li><p><strong>groups</strong> (<em>str</em>) – group of subject to be processed (either patients, temoins etc. )</p></li>
+<li><p><strong>session</strong> (<em>int</em>) – session to be processed</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tractography.tractography_utils.get_list_sessions_inverse_phase">
+<span class="sig-prename descclassname"><span class="pre">tractography.tractography_utils.</span></span><span class="sig-name descname"><span class="pre">get_list_sessions_inverse_phase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.tractography_utils.get_list_sessions_inverse_phase" title="Link to this definition"></a></dt>
+<dd><p>Get the list of subject that underwent session i and were aquired an inverse phase</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_dir</strong> (<em>str</em>) – base directory</p></li>
+<li><p><strong>groups</strong> (<em>str</em>) – group of subject to be processed (either patients, temoins etc. )</p></li>
+<li><p><strong>session</strong> (<em>int</em>) – session to be processed</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tractography.tractography_utils.isEmpty">
+<span class="sig-prename descclassname"><span class="pre">tractography.tractography_utils.</span></span><span class="sig-name descname"><span class="pre">isEmpty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.tractography_utils.isEmpty" title="Link to this definition"></a></dt>
+<dd><p>Function to check if a directory exists and is empty</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – path to folder</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-tractography">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-tractography" title="Link to this heading"></a></h2>
+<p>sub module containing diffusion MRI tractography workflows</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="BIDS_formatting.html" class="btn btn-neutral float-left" title="BIDS_formatting package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="matrixescreation.html" class="btn btn-neutral float-right" title="matrixescreation package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Francois Ramon.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
