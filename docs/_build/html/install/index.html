@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pytracto &mdash; pytracto 0.1 documentation</title>
+  <title>Installation &mdash; pytracto 0.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
 
@@ -20,7 +20,9 @@
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Documentation" href="../documentation/index.html" />
+    <link rel="prev" title="Pytracto" href="../index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,8 +45,12 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../install/index.html">Installation</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#neuroimaging-software-requirements">Neuroimaging software requirements:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python-packages-requirements">Python packages requirements:</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../documentation/index.html">Documentation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../documentation/index.html">API Reference</a></li>
 </ul>
@@ -63,9 +69,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Pytracto</li>
+      <li class="breadcrumb-item active">Installation</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/source/README.md.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/install/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -73,18 +79,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="pytracto">
-<h1>Pytracto<a class="headerlink" href="#pytracto" title="Link to this heading"></a></h1>
-<section id="python-package-for-diffusion-mri-tractography-and-connectivity">
-<h2>Python package for diffusion MRI tractography and connectivity<a class="headerlink" href="#python-package-for-diffusion-mri-tractography-and-connectivity" title="Link to this heading"></a></h2>
-<p>Author : <strong>François Ramon</strong></p>
-<p>Mail : francois.ramon&#64;ghu-paris.fr</p>
-<p>Uses nipype workflows, on interfaces of Mrtrix3, FSL, freesurfer, ANTs and other neuroimaging softwares</p>
-</section>
-<section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
-<section id="neuroimaging-sofware-requirements">
-<h3>Neuroimaging sofware requirements :<a class="headerlink" href="#neuroimaging-sofware-requirements" title="Link to this heading"></a></h3>
+  <section id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h1>
+<section id="neuroimaging-software-requirements">
+<h2>Neuroimaging software requirements:<a class="headerlink" href="#neuroimaging-software-requirements" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>mrtrix3 (installed with <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">install</span> <span class="pre">-c</span> <span class="pre">mrtrix3</span> <span class="pre">mrtrix3</span></code>)</p></li>
 <li><p>FSL <a class="footnote-reference brackets" href="#id4" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p></li>
@@ -93,39 +91,44 @@
 </ul>
 </section>
 <section id="python-packages-requirements">
-<h3>Python packages requirements :<a class="headerlink" href="#python-packages-requirements" title="Link to this heading"></a></h3>
-<p>Most important packages with version such as nipype are in setup.py and automatically installed with pip install
+<h2>Python packages requirements:<a class="headerlink" href="#python-packages-requirements" title="Link to this heading"></a></h2>
+<p>Most important packages with version such as nipype are in setup.py and automatically installed with pip install.
 For secondary packages, run</p>
-<p><code class="docutils literal notranslate"> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">requirements.txt</span></code></p>
-<p>To install :</p>
-<p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/FRramon/pytracto.git</span></code></p>
-<p><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">pytracto</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+<p>To install:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/FRramon/pytracto.git
+<span class="nb">cd</span><span class="w"> </span>pytracto
+</pre></div>
+</div>
 <p>Navigate in pytracto path and type in terminal:</p>
 <p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code> or <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">setup.py</span> <span class="pre">install</span></code></p>
 <p>Pytracto is then <em>installed</em>.</p>
-<hr class="footnotes docutils" />
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id4" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
-<p>[ https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation]</p>
+<p><a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation">https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation</a></p>
 </aside>
 <aside class="footnote brackets" id="id5" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
-<p>[ https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall]</p>
+<p><a class="reference external" href="https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall">https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall</a></p>
 </aside>
 <aside class="footnote brackets" id="id6" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
-<p>[https://github.com/ANTsX/ANTs/wiki/Compiling-ANTs-on-Linux-and-Mac-OS]</p>
+<p><a class="reference external" href="https://github.com/ANTsX/ANTs/wiki/Compiling-ANTs-on-Linux-and-Mac-OS">https://github.com/ANTsX/ANTs/wiki/Compiling-ANTs-on-Linux-and-Mac-OS</a></p>
 </aside>
 </aside>
-</section>
 </section>
 </section>
 
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Pytracto" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../documentation/index.html" class="btn btn-neutral float-right" title="Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 
