@@ -106,13 +106,18 @@ Warning : if the pipeline is rerun, it will do again tracks generation.</p>
 <span class="sig-prename descclassname"><span class="pre">tractography.even_workflow.</span></span><span class="sig-name descname"><span class="pre">execute_even_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ses_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.even_workflow.execute_even_workflow" title="Link to this definition"></a></dt>
 <dd><p>Workflow for diffusion MRI tractography and connectivity matrixes creation.
 Particularly adapted for subjects with 2PA/2AP</p>
-<p>Arguments:
-data_dir : str, path to nifti files
-base_directory : str, father branch of data_dir
-out_dir : chosen output folder
-subject_list : list, subjects list in the format [‘01’,’02’,’03’]
-ses_list: list, session list in the format [1,2,3]
-<a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs: keywords argument for specific pipeline parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_dir</strong> (<em>str</em>) – path to nifti files</p></li>
+<li><p><strong>base_directory</strong> (<em>str</em>) – father branch of data_dir</p></li>
+<li><p><strong>out_dir</strong> (<em>str</em>) – chosen output folder</p></li>
+<li><p><strong>subject_list</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – subjects list in the format [‘01’,’02’,’03’]</p></li>
+<li><p><strong>ses_list</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – session list in the format [1,2,3]</p></li>
+<li><p><strong>**kwargs</strong> – keywords argument for specific pipeline parameters</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -123,13 +128,18 @@ ses_list: list, session list in the format [1,2,3]
 <span class="sig-prename descclassname"><span class="pre">tractography.odd_workflow.</span></span><span class="sig-name descname"><span class="pre">execute_odd_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ses_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.odd_workflow.execute_odd_workflow" title="Link to this definition"></a></dt>
 <dd><p>Workflow for diffusion MRI tractography and connectivity matrixes creation.
 Particularly adapted for subjects with 3PA/1AP or 3AP/1PA</p>
-<p>Arguments:
-data_dir : str, path to nifti files
-base_directory : str, father branch of data_dir
-out_dir : chosen output folder
-subject_list : list, subjects list in the format [‘01’,’02’,’03’]
-ses_list: list, session list in the format [1,2,3]
-<a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs: keywords argument for specific pipeline parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_dir</strong> (<em>str</em>) – path to nifti files</p></li>
+<li><p><strong>base_directory</strong> (<em>str</em>) – father branch of data_dir</p></li>
+<li><p><strong>out_dir</strong> (<em>str</em>) – chosen output folder</p></li>
+<li><p><strong>subject_list</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – subjects list in the format [‘01’,’02’,’03’]</p></li>
+<li><p><strong>ses_list</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – session list in the format [1,2,3]</p></li>
+<li><p><strong>**kwargs</strong> – keywords argument for specific pipeline parameters</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -143,13 +153,18 @@ ses_list: list, session list in the format [1,2,3]
 <span class="sig-prename descclassname"><span class="pre">tractography.single_shell_workflow.</span></span><span class="sig-name descname"><span class="pre">execute_single_shell_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ses_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.single_shell_workflow.execute_single_shell_workflow" title="Link to this definition"></a></dt>
 <dd><p>Workflow for diffusion MRI tractography and connectivity matrixes creation.
 For single shell diffusion MRI data</p>
-<p>Arguments:
-data_dir : str, path to nifti files
-base_directory : str, father branch of data_dir
-out_dir : chosen output folder
-subject_list : list, subjects list in the format [‘01’,’02’,’03’]
-ses_list: list, session list in the format [1,2,3]
-<a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs: keywords argument for specific pipeline parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_dir</strong> (<em>str</em>) – path to nifti files</p></li>
+<li><p><strong>base_directory</strong> (<em>str</em>) – father branch of data_dir</p></li>
+<li><p><strong>out_dir</strong> (<em>str</em>) – chosen output folder</p></li>
+<li><p><strong>subject_list</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – subjects list in the format [‘01’,’02’,’03’]</p></li>
+<li><p><strong>ses_list</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – session list in the format [1,2,3]</p></li>
+<li><p><strong>**kwargs</strong> – keywords argument for specific pipeline parameters</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
