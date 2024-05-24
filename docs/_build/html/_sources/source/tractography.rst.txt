@@ -36,6 +36,14 @@ tractography.pipeline\_parameters module
    :undoc-members:
    :show-inheritance:
 
+tractography.single\_shell\_workflow module
+-------------------------------------------
+
+.. automodule:: tractography.single_shell_workflow
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 tractography.synth\_workflow module
 -----------------------------------
 

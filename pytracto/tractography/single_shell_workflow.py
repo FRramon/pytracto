@@ -44,7 +44,7 @@ def execute_single_shell_workflow(
 ):
     """
     Workflow for diffusion MRI tractography and connectivity matrixes creation.
-    Particularly adapted for subjects with 2PA/2AP
+    For single shell diffusion MRI data
 
     Arguments:
     data_dir : str, path to nifti files

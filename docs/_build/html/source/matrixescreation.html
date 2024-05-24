@@ -52,10 +52,7 @@
 <li class="toctree-l2"><a class="reference internal" href="tractography.html">Tractography</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Matrixes creation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-matrixescreation.MatrixesCreation">matrixescreation.MatrixesCreation module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#matrixescreation.MatrixesCreation.build_connectivity_matrixes"><code class="docutils literal notranslate"><span class="pre">build_connectivity_matrixes()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="#matrixescreation-matrixescreation-module">matrixescreation.MatrixesCreation module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-matrixescreation.MatrixesCreationParameters">matrixescreation.MatrixesCreationParameters module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-matrixescreation.add_connectome_schaefer">matrixescreation.add_connectome_schaefer module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#matrixescreation.add_connectome_schaefer.add_schaefer_parcellation"><code class="docutils literal notranslate"><span class="pre">add_schaefer_parcellation()</span></code></a></li>
@@ -69,6 +66,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="bundlesegmentation.html">Bundle segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="QA_check.html">QA_check</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../documentation/index.html">API Reference</a><ul class="current">
@@ -76,10 +74,7 @@
 <li class="toctree-l2"><a class="reference internal" href="tractography.html">Tractography</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Matrixes creation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-matrixescreation.MatrixesCreation">matrixescreation.MatrixesCreation module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#matrixescreation.MatrixesCreation.build_connectivity_matrixes"><code class="docutils literal notranslate"><span class="pre">build_connectivity_matrixes()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="#matrixescreation-matrixescreation-module">matrixescreation.MatrixesCreation module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-matrixescreation.MatrixesCreationParameters">matrixescreation.MatrixesCreationParameters module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-matrixescreation.add_connectome_schaefer">matrixescreation.add_connectome_schaefer module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#matrixescreation.add_connectome_schaefer.add_schaefer_parcellation"><code class="docutils literal notranslate"><span class="pre">add_schaefer_parcellation()</span></code></a></li>
@@ -93,6 +88,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="bundlesegmentation.html">Bundle segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="QA_check.html">QA_check</a></li>
 </ul>
 </li>
 </ul>
@@ -127,27 +123,8 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 </section>
-<section id="module-matrixescreation.MatrixesCreation">
-<span id="matrixescreation-matrixescreation-module"></span><h2>matrixescreation.MatrixesCreation module<a class="headerlink" href="#module-matrixescreation.MatrixesCreation" title="Link to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="matrixescreation.MatrixesCreation.build_connectivity_matrixes">
-<span class="sig-prename descclassname"><span class="pre">matrixescreation.MatrixesCreation.</span></span><span class="sig-name descname"><span class="pre">build_connectivity_matrixes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ses_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#matrixescreation.MatrixesCreation.build_connectivity_matrixes" title="Link to this definition"></a></dt>
-<dd><p>This function takes in argument source directory, a subject and session list.
-It create connectivity matrixes according to a file of parameters.
-Matrixes for atlas Destrieux &amp; Schaefer
-Matrixes for generative method probabilistic and deterministic
-Matrixes for microstructural parameters : SC, FA, MD, ADC, RD, AD, NDI, ODI, FWF</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>source_dir</strong> (<em>str</em>) – source directory where the DICOM are located</p></li>
-<li><p><strong>subject_list</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – list of subjects to be processed</p></li>
-<li><p><strong>ses_list</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – list of sessions to be processed</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
+<section id="matrixescreation-matrixescreation-module">
+<h2>matrixescreation.MatrixesCreation module<a class="headerlink" href="#matrixescreation-matrixescreation-module" title="Link to this heading"></a></h2>
 </section>
 <section id="module-matrixescreation.MatrixesCreationParameters">
 <span id="matrixescreation-matrixescreationparameters-module"></span><h2>matrixescreation.MatrixesCreationParameters module<a class="headerlink" href="#module-matrixescreation.MatrixesCreationParameters" title="Link to this heading"></a></h2>

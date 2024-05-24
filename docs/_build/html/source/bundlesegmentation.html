@@ -21,6 +21,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="QA_check package" href="QA_check.html" />
     <link rel="prev" title="matrixescreation package" href="matrixescreation.html" /> 
 </head>
 
@@ -52,10 +53,7 @@
 <li class="toctree-l2"><a class="reference internal" href="matrixescreation.html">Matrixes creation</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Bundle segmentation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-bundlesegmentation.BundleSegmentation">bundlesegmentation.BundleSegmentation module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#bundlesegmentation.BundleSegmentation.bundle_segmentation"><code class="docutils literal notranslate"><span class="pre">bundle_segmentation()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="#bundlesegmentation-bundlesegmentation-module">bundlesegmentation.BundleSegmentation module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bundlesegmentation.BundleSegmentationParameters">bundlesegmentation.BundleSegmentationParameters module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bundlesegmentation.MergeBundles">bundlesegmentation.MergeBundles module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#bundlesegmentation.MergeBundles.GetBest"><code class="docutils literal notranslate"><span class="pre">GetBest()</span></code></a></li>
@@ -69,6 +67,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-bundlesegmentation">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="QA_check.html">QA_check</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="reference internal" href="../documentation/index.html">API Reference</a><ul class="current">
@@ -77,10 +76,7 @@
 <li class="toctree-l2"><a class="reference internal" href="matrixescreation.html">Matrixes creation</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Bundle segmentation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-bundlesegmentation.BundleSegmentation">bundlesegmentation.BundleSegmentation module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#bundlesegmentation.BundleSegmentation.bundle_segmentation"><code class="docutils literal notranslate"><span class="pre">bundle_segmentation()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="#bundlesegmentation-bundlesegmentation-module">bundlesegmentation.BundleSegmentation module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bundlesegmentation.BundleSegmentationParameters">bundlesegmentation.BundleSegmentationParameters module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bundlesegmentation.MergeBundles">bundlesegmentation.MergeBundles module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#bundlesegmentation.MergeBundles.GetBest"><code class="docutils literal notranslate"><span class="pre">GetBest()</span></code></a></li>
@@ -94,6 +90,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#module-bundlesegmentation">Module contents</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="QA_check.html">QA_check</a></li>
 </ul>
 </li>
 </ul>
@@ -128,26 +125,8 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 </section>
-<section id="module-bundlesegmentation.BundleSegmentation">
-<span id="bundlesegmentation-bundlesegmentation-module"></span><h2>bundlesegmentation.BundleSegmentation module<a class="headerlink" href="#module-bundlesegmentation.BundleSegmentation" title="Link to this heading"></a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="bundlesegmentation.BundleSegmentation.bundle_segmentation">
-<span class="sig-prename descclassname"><span class="pre">bundlesegmentation.BundleSegmentation.</span></span><span class="sig-name descname"><span class="pre">bundle_segmentation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ses_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bundlesegmentation.BundleSegmentation.bundle_segmentation" title="Link to this definition"></a></dt>
-<dd><p>Performs bundle segmentation using tractseg.
-DWI images are first registered to MNI152 space using a FA map.
-Tractseg segments into 72 bundles, using a U-net architecture
-All 72 bundles are registered back to subject DWI space using inverse transform</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>source_dir</strong> (<em>str</em>) – source directory of the DICOM</p></li>
-<li><p><strong>subject_list</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – list of subjects</p></li>
-<li><p><strong>ses_list</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – list of sessions</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
+<section id="bundlesegmentation-bundlesegmentation-module">
+<h2>bundlesegmentation.BundleSegmentation module<a class="headerlink" href="#bundlesegmentation-bundlesegmentation-module" title="Link to this heading"></a></h2>
 </section>
 <section id="module-bundlesegmentation.BundleSegmentationParameters">
 <span id="bundlesegmentation-bundlesegmentationparameters-module"></span><h2>bundlesegmentation.BundleSegmentationParameters module<a class="headerlink" href="#module-bundlesegmentation.BundleSegmentationParameters" title="Link to this heading"></a></h2>
@@ -249,6 +228,7 @@ All 72 bundles are registered back to subject DWI space using inverse transform<
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="matrixescreation.html" class="btn btn-neutral float-left" title="matrixescreation package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="QA_check.html" class="btn btn-neutral float-right" title="QA_check package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

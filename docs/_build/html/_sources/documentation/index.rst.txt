@@ -15,6 +15,8 @@ Documentation
    Tractography <../source/tractography>
    Matrixes creation <../source/matrixescreation>
    Bundle segmentation <../source/bundlesegmentation>
+   QA_check <../source/QA_check>
+   
 
 
 
