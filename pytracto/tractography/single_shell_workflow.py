@@ -9,26 +9,11 @@ import cmtklib.interfaces.mrtrix3 as cmp_mrt
 import os
 import sys
 
-
 from nipype import config, logging
 
 config.enable_debug_mode()
 logging.update_logging(config)
 
-##########################################################
-###########      Data Conversion       ###################
-##########################################################
-
-# data_dir = sys.argv[1]
-# subject_raw = sys.argv[2]
-# session_raw = sys.argv[3]
-# base_directory = sys.argv[4]
-# out_dir = sys.argv[5]
-
-# tckgen_ntracks_param = int(sys.argv[6])
-
-# subject_list = subject_raw.split(',')
-# ses_list = session_raw.split(',')
 
 ############# DC : Node Definition #######################
 
@@ -46,13 +31,13 @@ def execute_single_shell_workflow(
     Workflow for diffusion MRI tractography and connectivity matrixes creation.
     For single shell diffusion MRI data
 
-    Arguments:
-    data_dir : str, path to nifti files
-    base_directory : str, father branch of data_dir
-    out_dir : chosen output folder
-    subject_list : list, subjects list in the format ['01','02','03']
-    ses_list: list, session list in the format [1,2,3]
-    **kwargs: keywords argument for specific pipeline parameters
+    Args:
+          data_dir (str): path to nifti files
+          base_directory (str): father branch of data_dir
+          out_dir (str): chosen output folder
+          subject_list (list[str]): subjects list in the format ['01','02','03']
+          ses_list (list[int]): session list in the format [1,2,3]
+          **kwargs: keywords argument for specific pipeline parameters
 
     """
 
@@ -60,16 +45,6 @@ def execute_single_shell_workflow(
         IdentityInterface(fields=["subject_id", "ses_id"]), name="infosource"
     )
     infosource.iterables = [("subject_id", subject_list), ("ses_id", ses_list)]
-
-    # templates = {
-    #     "anat": "sub-{subject_id}/ses-{ses_id}/anat/sub-{subject_id}_ses-{ses_id}_T1w.nii.gz",
-    #     "dwiPA": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.nii.gz",
-    #     "bvalPA": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.bval",
-    #     "bvecPA": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.bvec",
-    #     "dwiAP": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-AP_dwi.nii.gz",
-    #     "bvalAP": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-AP_dwi.bval",
-    #     "bvecAP": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-AP_dwi.bvec",
-    # }
 
     sf = Node(SelectFiles(templates), name="sf")
     sf.inputs.base_directory = data_dir
@@ -112,22 +87,16 @@ def execute_single_shell_workflow(
     ########          Freesurfer  Workflow           ###########
     ############################################################
 
-
-
-
     os.environ["SUBJECTS_DIR"] = data_dir
-    # fs_reconall = Node(ReconAll(), name="fs_reconall")
-    # fs_reconall.inputs.directive = kwargs.get("reconall_param")
-    # # .inputs.subjects_dir = data_dir
-    # fs_workflow = Workflow(name="fs_workflow", base_dir=base_directory)
-    # fs_workflow.config["execution"]["use_caching"] = "True"
-    # fs_workflow.config["execution"]["hash_method"] = "content"
+    fs_reconall = Node(ReconAll(), name="fs_reconall")
+    fs_reconall.inputs.directive = kwargs.get("reconall_param")
+    # .inputs.subjects_dir = data_dir
+    fs_workflow = Workflow(name="fs_workflow", base_dir=base_directory)
+    fs_workflow.config["execution"]["use_caching"] = "True"
+    fs_workflow.config["execution"]["hash_method"] = "content"
 
-    # fs_workflow.connect(infosource, "subject_id", fs_reconall, "subject_id")
-    # fs_workflow.connect(sf, "anat", fs_reconall, "T1_files")
-
-
-
+    fs_workflow.connect(infosource, "subject_id", fs_reconall, "subject_id")
+    fs_workflow.connect(sf, "anat", fs_reconall, "T1_files")
 
 
     ############################################################
@@ -467,30 +436,24 @@ def execute_single_shell_workflow(
     main_wf.connect(wf_dc, "sf.anat", wf_tractography, "transformT1.in_files")
 
 
-
-
-    # main_wf.connect(
-    #     fs_workflow, "fs_reconall.aparc_aseg", connectome, "labelconvert.in_file"
-    # )
-    # main_wf.connect(
-    #     wf_tractography,
-    #     "transformconvert.out_transform",
-    #     connectome,
-    #     "transform_parcels.linear_transform",
-    # )
-    # main_wf.connect(
-    #     wf_tractography, "tcksift2.out_tracks", connectome, "tck2connectome.in_file"
-    # )
-    # main_wf.connect(
-    #     wf_tractography,
-    #     "tcksift2Det.out_tracks",
-    #     connectome,
-    #     "tck2connectomeDet.in_file",
-    # )
-
-
-
-
+    main_wf.connect(
+        fs_workflow, "fs_reconall.aparc_aseg", connectome, "labelconvert.in_file"
+    )
+    main_wf.connect(
+        wf_tractography,
+        "transformconvert.out_transform",
+        connectome,
+        "transform_parcels.linear_transform",
+    )
+    main_wf.connect(
+        wf_tractography, "tcksift2.out_tracks", connectome, "tck2connectome.in_file"
+    )
+    main_wf.connect(
+        wf_tractography,
+        "tcksift2Det.out_tracks",
+        connectome,
+        "tck2connectomeDet.in_file",
+    )
 
     #main_wf.write_graph(graph2use="colored", dotfilename="./pipeline_graph.dot")
     # wf_tractography.write_graph(
