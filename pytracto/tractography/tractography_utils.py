@@ -10,6 +10,7 @@ import pandas as pd
 import re
 from collections import Counter
 import json
+import glob
 
 
 # Function to Check if the path specified
@@ -32,22 +33,26 @@ def isEmpty(path: str):
         return True
 
 
-def get_list_sessions(base_dir: str, groups: str, session: int):
+def get_list_sessions(base_dir: str,folder_name: str, session: int,group: str = None):
     """
     Function to get the subject list that attended to a specific session
 
     Args:
             base_dir (str): base directory
-            groups (str): group of subject to be processed (either patients, temoins etc. )
+            folder_name (str) : name of the data directory (usually 'rawdata')
             session (int): session to be processed
+            group (str,optional): Optional group to include in path
     """
 
     # Get subjects ids which participated in session i
 
-    source_data_dir = os.path.join(base_dir, "nifti3", groups)
+    if group:
+        source_data_dir = os.path.join(base_dir,folder_name, group)
+    else:
+        source_data_dir = os.path.join(base_dir, folder_name)
 
     subjects_raw = os.listdir(source_data_dir)
-    pattern = re.compile(r"^sub-\d")
+    pattern = re.compile(r"^sub.*")
     subjects = [s for s in subjects_raw if pattern.match(s)]
 
     haveSes = []
@@ -55,7 +60,7 @@ def get_list_sessions(base_dir: str, groups: str, session: int):
     for s in subjects:
         ses_id = "ses-" + session
         ses_path = os.path.join(source_data_dir, s, ses_id)
-        if not isEmpty(ses_path):
+        if not isEmpty(ses_path) and not isEmpty(os.path.join(ses_path,"anat")) and not isEmpty(os.path.join(ses_path,"dwi")):
             haveSes.append(s)
 
     haveSes = [s[4:] for s in haveSes]
@@ -69,23 +74,81 @@ def get_list_sessions(base_dir: str, groups: str, session: int):
 
     return result_list
 
+def check_template(base_dir:str,folder_name:str, session_id:str, templates:dict,group:str = None):
 
-def get_list_sessions_inverse_phase(base_dir: str, groups: str, session: int):
+    """
+    Function to get the subject list that attended to a specific session
+
+    Args:
+            base_dir (str): base directory
+            folder_name (str) : name of the data directory (usually 'rawdata')
+            session (int): session to be processed
+            group (str, optional ) : group 
+            group (str,optional): Optional group to include in path
+    """
+
+    if group:
+        source_data_dir = os.path.join(base_dir,folder_name, group)
+    else:
+        source_data_dir = os.path.join(base_dir, folder_name)
+
+    subjects_raw = os.listdir(source_data_dir)
+    pattern = re.compile(r"^sub.*")
+    subjects = [s[4:] for s in subjects_raw if pattern.match(s)]
+
+    print(subjects)
+    existing_files = []
+    missing_files = []
+    matching_subject_ids = []
+
+    for subject_id in subjects:
+        subject_has_all_files = True
+
+        for key, template in templates.items():
+            # Format the template with subject_id and session_id
+            path_pattern = template.format(subject_id=subject_id, ses_id=session_id)
+            full_path_pattern = os.path.join(source_data_dir, path_pattern)
+
+            # Use glob to handle the wildcard and find matching files
+            matching_files = glob.glob(full_path_pattern)
+
+            if matching_files:
+                existing_files.extend(matching_files)
+            else:
+                missing_files.append(full_path_pattern)
+                subject_has_all_files = False
+
+        if subject_has_all_files:
+            matching_subject_ids.append(subject_id)
+
+
+    print(len(matching_subject_ids))
+
+    return matching_subject_ids, existing_files, missing_files
+
+
+def get_list_sessions_inverse_phase(base_dir: str,folder_name: str, session: int,group: str = None):
     """
     Get the list of subject that underwent session i and were aquired an inverse phase
 
     Args:
             base_dir (str): base directory
-            groups (str): group of subject to be processed (either patients, temoins etc. )
+            folder_name (str) :s
             session (int): session to be processed
+            group (str, optional): group of subject to be processed (either patients, temoins etc. )
+
 
     """
 
     # Get subjects ids which participated in session i
-    source_data_dir = os.path.join(base_dir, "nifti3", groups)
+
+    if group:
+        source_data_dir = os.path.join(base_dir,folder_name, group)
+    else:
+        source_data_dir = os.path.join(base_dir, folder_name)
 
     subjects_raw = os.listdir(source_data_dir)
-    pattern = re.compile(r"^sub-\d")
+    pattern = re.compile(r"^sub.*")
     subjects = [s for s in subjects_raw if pattern.match(s)]
 
     haveSes = []

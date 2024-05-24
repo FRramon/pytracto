@@ -42,9 +42,9 @@ def execute_synth_workflow(
     data_dir: str,
     base_directory: str,
     out_dir: str,
-    tckgen_ntracks_param: int,
     subject_list: list,
     ses_list: list,
+    templates: dict,
     **kwargs,
 ):
     """
@@ -55,7 +55,6 @@ def execute_synth_workflow(
           data_dir (str): path to nifti files
           base_directory (str): father branch of data_dir
           out_dir (str): chosen output folder
-          tckgen_ntracks_param (int): TO REMOVE
           subject_list (list[str]): subjects list in the format ['01','02','03']
           ses_list (list[int]): session list in the format [1,2,3]
           **kwargs: keywords argument for specific pipeline parameters
@@ -68,12 +67,12 @@ def execute_synth_workflow(
 
     # tester si il est ok si je cree un dossier synth et que je cherche dedans (le risque est d'avoir une incompatibilité bids)
 
-    templates = {
-        "anat": "sub-{subject_id}/ses-{ses_id}/anat/sub-{subject_id}_ses-{ses_id}_T1w.nii.gz",
-        "dwiPA": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.nii.gz",
-        "bvalPA": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.bval",
-        "bvecPA": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.bvec",
-    }
+    # templates = {
+    #     "anat": "sub-{subject_id}/ses-{ses_id}/anat/sub-{subject_id}_ses-{ses_id}_T1w.nii.gz",
+    #     "dwiPA": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.nii.gz",
+    #     "bvalPA": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.bval",
+    #     "bvecPA": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.bvec",
+    # }
 
     sf = Node(SelectFiles(templates), name="sf")
     sf.inputs.base_directory = data_dir

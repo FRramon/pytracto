@@ -37,9 +37,9 @@ def execute_even_workflow(
     data_dir: str,
     base_directory: str,
     out_dir: str,
-    tckgen_ntracks_param: int,
     subject_list: list,
     ses_list: list,
+    templates: dict,
     **kwargs,
 ):
     """
@@ -50,7 +50,6 @@ def execute_even_workflow(
     data_dir : str, path to nifti files
     base_directory : str, father branch of data_dir
     out_dir : chosen output folder
-    tckgen_ntracks_param : str, TO REMOVE
     subject_list : list, subjects list in the format ['01','02','03']
     ses_list: list, session list in the format [1,2,3]
     **kwargs: keywords argument for specific pipeline parameters
@@ -62,15 +61,15 @@ def execute_even_workflow(
     )
     infosource.iterables = [("subject_id", subject_list), ("ses_id", ses_list)]
 
-    templates = {
-        "anat": "sub-{subject_id}/ses-{ses_id}/anat/sub-{subject_id}_ses-{ses_id}_T1w.nii.gz",
-        "dwiPA": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.nii.gz",
-        "bvalPA": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.bval",
-        "bvecPA": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.bvec",
-        "dwiAP": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-AP_dwi.nii.gz",
-        "bvalAP": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-AP_dwi.bval",
-        "bvecAP": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-AP_dwi.bvec",
-    }
+    # templates = {
+    #     "anat": "sub-{subject_id}/ses-{ses_id}/anat/sub-{subject_id}_ses-{ses_id}_T1w.nii.gz",
+    #     "dwiPA": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.nii.gz",
+    #     "bvalPA": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.bval",
+    #     "bvecPA": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.bvec",
+    #     "dwiAP": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-AP_dwi.nii.gz",
+    #     "bvalAP": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-AP_dwi.bval",
+    #     "bvecAP": "sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-AP_dwi.bvec",
+    # }
 
     sf = Node(SelectFiles(templates), name="sf")
     sf.inputs.base_directory = data_dir
@@ -478,11 +477,11 @@ def execute_even_workflow(
         "tck2connectomeDet.in_file",
     )
 
-    main_wf.write_graph(graph2use="colored", dotfilename="./mult_11_12.dot")
-    wf_tractography.write_graph(
-        graph2use="orig", dotfilename="./graph_tractography.dot"
-    )
-    wf_dc.write_graph(graph2use="orig", dotfilename="./graph_dc.dot")
-    connectome.write_graph(graph2use="orig", dotfilename="./graph_connectome.dot")
+    #main_wf.write_graph(graph2use="colored", dotfilename="./pipeline_graph.dot")
+    # wf_tractography.write_graph(
+    #     graph2use="orig", dotfilename="./graph_tractography.dot"
+    # )
+    # wf_dc.write_graph(graph2use="orig", dotfilename="./graph_dc.dot")
+    # connectome.write_graph(graph2use="orig", dotfilename="./graph_connectome.dot")
 
-    main_wf.run(plugin=plugin_processing, plugin_args={"n_procs": 12})
+    main_wf.run(plugin=kwargs.get("plugin_processing"), plugin_args={"n_procs": 12})

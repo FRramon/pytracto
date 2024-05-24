@@ -11,7 +11,7 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    packages=["pytracto", "pytracto.QA_check"],
+    packages=["pytracto", "pytracto.QA_check","pytracto.tractography"],
     install_requires=[
         "python-on-whales>=0.71",
         "pybids>=0.16",
