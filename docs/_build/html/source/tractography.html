@@ -193,17 +193,29 @@ Particularly adapted for subjects without inverse phase</p>
 <section id="module-tractography.tractography_utils">
 <span id="tractography-tractography-utils-module"></span><h2>tractography.tractography_utils module<a class="headerlink" href="#module-tractography.tractography_utils" title="Link to this heading"></a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="tractography.tractography_utils.check_dimensions_problems">
-<span class="sig-prename descclassname"><span class="pre">tractography.tractography_utils.</span></span><span class="sig-name descname"><span class="pre">check_dimensions_problems</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.tractography_utils.check_dimensions_problems" title="Link to this definition"></a></dt>
-<dd><p>Get the list of subject in session i that have a dimensionality issue in their images.</p>
+<dt class="sig sig-object py" id="tractography.tractography_utils.check_problems_nifti">
+<span class="sig-prename descclassname"><span class="pre">tractography.tractography_utils.</span></span><span class="sig-name descname"><span class="pre">check_problems_nifti</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.tractography_utils.check_problems_nifti" title="Link to this definition"></a></dt>
+<dd><p>Get the list of subject that can be processed using the diffusion workflows</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>source_dir</strong> (<em>str</em>) – source directory (parent folder of dicom directory)</p></li>
 <li><p><strong>base_dir</strong> (<em>str</em>) – base directory</p></li>
-<li><p><strong>groups</strong> (<em>str</em>) – group of subject to be processed (either patients, temoins etc. )</p></li>
+<li><p><strong>folder_name</strong> (<em>str</em>) – s</p></li>
 <li><p><strong>session</strong> (<em>int</em>) – session to be processed</p></li>
+<li><p><strong>templates</strong> (<em>dict</em>) – template for MRI aquisition</p></li>
+<li><p><strong>group</strong> (<em>str</em><em>, </em><em>optional</em>) – group of subject to be processed (either patients, temoins etc. )</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>the list of subjects that can be processed</p></li>
+<li><p>the list of subjects having dimensions issues</p></li>
+<li><p>the list of subjects having template issues</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a tuple comprising</p>
 </dd>
 </dl>
 </dd></dl>
@@ -226,17 +238,22 @@ Particularly adapted for subjects without inverse phase</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="tractography.tractography_utils.get_ids_by_sessions">
-<span class="sig-prename descclassname"><span class="pre">tractography.tractography_utils.</span></span><span class="sig-name descname"><span class="pre">get_ids_by_sessions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.tractography_utils.get_ids_by_sessions" title="Link to this definition"></a></dt>
-<dd><p>Get subject identifiers that went into session i, had or not inverse phase, had or not a dimension issue.</p>
+<dt class="sig sig-object py" id="tractography.tractography_utils.extract_dim">
+<span class="sig-prename descclassname"><span class="pre">tractography.tractography_utils.</span></span><span class="sig-name descname"><span class="pre">extract_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.tractography_utils.extract_dim" title="Link to this definition"></a></dt>
+<dd><p>Explore nifti headers to search for a potential dimension error.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>source_dir</strong> (<em>str</em>) – source directory (parent folder of dicom directory)</p></li>
-<li><p><strong>base_dir</strong> (<em>str</em>) – base directory</p></li>
-<li><p><strong>groups</strong> (<em>str</em>) – group of subject to be processed (either patients, temoins etc. )</p></li>
-<li><p><strong>session</strong> (<em>int</em>) – session to be processed</p></li>
+<dd class="field-odd"><p><strong>pattern</strong> – file path pattern for the nifti image to be analyzed</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>a list of three int : dimension x,y,z</p></li>
+<li><p>a boolean, True if the image has a dimension error</p></li>
 </ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a tuple comprising</p>
 </dd>
 </dl>
 </dd></dl>
@@ -258,8 +275,19 @@ Particularly adapted for subjects without inverse phase</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="tractography.tractography_utils.get_list_sessions_inverse_phase">
-<span class="sig-prename descclassname"><span class="pre">tractography.tractography_utils.</span></span><span class="sig-name descname"><span class="pre">get_list_sessions_inverse_phase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.tractography_utils.get_list_sessions_inverse_phase" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="tractography.tractography_utils.isEmpty">
+<span class="sig-prename descclassname"><span class="pre">tractography.tractography_utils.</span></span><span class="sig-name descname"><span class="pre">isEmpty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.tractography_utils.isEmpty" title="Link to this definition"></a></dt>
+<dd><p>Function to check if a directory exists and is empty</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – path to folder</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tractography.tractography_utils.workflow_repartition">
+<span class="sig-prename descclassname"><span class="pre">tractography.tractography_utils.</span></span><span class="sig-name descname"><span class="pre">workflow_repartition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.tractography_utils.workflow_repartition" title="Link to this definition"></a></dt>
 <dd><p>Get the list of subject that underwent session i and were aquired an inverse phase</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -267,19 +295,24 @@ Particularly adapted for subjects without inverse phase</p>
 <li><p><strong>base_dir</strong> (<em>str</em>) – base directory</p></li>
 <li><p><strong>folder_name</strong> (<em>str</em>) – s</p></li>
 <li><p><strong>session</strong> (<em>int</em>) – session to be processed</p></li>
+<li><p><strong>templates</strong> (<em>dict</em>) – template for MRI aquisition</p></li>
+<li><p><strong>shell</strong> (<em>str</em>) – either ‘multishell’ or ‘singleshell’, require multishell for b != 0 &gt; 1</p></li>
 <li><p><strong>group</strong> (<em>str</em><em>, </em><em>optional</em>) – group of subject to be processed (either patients, temoins etc. )</p></li>
 </ul>
 </dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="tractography.tractography_utils.isEmpty">
-<span class="sig-prename descclassname"><span class="pre">tractography.tractography_utils.</span></span><span class="sig-name descname"><span class="pre">isEmpty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.tractography_utils.isEmpty" title="Link to this definition"></a></dt>
-<dd><p>Function to check if a directory exists and is empty</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – path to folder</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>list of subjects that check template</p></li>
+<li><p>list of subjects that must go in even_workflow (multishell data)</p></li>
+<li><p>list of subjects that must go in odd_workflow (multishell data)</p></li>
+<li><p>list of subjects that must go in synth_workflow (multishell data)</p></li>
+<li><p>list of subjects that must go in singleshell_workflow (singleshell data)</p></li>
+<li><p>list of subjects that must go in singleshellsynth_workflow (singleshell data)</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a tuple, comprising</p>
 </dd>
 </dl>
 </dd></dl>
