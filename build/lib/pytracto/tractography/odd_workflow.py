@@ -51,13 +51,13 @@ def execute_odd_workflow(
     Workflow for diffusion MRI tractography and connectivity matrixes creation.
     Particularly adapted for subjects with 3PA/1AP or 3AP/1PA
 
-    Arguments:
-    data_dir : str, path to nifti files
-    base_directory : str, father branch of data_dir
-    out_dir : chosen output folder
-    subject_list : list, subjects list in the format ['01','02','03']
-    ses_list: list, session list in the format [1,2,3]
-    **kwargs: keywords argument for specific pipeline parameters
+    Args:
+          data_dir (str): path to nifti files
+          base_directory (str): father branch of data_dir
+          out_dir (str): chosen output folder
+          subject_list (list[str]): subjects list in the format ['01','02','03']
+          ses_list (list[int]): session list in the format [1,2,3]
+          **kwargs: keywords argument for specific pipeline parameters
 
     """
 
