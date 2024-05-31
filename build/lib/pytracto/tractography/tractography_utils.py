@@ -463,16 +463,16 @@ def workflow_repartition(base_dir: str,folder_name: str, session: int,templates,
     ### Get the list of subject having two PA and two AP --> even
 
 
-    print(f"Even Workflow : {have_even}")
-    print(f"Odd Workflow : {have_odd}")
-    print(f"Synth Workflow : {have_not}")
-    print(f"Single shell Workflow : {have_single}")
-    print(f"Single shell synth Workflow : {have_single_not}")
+    # print(f"Even Workflow : {have_even}")
+    # print(f"Odd Workflow : {have_odd}")
+    # print(f"Synth Workflow : {have_not}")
+    # print(f"Single shell Workflow : {have_single}")
+    # print(f"Single shell synth Workflow : {have_single_not}")
 
 
 
 
-    return haveSes, have_even, have_odd, have_not
+    return haveSes, have_even, have_odd, have_not,have_single,have_single_not
 
 
 
