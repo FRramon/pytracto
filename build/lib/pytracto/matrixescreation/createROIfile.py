@@ -10,39 +10,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import subprocess
 
-# source_dir = '/mnt/POOL_IRM08/CONHECT'
-# ses_list = [1,3]
-# group = "Patients"
-# dicom_dir = "/mnt/POOL_IRM06/CONHECT/ConhectDatabase"
-
-# sys.path.append(source_dir + '/dmri-pipeline')
 from pytracto.tractography.tractography_utils import *
 
 
-# r = get_ids_by_sessions("/mnt/POOL_IRM06/CONHECT/ConhectDatabase","/mnt/POOL_IRM08/CONHECT","Patients",3)
-# even_list = r[1]
-# odd_list = r[2]
-
-
-# subject_list_even = even_list[0].split(',')
-# subject_list_odd = odd_list[0].split(',')
-
-# if subject_list_odd != [''] and subject_list_even != ['']:
-# 	subject_list = subject_list_odd + subject_list_even
-# elif subject_list_odd == [''] :
-# 	subject_list = subject_list_even
-# elif subject_list_even == [''] :
-# 	subject_list = subject_list_odd
-
-# #ses_list = session_raw.split(',')
-# print(subject_list)
-# print(ses_list)
-
-# if group_raw == 'HealthyVolunteers':
-# 	result_dir = os.path.join(source_dir , 'results_test2')
-
-
-def create_roi_file(source_dir: str, dicom_dir: str, ses_list: list, group: str):
+def create_roi_file(base_dir, derivatives_folder, rawdata_folder, templates, ses_list, group = None,**kwargs):
     """
     This function create a xlsx file containing information of all connectivity matrixes for all subjects/sessions in a group.
 
@@ -52,45 +23,40 @@ def create_roi_file(source_dir: str, dicom_dir: str, ses_list: list, group: str)
             ses_list (list[str]): list of sessions to be processed
             group (str): group of patients (either patients, temoins etc. )
     """
+
+
     if group == "Patients":
         result_dir = os.path.join(
-            source_dir, "full_results", "main_workflow", "connectome"
+            base_dir, derivatives_folder , "main_workflow", "connectome"
         )
+    else:
+        result_dir =  os.path.join(
+            base_dir, derivatives_folder, "main_workflow", "connectome"
+        ) ### Changer ici
 
     print(result_dir)
-    # elif group_raw == 'Controls':
-    # 	result_dir = os.path.join(source_dir , 'pipe_controls')
+   
+    method = "Deterministic"
+    atlas = "Destrieux"
 
-    metric_list = ["fwf", "odi", "ndi"]  # ["fa","sc","ad","adc","rd"]
+    metric_list = ["sc"]#, "odi", "ndi"]  # ["fa","sc","ad","adc","rd","fwf"]
 
     for metric in metric_list:
         all_non_zero_entries = []
         for ses in ses_list:
-            r = get_ids_by_sessions(dicom_dir, source_dir, group, ses)
-            even_list = r[1]
-            odd_list = r[2]
 
-            subject_list_even = even_list[0].split(",")
-            subject_list_odd = odd_list[0].split(",")
 
-            if subject_list_odd != [""] and subject_list_even != [""]:
-                subject_list = subject_list_odd + subject_list_even
-            elif subject_list_odd == [""]:
-                subject_list = subject_list_even
-            elif subject_list_even == [""]:
-                subject_list = subject_list_odd
+            slist = check_problems_nifti(base_dir, rawdata_folder, templates, ses, group)
+            subject_list = slist[0]
 
-            # ses_list = session_raw.split(',')
-            print(subject_list)
 
-            ses = "00" + str(ses)
 
             for sub in subject_list:
                 identifier = "_ses_id_" + ses + "_subject_id_" + sub
-                connectome_dir = os.path.join(result_dir, identifier, metric)
+                connectome_dir = os.path.join(result_dir, identifier, method,atlas,metric)
                 print(connectome_dir)
                 if not os.path.exists(connectome_dir):
-                    sys.exit(
+                    print(
                         f"Error File not Found: Pipeline has not created connectome matrix for {sub} on {ses}"
                     )
                 else:
@@ -137,7 +103,9 @@ def create_roi_file(source_dir: str, dicom_dir: str, ses_list: list, group: str)
 
                     print(f"--- Add cortical zones labels to roi file")
 
-                    input_file = source_dir + "/dmri-pipeline/fs_a2009s.txt"
+                    # Load fs_2009.txt file
+                    input_file = kwargs.get('labelconvert_param')
+
                     df_labelconvert = pd.read_csv(
                         input_file,
                         delim_whitespace=True,
@@ -176,16 +144,13 @@ def create_roi_file(source_dir: str, dicom_dir: str, ses_list: list, group: str)
 
         result_df = pd.concat(all_non_zero_entries)
 
-        group_dir = source_dir + "/dmri-pipeline/derivatives/test11avr"
+        group_dir = os.path.join(base_dir,derivatives_folder,'main_workflow','grouped_results')
         if not os.path.exists(group_dir):
             os.makedirs(group_dir)
 
         # Write the result DataFrame to a new CSV file
-        output_file = group_dir + f"/{metric}_ROIs.csv"
+        output_file = group_dir + f"/{method}_{atlas}_{metric}_ROIs_test.csv"
         print(output_file)
         result_df.to_csv(output_file, mode="w", index=False)
 
 
-# 		# print(result_dir)
-
-# # |Group | Sub-id | Ses-id | Metric | ROI1 | ROI2 |

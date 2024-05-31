@@ -10,11 +10,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import subprocess
 
-
 from pytracto.tractography.tractography_utils import *
 
 
-def create_roi_file(base_dir, folder_name, templates, ses_list, group,**kwargs):
+def create_roi_file(base_dir, derivatives_folder, rawdata_folder, templates, ses_list, group = None,**kwargs):
     """
     This function create a xlsx file containing information of all connectivity matrixes for all subjects/sessions in a group.
 
@@ -28,12 +27,12 @@ def create_roi_file(base_dir, folder_name, templates, ses_list, group,**kwargs):
 
     if group == "Patients":
         result_dir = os.path.join(
-            base_dir, "full_results", "main_workflow", "connectome"
+            base_dir, derivatives_folder , "main_workflow", "connectome"
         )
     else:
         result_dir =  os.path.join(
-            base_dir, kwargs.get("out_dir"), "main_workflow", "connectome"
-        )
+            base_dir, derivatives_folder, "main_workflow", "connectome"
+        ) ### Changer ici
 
     print(result_dir)
    
@@ -47,7 +46,7 @@ def create_roi_file(base_dir, folder_name, templates, ses_list, group,**kwargs):
         for ses in ses_list:
 
 
-            slist = check_problems_nifti(base_dir, folder_name, templates, ses, group)
+            slist = check_problems_nifti(base_dir, rawdata_folder, templates, ses, group)
             subject_list = slist[0]
 
 
@@ -57,7 +56,7 @@ def create_roi_file(base_dir, folder_name, templates, ses_list, group,**kwargs):
                 connectome_dir = os.path.join(result_dir, identifier, method,atlas,metric)
                 print(connectome_dir)
                 if not os.path.exists(connectome_dir):
-                    sys.exit(
+                    print(
                         f"Error File not Found: Pipeline has not created connectome matrix for {sub} on {ses}"
                     )
                 else:
@@ -104,7 +103,9 @@ def create_roi_file(base_dir, folder_name, templates, ses_list, group,**kwargs):
 
                     print(f"--- Add cortical zones labels to roi file")
 
-                    input_file = source_dir + "/dmri-pipeline/fs_a2009s.txt"
+                    # Load fs_2009.txt file
+                    input_file = kwargs.get('labelconvert_param')
+
                     df_labelconvert = pd.read_csv(
                         input_file,
                         delim_whitespace=True,
@@ -143,12 +144,12 @@ def create_roi_file(base_dir, folder_name, templates, ses_list, group,**kwargs):
 
         result_df = pd.concat(all_non_zero_entries)
 
-        group_dir = kwargs.get("out_dir")
+        group_dir = os.path.join(base_dir,derivatives_folder,'main_workflow','grouped_results')
         if not os.path.exists(group_dir):
             os.makedirs(group_dir)
 
         # Write the result DataFrame to a new CSV file
-        output_file = group_dir + f"/{metric}_ROIs.csv"
+        output_file = group_dir + f"/{method}_{atlas}_{metric}_ROIs_test.csv"
         print(output_file)
         result_df.to_csv(output_file, mode="w", index=False)
 
