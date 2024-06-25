@@ -24,7 +24,7 @@ jobs:
         with:
           python-version: '3.11'
       - run: |
-          pip install sphinx sphinx_rtd_theme myst_parser furo
+          pip install sphinx sphinx_rtd_theme myst_parser furo sphinx-copybutton
       - name: Sphinx build
         run: |
           sphinx-build docs _build
