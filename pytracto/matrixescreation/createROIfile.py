@@ -36,10 +36,26 @@ def create_roi_file(base_dir, derivatives_folder, rawdata_folder, templates, ses
 
     print(result_dir)
    
-    method = "Deterministic"
-    atlas = "Destrieux"
+    # method = "Deterministic"
+    # atlas = "Destrieux"
 
-    metric_list = ["sc"]#, "odi", "ndi"]  # ["fa","sc","ad","adc","rd","fwf"]
+    #metric_list = ["sc", "odi", "ndi","fa","sc","ad","adc","rd","fwf"]
+
+    metric_list = kwargs.get('metric_list')
+    atlas = kwargs.get("atlas")
+    method = kwargs.get('method')
+
+    group_dir = os.path.join(base_dir,derivatives_folder,'main_workflow','stats_in_all_wm')
+    if not os.path.exists(group_dir):
+        os.makedirs(group_dir)
+
+    method_dir = os.path.join(group_dir,method)
+    if not os.path.exists(method_dir):
+        os.makedirs(method_dir)
+
+    atlas_dir = os.path.join(method_dir,atlas)
+    if not os.path.exists(atlas_dir):
+        os.makedirs(atlas_dir)
 
     for metric in metric_list:
         all_non_zero_entries = []
@@ -78,18 +94,18 @@ def create_roi_file(base_dir, derivatives_folder, rawdata_folder, templates, ses
                             connectome_dir, f"{metric.upper()}_connectivity_matrix.csv"
                         )
 
-                    df = pd.read_csv(input_file)
+                    df = pd.read_csv(input_file,header=None) # previously no header = None
                     # Create a list to store the non-zero entries for each subject and session
                     non_zero_entries = []
                     for i in range(df.shape[0]):
-                        for j in range(i + 1, df.shape[1]):
-                            if df.iloc[i, j] != 0 and i != 0 and j != 0:
+                        for j in range(i, df.shape[1]): # originally range (i + 1 ,df.shape[0]) but missing right cerebellum
+                            if df.iloc[i, j] != 0:
                                 non_zero_entries.append(
                                     {
                                         "subject": sub,
                                         "session": ses,
-                                        "i": i,
-                                        "j": j,
+                                        "i": i+1, # since labels are between 1 and 164 in destrieux atlas, between 1 and 400 in schaefer
+                                        "j": j+1,
                                         metric: df.iloc[i, j],
                                     }
                                 )
@@ -144,12 +160,8 @@ def create_roi_file(base_dir, derivatives_folder, rawdata_folder, templates, ses
 
         result_df = pd.concat(all_non_zero_entries)
 
-        group_dir = os.path.join(base_dir,derivatives_folder,'main_workflow','grouped_results')
-        if not os.path.exists(group_dir):
-            os.makedirs(group_dir)
-
         # Write the result DataFrame to a new CSV file
-        output_file = group_dir + f"/{method}_{atlas}_{metric}_ROIs_test.csv"
+        output_file = atlas_dir + f"/{method}_{atlas}_{metric}_ROIs_test.csv"
         print(output_file)
         result_df.to_csv(output_file, mode="w", index=False)
 

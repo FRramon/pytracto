@@ -19,24 +19,15 @@ logging.update_logging(config)
 ###########      Data Conversion       ###################
 ##########################################################
 
-# data_dir = sys.argv[1]
-# subject_raw = sys.argv[2]
-# session_raw = sys.argv[3]
-# base_directory = sys.argv[4]
-# out_dir = sys.argv[5]
 
-# tckgen_ntracks_param = int(sys.argv[6])
-
-# subject_list = subject_raw.split(',')
-# ses_list = session_raw.split(',')
 
 ############# DC : Node Definition #######################
 
 
 def execute_even_workflow(
-    data_dir: str,
-    base_directory: str,
-    out_dir: str,
+    source_dir: str,
+    rawdata_dir: str,
+    derivatives_dir: str,
     subject_list: list,
     ses_list: list,
     templates: dict,
@@ -47,9 +38,9 @@ def execute_even_workflow(
     Particularly adapted for subjects with 2PA/2AP
     
     Args:
-          data_dir (str): path to nifti files
-          base_directory (str): father branch of data_dir
-          out_dir (str): chosen output folder
+          source_dir (str): base directory 
+          rawdata_dir (str):  path to nifti files
+          derivatives_dir (str): chosen derivatives folder
           subject_list (list[str]): subjects list in the format ['01','02','03']
           ses_list (list[int]): session list in the format [1,2,3]
           **kwargs: keywords argument for specific pipeline parameters
@@ -72,7 +63,7 @@ def execute_even_workflow(
     # }
 
     sf = Node(SelectFiles(templates), name="sf")
-    sf.inputs.base_directory = data_dir
+    sf.inputs.base_directory = rawdata_dir
 
     # Conversion des DWI PA en .mif (utilisation du nifti, bvec et bval) +
     # Concatenation
@@ -90,7 +81,7 @@ def execute_even_workflow(
 
     ############# DC : Connecting the WF #######################
 
-    wf_dc = Workflow(name="wf_dc", base_dir=base_directory)
+    wf_dc = Workflow(name="wf_dc", base_dir=derivatives_dir)
     wf_dc.config["execution"]["use_caching"] = "True"
     wf_dc.config["execution"]["hash_method"] = "content"
 
@@ -112,11 +103,11 @@ def execute_even_workflow(
     ########          Freesurfer  Workflow           ###########
     ############################################################
 
-    os.environ["SUBJECTS_DIR"] = data_dir
+    os.environ["SUBJECTS_DIR"] = rawdata_dir
     fs_reconall = Node(ReconAll(), name="fs_reconall")
     fs_reconall.inputs.directive = kwargs.get("reconall_param")
     # .inputs.subjects_dir = data_dir
-    fs_workflow = Workflow(name="fs_workflow", base_dir=base_directory)
+    fs_workflow = Workflow(name="fs_workflow", base_dir=derivatives_dir)
     fs_workflow.config["execution"]["use_caching"] = "True"
     fs_workflow.config["execution"]["hash_method"] = "content"
 
@@ -186,7 +177,7 @@ def execute_even_workflow(
 
     ##########           Preproc Connecting the WF         ##########
 
-    wf_preproc = Workflow(name="preproc", base_dir=base_directory)
+    wf_preproc = Workflow(name="preproc", base_dir=derivatives_dir)
     wf_preproc.config["execution"]["use_caching"] = "True"
     wf_preproc.config["execution"]["hash_method"] = "content"
 
@@ -318,7 +309,7 @@ def execute_even_workflow(
 
     #############     Tractography: Connecting the WF    ##################
 
-    wf_tractography = Workflow(name="wf_tractography", base_dir=base_directory)
+    wf_tractography = Workflow(name="wf_tractography", base_dir=derivatives_dir)
     wf_tractography.config["execution"]["use_caching"] = "True"
     wf_tractography.config["execution"]["hash_method"] = "content"
 
@@ -371,7 +362,7 @@ def execute_even_workflow(
     ############          Connectome construction          ################
     #######################################################################
 
-    connectome = Workflow(name="connectome", base_dir=base_directory)
+    connectome = Workflow(name="connectome", base_dir=derivatives_dir)
     connectome.config["execution"]["use_caching"] = "True"
     connectome.config["execution"]["hash_method"] = "content"
 
@@ -412,33 +403,12 @@ def execute_even_workflow(
     connectome.connect(transform_parcels, "out_file", tck2connectome, "in_parc")
     connectome.connect(transform_parcels, "out_file", tck2connectomeDet, "in_parc")
 
-    ######################################################################
-    ######            Data Sink                           ################
-    ######################################################################
-
-    def custom_output_path(out_dir, sub_id, ses_id):
-        import os
-
-        return os.path.join(out_dir, f"sub-{sub_id}/ses-{ses_id}")
-
-    datasink = Node(DataSink(), name="datasink")
-    datasink.inputs.parameterization = False
-    datasink.inputs.base_directory = out_dir
-
-    custom_path = Node(
-        Function(
-            input_names=["out_dir", "sub_id", "ses_id"],
-            output_names=["custom_path"],
-            function=custom_output_path,
-        ),
-        name="custom_path",
-    )
 
     #######################################################################
     #########         Connecting Workflows together        ################
     #######################################################################
 
-    main_wf = Workflow(name="main_workflow", base_dir=base_directory)
+    main_wf = Workflow(name="main_workflow", base_dir=derivatives_dir)
     main_wf.config["execution"]["use_caching"] = "True"
     main_wf.config["execution"]["hash_method"] = "content"
 
