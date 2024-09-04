@@ -327,10 +327,8 @@ def workflow_repartition(base_dir: str,folder_name: str, session: str,templates,
                     all_files = acqs
                     list_nifti = [st for st in all_files if "fmap" in st]
                     if len([s for s in list_nifti if 'dir-AP' in s]) != 0 :
-                        print("yes")
                         have_single.append(s)
                 else: 
-                    print("no")
                     have_single_not.append(s)
 
 
