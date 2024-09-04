@@ -326,10 +326,11 @@ def workflow_repartition(base_dir: str,folder_name: str, session: str,templates,
                 if os.path.exists(os.path.join(ses_path,'fmap')):
                     all_files = acqs
                     list_nifti = [st for st in all_files if "fmap" in st]
-                    list_phase = [st.split("_")[2] for st in list_nifti]
-                    if 'dir-AP' in list_phase:
+                    if len([s for s in list_nifti if 'dir-AP' in s]) != 0 :
+                        print("yes")
                         have_single.append(s)
                 else: 
+                    print("no")
                     have_single_not.append(s)
 
 
@@ -401,11 +402,13 @@ def workflow_repartition(base_dir: str,folder_name: str, session: str,templates,
 
 
 # r = workflow_repartition(base_dir ='/Volumes/LaCie',folder_name = 'nifti3', session ="001",templates = templates_seq,shell = "multishell",group = 'Patients')
-#r = workflow_repartition(base_dir ='/Volumes/LaCie/nifti3',folder_name = 'nifti3', session ="001",templates = templates_seq,shell = 'multishell',group ='Patients')
+# r = workflow_repartition(base_dir ='/Volumes/LaCie/APEX/apex_data',folder_name = 'rawdata', session ="post",templates = templates_apex,shell = 'singleshell')
 
 
 # print(r[0])
 # print(r[1])
 # print(r[2])
 # print(r[3])
+# print(r[4])
+# print(r[5])
 # print(r[6])

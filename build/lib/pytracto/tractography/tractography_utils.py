@@ -131,123 +131,6 @@ def check_template(base_dir:str,folder_name:str, session_id:str, templates:dict,
     return matching_subject_ids, existing_files, missing_files,non_matching_subject_ids
 
 
-# def check_dimensions_problems(
-#     source_dir: str, base_dir: str, groups: str, session: int
-# ):
-#     """
-#     Get the list of subject in session i that have a dimensionality issue in their images.
-
-#     Args:
-#             source_dir (str): source directory (parent folder of dicom directory)
-#             base_dir (str): base directory
-#             groups (str): group of subject to be processed (either patients, temoins etc. )
-#             session (int): session to be processed
-
-#     """
-
-#     session = "V" + str(session)
-#     # Get subjects ids which participated in session i
-#     source_data_dir = os.path.join(source_dir, groups)
-
-#     subjects = os.listdir(source_data_dir)
-
-#     haveProblem = []
-
-#     for s in subjects:
-#         ses_path = os.path.join(source_data_dir, s, session, "01-RawData")
-#         if os.path.isfile(os.path.join(ses_path, "description.json")):
-#             f = open(os.path.join(ses_path, "description.json"))
-#             data = json.load(f)
-#             b200 = [key for key in data.keys() if "dw-b0200" in key]
-#             b1500 = [key for key in data.keys() if "dw-b1500" in key]
-#             b2500_6 = [key for key in data.keys() if "dw-b2500-06dir" in key]
-#             b2500_60 = [key for key in data.keys() if "dw-b2500-60dir" in key]
-
-#             keys = b200 + b1500 + b2500_6 + b2500_60
-#             norms = [2170, 3220, 490, 4270]
-
-#             # print(haveProblem)
-
-#             for i, key in enumerate(keys):
-#                 folder = data[key]
-#                 if os.path.exists(os.path.join(ses_path, folder)):
-#                     nvols = len(os.listdir(os.path.join(ses_path, folder)))
-#                     statement = nvols == norms[i]
-#                     if statement == False:
-#                         # print(f"Problem on {key} for {s} : {nvols} instead of {norms[i]}")
-#                         haveProblem.append(s)
-
-#     equivalence_table = pd.read_csv(
-#         os.path.join(base_dir, "nifti3", "equivalence_table_Patients.csv")
-#     )
-
-#     # print(equivalence_table.head())
-
-#     sub_equi_table = equivalence_table[
-#         equivalence_table["conhect_label"].isin(haveProblem)
-#     ]
-#     sub_numbers = sub_equi_table["functional_label"].tolist()
-
-#     haveProblem = list(set(sub_numbers))
-#     haveProblem = [str(a) for a in haveProblem]
-
-#     return haveProblem
-
-
-# def get_ids_by_sessions(source_dir: str, base_dir: str, groups: str, session: int):
-#     """
-#     Get subject identifiers that went into session i, had or not inverse phase, had or not a dimension issue.
-
-#     Args:
-#             source_dir (str): source directory (parent folder of dicom directory)
-#             base_dir (str): base directory
-#             groups (str): group of subject to be processed (either patients, temoins etc. )
-#             session (int): session to be processed
-
-#     """
-#     haveSes, have_even, have_odd, have_not = get_list_sessions_inverse_phase(
-#         base_dir, groups, session
-#     )
-#     haveProblem = check_dimensions_problems(source_dir, base_dir, groups, session)
-
-#     haveSes = [s for s in haveSes if s not in haveProblem]
-#     transformed_list_Ses = ",".join(haveSes)
-#     result_list_Ses = [transformed_list_Ses]
-
-#     if session == 1:
-#         have_even = [s for s in have_even if s not in haveProblem and s != "16"]
-#         haveProblem.append("16")
-#     elif session == 2:
-#         have_even = [
-#             s
-#             for s in have_even
-#             if s not in haveProblem and s != "03" and s != "06" and s != "07"
-#         ]
-#         haveProblem.append("03")
-#         haveProblem.append("06")
-
-#     else:
-#         have_even = [s for s in have_even if s not in haveProblem]
-
-#     transformed_list_even = ",".join(have_even)
-#     result_list_even = [transformed_list_even]
-
-#     have_odd = [s for s in have_odd if s not in haveProblem]
-#     transformed_list_odd = ",".join(have_odd)
-#     result_list_odd = [transformed_list_odd]
-
-#     have_not = [s for s in have_not if s not in haveProblem]
-
-#     transformed_list_not = ",".join(have_not)
-#     result_list_not = [transformed_list_not]
-
-#     return (
-#         result_list_Ses,
-#         result_list_even,
-#         result_list_odd,
-#         result_list_not,
-#         haveProblem,
-#     )
 
 def extract_dim(pattern):
 
@@ -288,7 +171,7 @@ def extract_dim(pattern):
 
     return dims_order,dimension_error
 
-def check_problems_nifti(base_dir,folder_name,templates,session,group = None):
+def check_problems_nifti(base_dir: str,folder_name: str,templates: dict,session: str,group = None):
 
     """
     Get the list of subject that can be processed using the diffusion workflows
@@ -338,8 +221,11 @@ def check_problems_nifti(base_dir,folder_name,templates,session,group = None):
             #print(f"{key}: {dim}")
 
 
-    four_occurences = [subject_id for subject_id, count in Counter(list_dimension_error).items() if count == 4]
-    list_dimension_error = [s for s in list_dimension_error if s not in four_occurences]
+    # four_occurences = [subject_id for subject_id, count in Counter(list_dimension_error).items() if count == 4]
+    # list_dimension_error = [s for s in list_dimension_error if s not in four_occurences]
+
+    list_dimension_error = list(set(list_dimension_error))
+
 
     subject_set = set(subject_list)
     errors_set = set(list_dimension_error)
@@ -347,18 +233,19 @@ def check_problems_nifti(base_dir,folder_name,templates,session,group = None):
 
 
 
+
     return subject_to_process, list_dimension_error,res[3]
 
 
 
-def workflow_repartition(base_dir: str,folder_name: str, session: int,templates,shell,group: str = None):
+def workflow_repartition(base_dir: str,folder_name: str, session: str,templates,shell,group: str = None):
     """
     Get the list of subject that underwent session i and were aquired an inverse phase
 
     Args:
             base_dir (str): base directory
-            folder_name (str) :s
-            session (int): session to be processed
+            folder_name (str) : folder name, usually rawdata
+            session (str): session to be processed
             templates (dict) : template for MRI aquisition
             shell (str) : either 'multishell' or 'singleshell', require multishell for b != 0 > 1
             group (str, optional): group of subject to be processed (either patients, temoins etc. )
@@ -382,9 +269,9 @@ def workflow_repartition(base_dir: str,folder_name: str, session: int,templates,
     else:
         source_data_dir = os.path.join(base_dir, folder_name)
 
-    subjects_raw = os.listdir(source_data_dir)
-    pattern = re.compile(r"^sub.*")
-    subjects = [s for s in subjects_raw if pattern.match(s)]
+    # subjects_raw = os.listdir(source_data_dir)
+    # pattern = re.compile(r"^sub.*")
+    # subjects = [s for s in subjects_raw if pattern.match(s)]
 
     haveSes = []
     have_odd = []
@@ -405,11 +292,21 @@ def workflow_repartition(base_dir: str,folder_name: str, session: int,templates,
             haveSes.append(s)
 
             # print(s)
+            acqs = []
+            for key, template in templates.items():
+                file_pattern = f"{source_data_dir}/{template.format(subject_id=s, ses_id=session)}"
+                file_paths = glob.glob(file_pattern)[0]
+
+                acqs.append(file_paths)
+                        
+
 
             if shell == 'multishell':
 
-                all_files = os.listdir(os.path.join(ses_path, "dwi"))
-                list_nifti = [st for st in all_files if st[-7:] == ".nii.gz"]
+                all_files = acqs
+                list_nifti = [st for st in all_files if "dwi" in st]
+
+
                 list_phase = [st.split("_")[3] for st in list_nifti]
                 counter = Counter(list_phase)
 
@@ -427,8 +324,8 @@ def workflow_repartition(base_dir: str,folder_name: str, session: int,templates,
             elif shell == 'singleshell':
 
                 if os.path.exists(os.path.join(ses_path,'fmap')):
-                    all_files = os.listdir(os.path.join(ses_path, "fmap"))
-                    list_nifti = [st for st in all_files if st[-7:] == ".nii.gz"]
+                    all_files = acqs
+                    list_nifti = [st for st in all_files if "fmap" in st]
                     list_phase = [st.split("_")[2] for st in list_nifti]
                     if 'dir-AP' in list_phase:
                         have_single.append(s)
@@ -472,7 +369,7 @@ def workflow_repartition(base_dir: str,folder_name: str, session: int,templates,
 
 
 
-    return haveSes, have_even, have_odd, have_not,have_single,have_single_not
+    return haveSes, have_even, have_odd, have_not,have_single,have_single_not,subjects[1]
 
 
 
@@ -503,7 +400,7 @@ def workflow_repartition(base_dir: str,folder_name: str, session: int,templates,
 
 
 
-#r = workflow_repartition(base_dir ='/Volumes/LaCie/nifti3',folder_name = 'nifti3', session ="001",templates = templates_seq,group = 'Patients')
+# r = workflow_repartition(base_dir ='/Volumes/LaCie',folder_name = 'nifti3', session ="001",templates = templates_seq,shell = "multishell",group = 'Patients')
 #r = workflow_repartition(base_dir ='/Volumes/LaCie/nifti3',folder_name = 'nifti3', session ="001",templates = templates_seq,shell = 'multishell',group ='Patients')
 
 
@@ -511,3 +408,4 @@ def workflow_repartition(base_dir: str,folder_name: str, session: int,templates,
 # print(r[1])
 # print(r[2])
 # print(r[3])
+# print(r[6])
