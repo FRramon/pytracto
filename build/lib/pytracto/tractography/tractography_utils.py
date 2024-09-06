@@ -306,8 +306,10 @@ def workflow_repartition(base_dir: str,folder_name: str, session: str,templates,
                 all_files = acqs
                 list_nifti = [st for st in all_files if "dwi" in st]
 
+                list_filename = [os.path.basename(filepath) for filepath in list_nifti]
 
-                list_phase = [st.split("_")[3] for st in list_nifti]
+
+                list_phase = [st.split("_")[3] for st in list_filename]
                 counter = Counter(list_phase)
 
                 max_freq = max(counter.values())
@@ -400,7 +402,7 @@ def workflow_repartition(base_dir: str,folder_name: str, session: str,templates,
 
 
 # r = workflow_repartition(base_dir ='/Volumes/LaCie',folder_name = 'nifti3', session ="001",templates = templates_seq,shell = "multishell",group = 'Patients')
-# r = workflow_repartition(base_dir ='/Volumes/LaCie/APEX/apex_data',folder_name = 'rawdata', session ="post",templates = templates_apex,shell = 'singleshell')
+# r = workflow_repartition(base_dir ='/Volumes/LaCie',folder_name = 'nifti3', session ="001",templates = templates_seq,shell = 'multishell',group = 'Patients')
 
 
 # print(r[0])
