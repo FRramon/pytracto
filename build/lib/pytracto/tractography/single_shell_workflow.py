@@ -23,7 +23,7 @@ def execute_single_shell_workflow(
     rawdata_dir: str,
     derivatives_dir: str,
     subject_list: list,
-    ses_list: list,
+    session_list: str,
     templates: dict,
     **kwargs,
 ):
@@ -36,7 +36,7 @@ def execute_single_shell_workflow(
           rawdata_dir (str):  path to nifti files
           derivatives_dir (str): chosen derivatives folder
           subject_list (list[str]): subjects list in the format ['01','02','03']
-          ses_list (list[int]): session list in the format [1,2,3]
+          session_list (str): session id
           **kwargs: keywords argument for specific pipeline parameters
 
     """
@@ -44,7 +44,7 @@ def execute_single_shell_workflow(
     infosource = Node(
         IdentityInterface(fields=["subject_id", "ses_id"]), name="infosource"
     )
-    infosource.iterables = [("subject_id", subject_list), ("ses_id", ses_list)]
+    infosource.iterables = [("subject_id", subject_list),("ses_id", session_list)]
 
     sf = Node(SelectFiles(templates), name="sf")
     sf.inputs.base_directory = rawdata_dir

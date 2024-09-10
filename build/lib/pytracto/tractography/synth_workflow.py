@@ -29,7 +29,7 @@ def execute_synth_workflow(
     rawdata_dir: str,
     derivatives_dir: str,
     subject_list: list,
-    ses_list: list,
+    ses_id: str,
     templates: dict,
     **kwargs,
 ):
@@ -42,14 +42,15 @@ def execute_synth_workflow(
           rawdata_dir (str):  path to nifti files
           derivatives_dir (str): chosen derivatives folder
           subject_list (list[str]): subjects list in the format ['01','02','03']
-          ses_list (list[int]): session list in the format [1,2,3]
+          ses_id (str): session id
           **kwargs: keywords argument for specific pipeline parameters
 
     """
     infosource = Node(
         IdentityInterface(fields=["subject_id", "ses_id"]), name="infosource"
     )
-    infosource.iterables = [("subject_id", subject_list), ("ses_id", ses_list)]
+    infosource.inputs.ses_id = ses_id
+    infosource.iterables = [("subject_id", subject_list)]
 
     # tester si il est ok si je cree un dossier synth et que je cherche dedans (le risque est d'avoir une incompatibilité bids)
 

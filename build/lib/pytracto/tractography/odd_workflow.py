@@ -43,7 +43,7 @@ def execute_odd_workflow(
     rawdata_dir: str,
     derivatives_dir: str,
     subject_list: list,
-    ses_list: list,
+    ses_id: str,
     templates: dict,
     **kwargs,
 ):
@@ -56,7 +56,7 @@ def execute_odd_workflow(
           rawdata_dir (str):  path to nifti files
           derivatives_dir (str): chosen derivatives folder
           subject_list (list[str]): subjects list in the format ['01','02','03']
-          ses_list (list[int]): session list in the format [1,2,3]
+          ses_id (str): session id 
           **kwargs: keywords argument for specific pipeline parameters
 
     """
@@ -64,7 +64,8 @@ def execute_odd_workflow(
     infosource = Node(
         IdentityInterface(fields=["subject_id", "ses_id"]), name="infosource"
     )
-    infosource.iterables = [("subject_id", subject_list), ("ses_id", ses_list)]
+    infosource.inputs.ses_id = ses_id
+    infosource.iterables = [("subject_id", subject_list)]
 
     # templates = {
     #     "anat": "sub-{subject_id}/ses-{ses_id}/anat/sub-{subject_id}_ses-{ses_id}_T1w.nii.gz",
