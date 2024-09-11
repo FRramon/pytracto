@@ -13,6 +13,8 @@ import sys
 from nipype import config, logging
 
 config.enable_debug_mode()
+config.set('execution','use_relative_paths','true')
+config.set('execution','has_method','content')
 logging.update_logging(config)
 
 ##########################################################
