@@ -373,6 +373,49 @@ def workflow_repartition(base_dir: str,folder_name: str, session: str,templates,
     return haveSes, have_even, have_odd, have_not,have_single,have_single_not,subjects[1]
 
 
+def move_workflow(
+    original_dir: str,
+    destination_dir: str,
+    exception_subject_list: str):
+
+    """
+    Move a workflow from a directory to another with caching sustained
+
+    Args:
+          original_dir (str): path to the original derivatives directory 
+          destination_dir (str):  path the new derivatives directory 
+          exception_subject_list (str): a list of subject ids suffixes not to be migrated
+          
+    Note : currently take input subject ids as "_subject_id_{IN}" and move them as "_ses_id_pre_subject_id_{IN}". To change in the future (option rename)
+
+    """
+
+    wf_dir = os.path.join(original_dir,"main_workflow","wf_tractography")
+    list_dirs = os.listdir(wf_dir)
+    list_ids = [s.split("_")[-1] for s in list_dirs ]
+    subject_list = [s for s in list_ids if s not in exception_subject_list]
+
+    for sub in subject_list:
+        # Define new names for the folders
+        origsub =  f"_subject_id_{sub}"
+        newsub = f"_ses_id_pre_subject_id_{sub}"
+        print(newsub)
+
+        # Copy freesurfer, preprocessing, tractography and connectome workflows directories
+
+        command = f"rsync -av -delete {original_dir}/main_workflow/wf_tractography/{origsub}/ {destination_dir}/main_workflow/wf_tractography/{newsub}"
+        subprocess.run(command,shell = True)
+        
+        command = f"rsync -av -delete {original_dir}/main_workflow/preproc/{origsub}/ {destination_dir}/main_workflow/preproc/{newsub}"
+        subprocess.run(command,shell = True)
+        
+        command = f"rsync -av -delete {original_dir}/main_workflow/fs_workflow/{origsub}/ {destination_dir}/main_workflow/fs_workflow/{newsub}"
+        subprocess.run(command,shell = True)
+        
+        command = f"rsync -av -delete {original_dir}/main_workflow/connectome/{origsub}/ {destination_dir}/main_workflow/connectome/{newsub}"
+        subprocess.run(command,shell = True)
+
+
 
 # templates_apex = {
 #         "anat": "sub-{subject_id}/ses-{ses_id}/anat/sub-{subject_id}_ses-{ses_id}_T1w.nii.gz",
