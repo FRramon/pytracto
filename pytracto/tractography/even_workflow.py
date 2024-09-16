@@ -31,7 +31,7 @@ def execute_even_workflow(
     rawdata_dir: str,
     derivatives_dir: str,
     subject_list: list,
-    ses_id: str,
+    session_list: list,
     templates: dict,
     **kwargs,
 ):
@@ -53,7 +53,7 @@ def execute_even_workflow(
         IdentityInterface(fields=["subject_id","ses_id"]), name="infosource"
     )
     infosource.inputs.ses_id = ses_id
-    infosource.iterables = [("subject_id", subject_list)]
+    infosource.iterables = [("subject_id", subject_list),("ses_id",session_list)]
 
 
     sf = Node(SelectFiles(templates), name="sf")

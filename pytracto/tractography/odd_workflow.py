@@ -45,7 +45,7 @@ def execute_odd_workflow(
     rawdata_dir: str,
     derivatives_dir: str,
     subject_list: list,
-    ses_id: str,
+    session_list: list,
     templates: dict,
     **kwargs,
 ):
@@ -67,7 +67,7 @@ def execute_odd_workflow(
         IdentityInterface(fields=["subject_id", "ses_id"]), name="infosource"
     )
     infosource.inputs.ses_id = ses_id
-    infosource.iterables = [("subject_id", subject_list)]
+    infosource.iterables = [("subject_id", subject_list),("ses_id",session_list)]
 
     # templates = {
     #     "anat": "sub-{subject_id}/ses-{ses_id}/anat/sub-{subject_id}_ses-{ses_id}_T1w.nii.gz",
