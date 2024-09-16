@@ -13,6 +13,8 @@ import sys
 from nipype import config, logging
 
 config.enable_debug_mode()
+config.set('execution','use_relative_paths','true')
+config.set('execution','has_method','content')
 logging.update_logging(config)
 
 ##########################################################
@@ -29,7 +31,7 @@ def execute_even_workflow(
     rawdata_dir: str,
     derivatives_dir: str,
     subject_list: list,
-    ses_id: str,
+    session_list: list,
     templates: dict,
     **kwargs,
 ):
@@ -51,7 +53,7 @@ def execute_even_workflow(
         IdentityInterface(fields=["subject_id","ses_id"]), name="infosource"
     )
     infosource.inputs.ses_id = ses_id
-    infosource.iterables = [("subject_id", subject_list)]
+    infosource.iterables = [("subject_id", subject_list),("ses_id",session_list)]
 
 
     sf = Node(SelectFiles(templates), name="sf")

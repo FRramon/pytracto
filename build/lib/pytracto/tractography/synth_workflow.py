@@ -14,6 +14,8 @@ from pytracto.tractography.pipeline_parameters import *
 from nipype import config, logging
 
 config.enable_debug_mode()
+config.set('execution','use_relative_paths','true')
+config.set('execution','has_method','content')
 logging.update_logging(config)
 
 ##########################################################
@@ -29,7 +31,7 @@ def execute_synth_workflow(
     rawdata_dir: str,
     derivatives_dir: str,
     subject_list: list,
-    ses_id: str,
+    session_list: list,
     templates: dict,
     **kwargs,
 ):
@@ -50,7 +52,7 @@ def execute_synth_workflow(
         IdentityInterface(fields=["subject_id", "ses_id"]), name="infosource"
     )
     infosource.inputs.ses_id = ses_id
-    infosource.iterables = [("subject_id", subject_list)]
+    infosource.iterables = [("subject_id", subject_list),("ses_id",session_list)]
 
     # tester si il est ok si je cree un dossier synth et que je cherche dedans (le risque est d'avoir une incompatibilité bids)
 
