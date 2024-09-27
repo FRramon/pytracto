@@ -27,20 +27,19 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 
-# subject_raw = sys.argv[1]
-# session_raw = sys.argv[2]
-# source_dir = sys.argv[3]
 
-# sys.path.append(source_dir + '/code')
-# from run_parameters import *
-
-# subject_list = subject_raw.split(',')
-# ses_list = session_raw.split(',')
-
-from pytracto.bundlesegmentation.BundleSegmentationParameters import *
+#from pytracto.bundlesegmentation.BundleSegmentationParameters import *
 
 
-def bundle_segmentation(source_dir: str, subject_list: list, ses_list: list):
+
+## Dans kwargs : verbose et mni file
+
+def bundle_segmentation(
+    source_dir: str,
+    subject_list: list,
+    ses_list: list,
+    **kwargs
+    ):
     """
     Performs bundle segmentation using tractseg.
     DWI images are first registered to MNI152 space using a FA map.
@@ -53,7 +52,8 @@ def bundle_segmentation(source_dir: str, subject_list: list, ses_list: list):
             ses_list (list[int]): list of sessions
     """
 
-    mni_file = source_dir + "/code/MNI_FA_template.nii.gz"
+    mni_file = kwargs.get("mni_fa_filepath")#source_dir + "/code/MNI_FA_template.nii.gz"
+    verbose = kwargs.ge("verbose")
 
     for sub in subject_list:
         for ses in ses_list:
@@ -238,7 +238,56 @@ def bundle_segmentation(source_dir: str, subject_list: list, ses_list: list):
             elif verbose == True:
                 print("--- [Node] : Bundle mask already inverted")
 
-            # Mask the tractography (sift) inside the masks
+
+def tract_masking(
+    source_dir: str,
+    subject_list: list,
+    ses_list: list,
+    **kwargs
+    ):
+    """
+    Performs bundle segmentation using tractseg.
+    DWI images are first registered to MNI152 space using a FA map.
+    Tractseg segments into 72 bundles, using a U-net architecture
+    All 72 bundles are registered back to subject DWI space using inverse transform
+
+    Args:
+            source_dir (str): source directory of the DICOM
+            subject_list (list[str]): list of subjects
+            ses_list (list[int]): list of sessions
+    """
+    mni_file = source_dir + "/code/MNI_FA_template.nii.gz"
+
+    for sub in subject_list:
+        for ses in ses_list:
+
+
+            subject_id = "sub-" + sub
+            session_id = "ses-" + ses
+            identifier = "_ses_id_" + ses + "_subject_id_" + sub
+
+            print(f"Running on {subject_id} - {session_id}")
+
+            # Set up directories
+            main_workflow_dir = source_dir + "/" + pipe_name + "/main_workflow"
+            dwipreproc_dir = os.path.join(
+                main_workflow_dir, "preproc", identifier, "biascorrect"
+            )
+            tracto_dir = os.path.join(main_workflow_dir, "wf_tractography", identifier)
+            freesurfer_dir = os.path.join(
+                main_workflow_dir, "fs_workflow", identifier, "fs_reconall", sub, "mri"
+            )
+            connectome_dir = os.path.join(main_workflow_dir, "connectome", identifier)
+
+            raw_dir = os.path.join(main_workflow_dir, "bundle_segmentation")
+
+            bundle_dir = os.path.join(raw_dir, identifier)
+
+            outputdir = bundle_dir + "/tractseg_output"
+
+
+
+            #Mask the tractography (sift) inside the masks
             tracts_subject_masked = outputdir + "/tracts_subject_masked"
             if not os.path.exists(tracts_subject_masked):
                 os.mkdir(tracts_subject_masked)
@@ -271,67 +320,67 @@ def bundle_segmentation(source_dir: str, subject_list: list, ses_list: list):
                     "--- [Node] : Filtering to 5k fibers per bundle for visualization already done"
                 )
 
-            # Perform tractometry, to vizualise FA through a bundle
-            tractometry = f"{bundle_dir}/tractseg_output/Tractometry_{sub}_{ses}.csv"
-            if not os.path.isfile(tractometry):
-                # os.mkdir(tractometry)
-                print("apply TractSeg")
-                command = f"Tractometry -i {bundle_dir}/tractseg_output/TOM_trackings/ -o {bundle_dir}/tractseg_output/Tractometry_{sub}_{ses}.csv -e {bundle_dir}/tractseg_output/endings_segmentations/ -s {bundle_dir}/FA.nii.gz"
-                subprocess.run(command, shell=True)
-            elif verbose == True:
-                print("--- [Node] : Tractseg already segmented bundle volumes")
+            # # Perform tractometry, to vizualise FA through a bundle
+            # tractometry = f"{bundle_dir}/tractseg_output/Tractometry_{sub}_{ses}.csv"
+            # if not os.path.isfile(tractometry):
+            #     # os.mkdir(tractometry)
+            #     print("apply TractSeg")
+            #     command = f"Tractometry -i {bundle_dir}/tractseg_output/TOM_trackings/ -o {bundle_dir}/tractseg_output/Tractometry_{sub}_{ses}.csv -e {bundle_dir}/tractseg_output/endings_segmentations/ -s {bundle_dir}/FA.nii.gz"
+            #     subprocess.run(command, shell=True)
+            # elif verbose == True:
+            #     print("--- [Node] : Tractseg already proceeded tractometry")
 
             ## Viewer : all tracts
-            if ViewAllTracts:
-                print("--- [Node] : Viewing whole 5k segmentation")
+            # if ViewAllTracts:
+            #     print("--- [Node] : Viewing whole 5k segmentation")
 
-                tracts_list = os.listdir(tracts_subject_masked)
+            #     tracts_list = os.listdir(tracts_subject_masked)
 
-                command = f"mrview {freesurfer_dir}/brain.mgz "
-                for tracts in tracts_list:
-                    R = np.random.choice(range(256))
-                    G = np.random.choice(range(256))
-                    B = np.random.choice(range(256))
+            #     command = f"mrview {freesurfer_dir}/brain.mgz "
+            #     for tracts in tracts_list:
+            #         R = np.random.choice(range(256))
+            #         G = np.random.choice(range(256))
+            #         B = np.random.choice(range(256))
 
-                    command_i = f"-mode 3 -imagevisible 0 -tractography.load {tracts_subject_masked}/{tracts} -tractography.geometry pseudotubes -tractography.colour {R},{G},{B} -tractography.opacity 1 "
-                    command += command_i
+            #         command_i = f"-mode 3 -imagevisible 0 -tractography.load {tracts_subject_masked}/{tracts} -tractography.geometry pseudotubes -tractography.colour {R},{G},{B} -tractography.opacity 1 "
+            #         command += command_i
 
-                # print(command)
-                subprocess.run(command, shell=True)
+            #     # print(command)
+            #     subprocess.run(command, shell=True)
 
-            ## Viewer : all 5k tracts
-            if View5kTracts:
-                print("--- [Node] : Viewing whole segmentation ")
+            # ## Viewer : all 5k tracts
+            # if View5kTracts:
+            #     print("--- [Node] : Viewing whole segmentation ")
 
-                tracts_list = os.listdir(tracts_5k)
+            #     tracts_list = os.listdir(tracts_5k)
 
-                command = f"mrview {freesurfer_dir}/brain.mgz -connectome.init {connectome_dir}/labelconvert/mapflow/_labelconvert2/parcellation.mif -connectome.load {connectome_dir}/tck2connectome/mapflow/_tck2connectome2/connectome.csv "
-                for tracts in tracts_list:
-                    R = np.random.choice(range(256))
-                    G = np.random.choice(range(256))
-                    B = np.random.choice(range(256))
+            #     command = f"mrview {freesurfer_dir}/brain.mgz -connectome.init {connectome_dir}/labelconvert/mapflow/_labelconvert2/parcellation.mif -connectome.load {connectome_dir}/tck2connectome/mapflow/_tck2connectome2/connectome.csv "
+            #     for tracts in tracts_list:
+            #         R = np.random.choice(range(256))
+            #         G = np.random.choice(range(256))
+            #         B = np.random.choice(range(256))
 
-                    command_i = f" -mode 3 -imagevisible 0 -tractography.load {tracts_5k}/{tracts} -tractography.geometry pseudotubes -tractography.thickness 0.1 -tractography.colour {R},{G},{B} -tractography.opacity 1"
-                    command += command_i
+            #         command_i = f" -mode 3 -imagevisible 0 -tractography.load {tracts_5k}/{tracts} -tractography.geometry pseudotubes -tractography.thickness 0.1 -tractography.colour {R},{G},{B} -tractography.opacity 1"
+            #         command += command_i
 
-                # print(command)
-                subprocess.run(command, shell=True)
+            #     # print(command)
+            #     subprocess.run(command, shell=True)
 
-            ## Viewer : Tractseg tracts
-            if ViewTractSegTracts:
-                print("Viewing whole segmentation tractseg")
+            # ## Viewer : Tractseg tracts
+            # if ViewTractSegTracts:
+            #     print("Viewing whole segmentation tractseg")
 
-                tracts_seg = os.path.join(outputdir, "TOM_trackings")
-                tracts_list = os.listdir(tracts_seg)
+            #     tracts_seg = os.path.join(outputdir, "TOM_trackings")
+            #     tracts_list = os.listdir(tracts_seg)
 
-                command = f"mrview {bundle_dir}/FA_MNI.nii.gz "
-                for tracts in tracts_list:
-                    R = np.random.choice(range(256))
-                    G = np.random.choice(range(256))
-                    B = np.random.choice(range(256))
+            #     command = f"mrview {bundle_dir}/FA_MNI.nii.gz "
+            #     for tracts in tracts_list:
+            #         R = np.random.choice(range(256))
+            #         G = np.random.choice(range(256))
+            #         B = np.random.choice(range(256))
 
-                    command_i = f"-mode 3 -imagevisible 0 -tractography.load {tracts_seg}/{tracts} -tractography.geometry pseudotubes -tractography.colour {R},{G},{B} -tractography.opacity 1 "
-                    command += command_i
+            #         command_i = f"-mode 3 -imagevisible 0 -tractography.load {tracts_seg}/{tracts} -tractography.geometry pseudotubes -tractography.colour {R},{G},{B} -tractography.opacity 1 "
+            #         command += command_i
 
-                # print(command)
-                subprocess.run(command, shell=True)
+            #     # print(command)
+            #     subprocess.run(command, shell=True)

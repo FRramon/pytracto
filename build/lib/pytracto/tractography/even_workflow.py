@@ -52,7 +52,6 @@ def execute_even_workflow(
     infosource = Node(
         IdentityInterface(fields=["subject_id","ses_id"]), name="infosource"
     )
-    infosource.inputs.ses_id = ses_id
     infosource.iterables = [("subject_id", subject_list),("ses_id",session_list)]
 
 

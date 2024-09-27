@@ -51,7 +51,6 @@ def execute_synth_workflow(
     infosource = Node(
         IdentityInterface(fields=["subject_id", "ses_id"]), name="infosource"
     )
-    infosource.inputs.ses_id = ses_id
     infosource.iterables = [("subject_id", subject_list),("ses_id",session_list)]
 
     # tester si il est ok si je cree un dossier synth et que je cherche dedans (le risque est d'avoir une incompatibilité bids)
