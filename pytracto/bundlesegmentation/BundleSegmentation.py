@@ -38,6 +38,7 @@ def bundle_segmentation(
     source_dir: str,
     subject_list: list,
     ses_list: list,
+    derivatives_folder :str,
     **kwargs
     ):
     """
@@ -65,7 +66,7 @@ def bundle_segmentation(
             print(f"Running on {subject_id} - {session_id}")
 
             # Set up directories
-            main_workflow_dir = source_dir + "/" + pipe_name + "/main_workflow"
+            main_workflow_dir = source_dir + "/" + derivatives_folder + "/main_workflow"
             dwipreproc_dir = os.path.join(
                 main_workflow_dir, "preproc", identifier, "biascorrect"
             )
@@ -243,6 +244,7 @@ def tract_masking(
     source_dir: str,
     subject_list: list,
     ses_list: list,
+    derivatives_folder:str,
     **kwargs
     ):
     """
@@ -270,7 +272,7 @@ def tract_masking(
             print(f"Running on {subject_id} - {session_id}")
 
             # Set up directories
-            main_workflow_dir = source_dir + "/" + pipe_name + "/main_workflow"
+            main_workflow_dir = source_dir + "/" + derivatives_folder + "/main_workflow"
             dwipreproc_dir = os.path.join(
                 main_workflow_dir, "preproc", identifier, "biascorrect"
             )

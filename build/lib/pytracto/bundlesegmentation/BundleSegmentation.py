@@ -53,7 +53,7 @@ def bundle_segmentation(
     """
 
     mni_file = kwargs.get("mni_fa_filepath")#source_dir + "/code/MNI_FA_template.nii.gz"
-    verbose = kwargs.ge("verbose")
+    verbose = kwargs.get("verbose")
 
     for sub in subject_list:
         for ses in ses_list:
@@ -256,7 +256,8 @@ def tract_masking(
             subject_list (list[str]): list of subjects
             ses_list (list[int]): list of sessions
     """
-    mni_file = source_dir + "/code/MNI_FA_template.nii.gz"
+    mni_file = kwargs.get("mni_fa_filepath")#source_dir + "/code/MNI_FA_template.nii.gz"
+    verbose = kwargs.get("verbose")
 
     for sub in subject_list:
         for ses in ses_list:
