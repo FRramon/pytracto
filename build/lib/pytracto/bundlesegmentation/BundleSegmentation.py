@@ -107,10 +107,20 @@ def bundle_segmentation(
                 print("--- [Node] : DWI conversion from mif to nifti already done")
 
             # Create a mask of DWI
+            maskmif = bundle_dir + "/brainmask.mif"
+            if not os.path.isfile(maskmif):
+                print("--- [Node] : Create Mask")
+                command_create_mask = f"dwi2mask {bundle_dir}/DWI.mif {bundle_dir}/brainmask.mif -force"
+                subprocess.run(command_create_mask, shell=True)
+            elif verbose == True:
+                print("--- [Node] : Mask creation already done")
+
+
+            #convert the mask to nii
             masknii = bundle_dir + "/brainmask.nii.gz"
             if not os.path.isfile(masknii):
                 print("--- [Node] : Convert Mask to nifti")
-                command_convert_mask = f"mrconvert {main_workflow_dir}/wf_tractography/{identifier}/brainmask/brainmask.mif {bundle_dir}/brainmask.nii.gz -force"
+                command_convert_mask = f"mrconvert {bundle_dir}/brainmask.mif {bundle_dir}/brainmask.nii.gz -force"
                 subprocess.run(command_convert_mask, shell=True)
             elif verbose == True:
                 print("--- [Node] : Mask conversion to nifti already done")
