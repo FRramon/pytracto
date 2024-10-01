@@ -168,8 +168,8 @@ def bundle_segmentation(
 
             # Apply tractseg : Bundle segmentation
             segdir = outputdir + "/bundle_segmentations"
-            if not os.path.exists(segdir):
-                os.mkdir(segdir)
+            if not os.path.exists(segdir) or not os.listdir(segdir) :
+                os.makedirs(segdir,exist_ok = True)
                 print("apply TractSeg")
                 command = f"TractSeg -i {bundle_dir}/Diffusion_MNI.nii.gz -o {bundle_dir}/tractseg_output --output_type tract_segmentation --raw_diffusion_input --bvals {bundle_dir}/MNI_bval.bvals --bvecs {bundle_dir}/MNI_bvec.bvecs --csd_type csd_msmt --super_resolution"
                 subprocess.run(command, shell=True)
@@ -180,8 +180,8 @@ def bundle_segmentation(
 
             # Apply tractseg : Ending segmentation
             enddir = outputdir + "/endings_segmentations"
-            if not os.path.exists(enddir):
-                os.mkdir(enddir)
+            if not os.path.exists(enddir) or not os.listdir(enddir):
+                os.makedirs(enddir,exist_ok = True)
                 print("apply TractSeg")
                 command = f"TractSeg -i {bundle_dir}/tractseg_output/peaks.nii.gz -o {bundle_dir}/tractseg_output --output_type endings_segmentation"
                 subprocess.run(command, shell=True)
@@ -190,8 +190,8 @@ def bundle_segmentation(
 
             # Apply tractseg : TOM segmentation
             TOMdir = outputdir + "/TOM"
-            if not os.path.exists(TOMdir):
-                os.mkdir(TOMdir)
+            if not os.path.exists(TOMdir) or not os.listdir(TOMdir):
+                os.makedirs(TOMdir,exist_ok = True)
                 print("apply TractSeg")
                 command = f"TractSeg -i {bundle_dir}/tractseg_output/peaks.nii.gz -o {bundle_dir}/tractseg_output --output_type TOM"
                 subprocess.run(command, shell=True)
@@ -200,8 +200,8 @@ def bundle_segmentation(
 
             # Perform tracking inside the mask bundle, following peaks, between start and end regions
             Trackingdir = outputdir + "/TOM_trackings"
-            if not os.path.exists(Trackingdir):
-                os.mkdir(Trackingdir)
+            if not os.path.exists(Trackingdir) or not os.listdir(Trackingdir):
+                os.makedirs(Trackingdir,exist_ok = True)
                 print("apply TractSeg")
                 command = f"Tracking -i {outputdir}/peaks.nii.gz -o {bundle_dir}/tractseg_output --nr_fibers 5000"
                 subprocess.run(command, shell=True)
@@ -219,8 +219,8 @@ def bundle_segmentation(
 
             # Moving bundles to subject space
             segSubject = outputdir + "/segmentation_subject_space"
-            if not os.path.exists(segSubject):
-                os.mkdir(segSubject)
+            if not os.path.exists(segSubject) or not os.listdir(segSubject):
+                os.makedirs(segSubject,exist_ok = True)
                 print("--- [Node] : Moving bundles masks to subject space")
                 bundles_MNI = os.listdir(
                     os.path.join(outputdir, "bundle_segmentations")
@@ -236,8 +236,8 @@ def bundle_segmentation(
 
             # Invert the masks binary
             segInverse = outputdir + "/segmentation_subject_space_inverse"
-            if not os.path.exists(segInverse):
-                os.mkdir(segInverse)
+            if not os.path.exists(segInverse) or not os.listdir(segInverse):
+                os.makedirs(segInverse,exist_ok = True)
                 print("--- [Node] : Inversing pixels in bundle masks")
                 bundles_subject = os.listdir(segSubject)
                 for bundles in bundles_subject:
