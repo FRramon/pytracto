@@ -295,6 +295,7 @@ def tract_masking(
             bundle_dir = os.path.join(raw_dir, identifier)
 
             outputdir = bundle_dir + "/tractseg_output"
+            segInverse = outputdir + "/segmentation_subject_space_inverse"
 
 
 
