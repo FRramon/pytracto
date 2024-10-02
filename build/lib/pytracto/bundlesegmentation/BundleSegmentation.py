@@ -287,9 +287,7 @@ def tract_masking(
                 main_workflow_dir, "preproc", identifier, "biascorrect"
             )
             tracto_dir = os.path.join(main_workflow_dir, "wf_tractography", identifier)
-            freesurfer_dir = os.path.join(
-                main_workflow_dir, "fs_workflow", identifier, "fs_reconall", sub, "mri"
-            )
+
             connectome_dir = os.path.join(main_workflow_dir, "connectome", identifier)
 
             raw_dir = os.path.join(main_workflow_dir, "bundle_segmentation")
@@ -297,6 +295,7 @@ def tract_masking(
             bundle_dir = os.path.join(raw_dir, identifier)
 
             outputdir = bundle_dir + "/tractseg_output"
+            segInverse = outputdir + "/segmentation_subject_space_inverse"
 
 
 
@@ -318,20 +317,20 @@ def tract_masking(
                     "--- [Node] : masking streamlines into bundles by exclusion already done"
                 )
 
-            # Compute lighter tracts files (5k per bundles)
-            tracts_5k = outputdir + "/tracts_5k"
-            if not os.path.exists(tracts_5k):
-                os.mkdir(tracts_5k)
-                print("--- [Node] : filter to 5k fibres")
-                tracts_list = os.listdir(tracts_subject_masked)
-                for tracts in tracts_list:
-                    command = f"tckedit  {tracts_subject_masked}/{tracts} -number 5k {tracts_5k}/5k_{tracts} -force"
-                    print(command)
-                    subprocess.run(command, shell=True)
-            elif verbose == True:
-                print(
-                    "--- [Node] : Filtering to 5k fibers per bundle for visualization already done"
-                )
+            # # Compute lighter tracts files (5k per bundles)
+            # tracts_5k = outputdir + "/tracts_5k"
+            # if not os.path.exists(tracts_5k):
+            #     os.mkdir(tracts_5k)
+            #     print("--- [Node] : filter to 5k fibres")
+            #     tracts_list = os.listdir(tracts_subject_masked)
+            #     for tracts in tracts_list:
+            #         command = f"tckedit  {tracts_subject_masked}/{tracts} -number 5k {tracts_5k}/5k_{tracts} -force"
+            #         print(command)
+            #         subprocess.run(command, shell=True)
+            # elif verbose == True:
+            #     print(
+            #         "--- [Node] : Filtering to 5k fibers per bundle for visualization already done"
+            #     )
 
             # # Perform tractometry, to vizualise FA through a bundle
             # tractometry = f"{bundle_dir}/tractseg_output/Tractometry_{sub}_{ses}.csv"
