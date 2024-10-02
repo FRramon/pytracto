@@ -340,14 +340,15 @@ def tract_masking(
             if not os.path.exists(tracts_subject_eb):
                 os.mkdir(tracts_subject_eb)
                 print("--- [Node] : mask streamlines into bundle - with two include")
-                bundles_subject = os.listdir(segInverse)
+                bundles_subject = os.listdir(segSubject)
                 for bundles in bundles_subject:
                     if verbose:
                         print(f"    --- masking {bundles}")
                     bundle_name = bundles[:-4]
+                    print(bundle_name)
                     tract_name = bundles[:-4] + ".tck"
 
-                    command = f"tckedit -include {enddir}/{bundle_name}_e.nii.gz -include {enddir}/{bundle_name}_b.nii.gz {tracto_dir}/tcksift2/sift_tracks.tck {tracts_subject_eb}/{tract_name} -force"
+                    command = f"tckedit -include {ebSubject}/{bundle_name}_e.nii.gz -include {ebSubject}/{bundle_name}_b.nii.gz {tracto_dir}/tcksift2/sift_tracks.tck {tracts_subject_eb}/{tract_name} -force"
                     print(command)
                     subprocess.run(command, shell=True)
             elif verbose == True:
