@@ -348,7 +348,7 @@ def tract_masking(
                     print(bundle_name)
                     tract_name = bundles[:-4] + ".tck"
 
-                    command = f"tckedit -include -ends_only {ebSubject}/subject_space_{bundle_name}_e.nii.gz -include -ends_only {ebSubject}/subject_space_{bundle_name}_b.nii.gz {tracto_dir}/tcksift2/sift_tracks.tck {tracts_subject_eb}/{tract_name} -force"
+                    command = f"tckedit -include {ebSubject}/subject_space_{bundle_name}_e.nii.gz -include {ebSubject}/subject_space_{bundle_name}_b.nii.gz {tracto_dir}/tcksift2/sift_tracks.tck {tracts_subject_eb}/{tract_name} -force -ends_only"
                     print(command)
                     subprocess.run(command, shell=True)
             elif verbose == True:
