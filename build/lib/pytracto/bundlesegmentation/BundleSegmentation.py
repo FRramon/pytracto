@@ -296,6 +296,10 @@ def tract_masking(
 
             outputdir = bundle_dir + "/tractseg_output"
             segInverse = outputdir + "/segmentation_subject_space_inverse"
+            segSubject = outputdir + "/segmentation_subject_space"
+            enddir = outputdir + "/endings_segmentations"
+
+
 
 
 
@@ -304,12 +308,31 @@ def tract_masking(
             if not os.path.exists(tracts_subject_masked):
                 os.mkdir(tracts_subject_masked)
                 print("--- [Node] : mask streamlines into bundle - with exclude")
-                bundles_subject = os.listdir(segInverse)
+                bundles_subject = os.listdir(segSubject)
                 for bundles in bundles_subject:
                     if verbose:
                         print(f"	--- masking {bundles}")
                     tract_name = bundles[:-4] + ".tck"
                     command = f"tckedit -exclude {segInverse}/{bundles} {tracto_dir}/tcksift2/sift_tracks.tck {tracts_subject_masked}/{tract_name} -force"
+                    print(command)
+                    subprocess.run(command, shell=True)
+            elif verbose == True:
+                print(
+                    "--- [Node] : masking streamlines into bundles by exclusion already done"
+                )
+
+            tracts_subject_eb = outputdir + "/tracts_subject_eb"
+            if not os.path.exists(tracts_subject_eb):
+                os.mkdir(tracts_subject_eb)
+                print("--- [Node] : mask streamlines into bundle - with two include")
+                bundles_subject = os.listdir(segInverse)
+                for bundles in bundles_subject:
+                    if verbose:
+                        print(f"    --- masking {bundles}")
+                    bundle_name = bundles[:-4]
+                    tract_name = bundles[:-4] + ".tck"
+
+                    command = f"tckedit -include {enddir}/{bundle_name}_e.nii.gz -include {enddir}/{bundle_name}_b.nii.gz {tracto_dir}/tcksift2/sift_tracks.tck {tracts_subject_eb}/{tract_name} -force"
                     print(command)
                     subprocess.run(command, shell=True)
             elif verbose == True:

@@ -321,6 +321,21 @@ def tract_masking(
                     "--- [Node] : masking streamlines into bundles by exclusion already done"
                 )
 
+            ebSubject = outputdir + "/endings_segmentations_subject_space"
+            if not os.path.exists(ebSubject) or not os.listdir(ebSubject):
+                os.makedirs(ebSubject,exist_ok = True)
+                print("--- [Node] : Moving end/beg bundles masks to subject space")
+                bundles_MNI = os.listdir(
+                    os.path.join(outputdir, "endings_segmentations")
+                )
+                for bundles in bundles_MNI:
+                    if verbose:
+                        print(f"Moving {bundles} to subject space")
+                    command = f"flirt -ref {bundle_dir}/FA.nii.gz -in {enddir}/{bundles} -out {ebSubject}/subject_space_{bundles} -applyxfm -init {bundle_dir}/MNI_2_FA.mat -dof 6 -interp spline"
+                    subprocess.run(command, shell=True)
+            elif verbose == True:
+                print("--- [Node] : Bundles already transformed to subject space")
+
             tracts_subject_eb = outputdir + "/tracts_subject_eb"
             if not os.path.exists(tracts_subject_eb):
                 os.mkdir(tracts_subject_eb)
