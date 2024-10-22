@@ -70,6 +70,17 @@ def build_connectivity_matrixes(
     viewSCConnectome = kwargs.get('viewSCConnectome')
     viewFAConnectome = kwargs.get('viewFAConnectome')
 
+    mapdict = {
+    'fa' : createFAmatrix,
+    'ad' : createADmatrix,
+    'sc' : createSCmatrix,
+    'adc': createADCmatrix,
+    'rd' : createRDmatrix,
+    'ndi' : createNODDImatrix,
+    'odi' : createNODDImatrix,
+    'fwf' : createNODDImatrix
+    }
+
 
     for sub in subject_list:
         for ses in ses_list:
@@ -184,8 +195,10 @@ def build_connectivity_matrixes(
                         os.mkdir(connectome_mesh_dir)
 
                     if createMesh:
-                        bash_command = f"label2mesh {parcellation_file} {connectome_mesh_dir}/mesh.obj -force"
-                        subprocess.run(bash_command, shell=True)
+
+                        if not os.path.isfile(f"{connectome_mesh_dir}/mesh.obj"):
+                            bash_command = f"label2mesh {parcellation_file} {connectome_mesh_dir}/mesh.obj -force"
+                            subprocess.run(bash_command, shell=True)
 
                     #####				create SC matrix  				#####
 
@@ -390,93 +403,102 @@ def build_connectivity_matrixes(
                             subprocess.run(bash_command9, shell=True)
 
                     if save_matrix:
-                        sc_file_path = f"{connectome_sc_dir}/sc_connectivity_matrix.csv"
-                        fa_file_path = f"{connectome_fa_dir}/fa_connectivity_matrix.csv"
-                        rd_file_path = f"{connectome_rd_dir}/rd_connectivity_matrix.csv"
-                        ad_file_path = f"{connectome_ad_dir}/ad_connectivity_matrix.csv"
-                        adc_file_path = (
-                            f"{connectome_adc_dir}/adc_connectivity_matrix.csv"
-                        )
-                        ndi_file_path = (
-                            f"{connectome_ndi_dir}/NDI_connectivity_matrix.csv"
-                        )
-                        odi_file_path = (
-                            f"{connectome_odi_dir}/ODI_connectivity_matrix.csv"
-                        )
-                        fwf_file_path = (
-                            f"{connectome_fwf_dir}/FWF_connectivity_matrix.csv"
-                        )
 
-                        if not (
-                            os.path.isfile(sc_file_path)
-                            and os.path.isfile(fa_file_path)
-                            and os.path.isfile(rd_file_path)
-                            and os.path.isfile(ad_file_path)
-                            and os.path.isfile(adc_file_path)
-                            and os.path.isfile(ndi_file_path)
-                            and os.path.isfile(odi_file_path)
-                            and os.path.isfile(fwf_file_path)
-                        ):
-                            print("Error: One or more files not found.")
-                            sys.exit(1)
+                        map2compute = [key for key, value in mapdict.items() if value]
 
-                        # Read the CSV files without skipping the header
+                        Listfile = [os.path.isfile(f"{connectome_dir}/{gen_met}/{atlas}/{label}/{label}_connectivity_matrix.png") for label in map2compute]  
 
-                        df_sc = pd.read_csv(sc_file_path, header=None)
-                        df_fa = pd.read_csv(fa_file_path, header=None)
-                        df_rd = pd.read_csv(fa_file_path, header=None)
-                        df_ad = pd.read_csv(ad_file_path, header=None)
-                        df_adc = pd.read_csv(adc_file_path, header=None)
-                        df_ndi = pd.read_csv(ndi_file_path, header=None)
-                        df_odi = pd.read_csv(odi_file_path, header=None)
-                        df_fwf = pd.read_csv(fwf_file_path, header=None)
+                        has_false = any(not x for x in Listfile)
 
-                        # Calculate the adaptive outlier threshold (e.g., 99th percentile) for both dataframes
-                        outlier_threshold_sc = df_sc.stack().quantile(0.99)
-                        outlier_threshold_fa = 1
-                        outlier_threshold_rd = df_rd.stack().quantile(0.99)
-                        outlier_threshold_ad = df_ad.stack().quantile(0.99)
-                        outlier_threshold_adc = df_adc.stack().quantile(0.99)
-                        outlier_threshold_ndi = df_ndi.stack().quantile(0.99)
-                        outlier_threshold_odi = df_odi.stack().quantile(0.99)
-                        outlier_threshold_fwf = df_fwf.stack().quantile(0.99)
+                        if has_false:
 
-                        # Create a function to generate and save the heatmap
-                        def save_heatmap(
-                            dataframe, outlier_threshold, label, gen_met, atlas
-                        ):
-                            plt.figure(figsize=(10, 8))
-                            sns.heatmap(
-                                dataframe,
-                                cmap="viridis",
-                                vmin=0,
-                                vmax=outlier_threshold,
-                                annot=False,
-                                fmt=".2f",
+                            sc_file_path = f"{connectome_sc_dir}/sc_connectivity_matrix.csv"
+                            fa_file_path = f"{connectome_fa_dir}/fa_connectivity_matrix.csv"
+                            rd_file_path = f"{connectome_rd_dir}/rd_connectivity_matrix.csv"
+                            ad_file_path = f"{connectome_ad_dir}/ad_connectivity_matrix.csv"
+                            adc_file_path = (
+                                f"{connectome_adc_dir}/adc_connectivity_matrix.csv"
                             )
-                            plt.title(f" sub-{sub} - ses-{ses} - {label}")
+                            ndi_file_path = (
+                                f"{connectome_ndi_dir}/NDI_connectivity_matrix.csv"
+                            )
+                            odi_file_path = (
+                                f"{connectome_odi_dir}/ODI_connectivity_matrix.csv"
+                            )
+                            fwf_file_path = (
+                                f"{connectome_fwf_dir}/FWF_connectivity_matrix.csv"
+                            )
 
-                            # Save the heatmap as a PNG file in the source data folder
-                            output_file_path = f"{connectome_dir}/{gen_met}/{atlas}/{label}/{label}_connectivity_matrix.png"
-                            plt.savefig(output_file_path)
+                            if not (
+                                os.path.isfile(sc_file_path)
+                                and os.path.isfile(fa_file_path)
+                                and os.path.isfile(rd_file_path)
+                                and os.path.isfile(ad_file_path)
+                                and os.path.isfile(adc_file_path)
+                                and os.path.isfile(ndi_file_path)
+                                and os.path.isfile(odi_file_path)
+                                and os.path.isfile(fwf_file_path)
+                            ):
+                                print("Error: One or more files not found.")
+                                sys.exit(1)
 
-                        # Save heatmaps
-                        save_heatmap(df_sc, outlier_threshold_sc, "sc", gen_met, atlas)
-                        save_heatmap(df_fa, outlier_threshold_fa, "fa", gen_met, atlas)
-                        save_heatmap(df_rd, outlier_threshold_rd, "rd", gen_met, atlas)
-                        save_heatmap(df_ad, outlier_threshold_ad, "ad", gen_met, atlas)
-                        save_heatmap(
-                            df_adc, outlier_threshold_adc, "adc", gen_met, atlas
-                        )
-                        save_heatmap(
-                            df_ndi, outlier_threshold_ndi, "ndi", gen_met, atlas
-                        )
-                        save_heatmap(
-                            df_odi, outlier_threshold_odi, "odi", gen_met, atlas
-                        )
-                        save_heatmap(
-                            df_fwf, outlier_threshold_fwf, "fwf", gen_met, atlas
-                        )
+                            # Read the CSV files without skipping the header
+
+                            df_sc = pd.read_csv(sc_file_path, header=None)
+                            df_fa = pd.read_csv(fa_file_path, header=None)
+                            df_rd = pd.read_csv(fa_file_path, header=None)
+                            df_ad = pd.read_csv(ad_file_path, header=None)
+                            df_adc = pd.read_csv(adc_file_path, header=None)
+                            df_ndi = pd.read_csv(ndi_file_path, header=None)
+                            df_odi = pd.read_csv(odi_file_path, header=None)
+                            df_fwf = pd.read_csv(fwf_file_path, header=None)
+
+                            # Calculate the adaptive outlier threshold (e.g., 99th percentile) for both dataframes
+                            outlier_threshold_sc = df_sc.stack().quantile(0.99)
+                            outlier_threshold_fa = 1
+                            outlier_threshold_rd = df_rd.stack().quantile(0.99)
+                            outlier_threshold_ad = df_ad.stack().quantile(0.99)
+                            outlier_threshold_adc = df_adc.stack().quantile(0.99)
+                            outlier_threshold_ndi = df_ndi.stack().quantile(0.99)
+                            outlier_threshold_odi = df_odi.stack().quantile(0.99)
+                            outlier_threshold_fwf = df_fwf.stack().quantile(0.99)
+
+                            # Create a function to generate and save the heatmap
+                            def save_heatmap(
+                                dataframe, outlier_threshold, label, gen_met, atlas
+                            ):
+                                plt.figure(figsize=(10, 8))
+                                sns.heatmap(
+                                    dataframe,
+                                    cmap="viridis",
+                                    vmin=0,
+                                    vmax=outlier_threshold,
+                                    annot=False,
+                                    fmt=".2f",
+                                )
+                                plt.title(f" sub-{sub} - ses-{ses} - {label}")
+
+                                # Save the heatmap as a PNG file in the source data folder
+                                output_file_path = f"{connectome_dir}/{gen_met}/{atlas}/{label}/{label}_connectivity_matrix.png"
+                                plt.savefig(output_file_path)
+
+                            # Save heatmaps
+                            save_heatmap(df_sc, outlier_threshold_sc, "sc", gen_met, atlas)
+                            save_heatmap(df_fa, outlier_threshold_fa, "fa", gen_met, atlas)
+                            save_heatmap(df_rd, outlier_threshold_rd, "rd", gen_met, atlas)
+                            save_heatmap(df_ad, outlier_threshold_ad, "ad", gen_met, atlas)
+                            save_heatmap(
+                                df_adc, outlier_threshold_adc, "adc", gen_met, atlas
+                            )
+                            save_heatmap(
+                                df_ndi, outlier_threshold_ndi, "ndi", gen_met, atlas
+                            )
+                            save_heatmap(
+                                df_odi, outlier_threshold_odi, "odi", gen_met, atlas
+                            )
+                            save_heatmap(
+                                df_fwf, outlier_threshold_fwf, "fwf", gen_met, atlas
+                            )
 
                     if viewSCConnectome:
                         bash_command = f"mrview {preproc_dir}/biascorrect/biascorrect.mif -connectome.init {connectome_dir}/labelconvert/mapflow/_labelconvert2/parcellation.mif -connectome.load {connectome_sc_dir}/sc_connectivity_matrix.csv -imagevisible 0"
