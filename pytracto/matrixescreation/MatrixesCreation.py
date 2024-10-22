@@ -92,6 +92,7 @@ def build_connectivity_matrixes(
                 subprocess.run(bash_command, shell=True)
 
             if createNODDImatrix:
+
                 tracto_noddi_dir = os.path.join(tracto_dir, "noddi")
                 if not os.path.exists(tracto_noddi_dir):
                     os.mkdir(tracto_noddi_dir)
@@ -104,36 +105,39 @@ def build_connectivity_matrixes(
                 ## Work on the preprocessed DWI at step 'bias correction'
                 # Second : Extract bvals and bvecs from the mif image & convert dwi to nifti
 
-                command_info = f"mrinfo {preproc_dir}/biascorrect/biascorrect.mif -export_grad_fsl {connectome_common_noddi_dir}/bvecs.txt {connectome_common_noddi_dir}/bvals.txt -force"
-                subprocess.run(command_info, shell=True)
 
-                command_convert = f"mrconvert {preproc_dir}/biascorrect/biascorrect.mif {connectome_common_noddi_dir}/dwi.nii.gz -force"
-                subprocess.run(command_convert, shell=True)
+                if not os.path.isfile(f"{connectome_common_noddi_dir}/AMICO/NODDI/fit_NDI.nii.gz"):
 
-                command_convert = f"mrconvert {tracto_dir}/brainmask/brainmask.mif {connectome_common_noddi_dir}/brainmask.nii.gz -force"
-                subprocess.run(command_convert, shell=True)
+                    command_info = f"mrinfo {preproc_dir}/biascorrect/biascorrect.mif -export_grad_fsl {connectome_common_noddi_dir}/bvecs.txt {connectome_common_noddi_dir}/bvals.txt -force"
+                    subprocess.run(command_info, shell=True)
 
-                os.chdir(connectome_common_noddi_dir)
+                    command_convert = f"mrconvert {preproc_dir}/biascorrect/biascorrect.mif {connectome_common_noddi_dir}/dwi.nii.gz -force"
+                    subprocess.run(command_convert, shell=True)
 
-                # # Define AMICO workflow and perform NODDI model
-                amico.setup()
-                ae = amico.Evaluation()
+                    command_convert = f"mrconvert {tracto_dir}/brainmask/brainmask.mif {connectome_common_noddi_dir}/brainmask.nii.gz -force"
+                    subprocess.run(command_convert, shell=True)
 
-                amico.util.fsl2scheme("bvals.txt", "bvecs.txt")
-                ae.load_data(
-                    "dwi.nii.gz",
-                    "bvals.scheme",
-                    mask_filename="brainmask.nii.gz",
-                    b0_thr=0,
-                )
-                ae.set_model("NODDI")
-                ae.generate_kernels(regenerate=True)
-                ae.load_kernels()
-                ae.fit()
-                ae.save_results()
+                    os.chdir(connectome_common_noddi_dir)
 
-            if parcellate_schaefer:
-                add_schaefer_parcellation(source_dir, sub, ses)
+                    # # Define AMICO workflow and perform NODDI model
+                    amico.setup()
+                    ae = amico.Evaluation()
+
+                    amico.util.fsl2scheme("bvals.txt", "bvecs.txt")
+                    ae.load_data(
+                        "dwi.nii.gz",
+                        "bvals.scheme",
+                        mask_filename="brainmask.nii.gz",
+                        b0_thr=0,
+                    )
+                    ae.set_model("NODDI")
+                    ae.generate_kernels(regenerate=True)
+                    ae.load_kernels()
+                    ae.fit()
+                    ae.save_results()
+
+            # if parcellate_schaefer:
+            #     add_schaefer_parcellation(source_dir, sub, ses)
 
             for gen_met in tckgen_method:
                 if gen_met == "Deterministic":

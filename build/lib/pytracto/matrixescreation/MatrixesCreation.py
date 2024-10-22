@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 
 import amico
 
-from pytracto.matrixescreation.MatrixesCreationParameters import *
+#from pytracto.matrixescreation.MatrixesCreationParameters import *
 
 
 # subject_raw = sys.argv[1]
@@ -28,7 +28,14 @@ from pytracto.matrixescreation.MatrixesCreationParameters import *
 # ses_list = session_raw.split(',')
 
 
-def build_connectivity_matrixes(source_dir: str, subject_list: list, ses_list: list):
+def build_connectivity_matrixes(
+    source_dir: str,
+    rawdata_dir: str,
+    derivatives_dir: str,
+    subject_list: list,
+    ses_list: list,
+    **kwargs):
+
     """
     This function takes in argument source directory, a subject and session list.
     It create connectivity matrixes according to a file of parameters.
@@ -42,6 +49,28 @@ def build_connectivity_matrixes(source_dir: str, subject_list: list, ses_list: l
             ses_list (list[int]): list of sessions to be processed
     """
 
+
+    # Load parameters
+
+    createTensor = kwargs.get("createTensor")
+    createNODDImatrix = kwargs.get("createNODDImatrix")
+    parcellate_schaefer = kwargs.get("parcellate_schaefer")
+    tckgen_method = kwargs.get("tckgen_method")
+    atlas_list = kwargs.get("atlas_list")
+    create_smallertck = kwargs.get("create_smallertck")
+    createMesh = kwargs.get("createMesh")
+
+    createADmatrix = kwargs.get("createADmatrix")
+    createFAmatrix = kwargs.get("createFAmatrix")
+    createSCmatrix = kwargs.get("createSCmatrix")
+    createADCmatrix = kwargs.get("createADCmatrix")
+    createRDmatrix = kwargs.get("createRDmatrix")
+
+    save_matrix = kwargs.get("save_matrix")
+    viewSCConnectome = kwargs.get('viewSCConnectome')
+    viewFAConnectome = kwargs.get('viewFAConnectome')
+
+
     for sub in subject_list:
         for ses in ses_list:
             subject_id = "sub-" + sub
@@ -51,7 +80,7 @@ def build_connectivity_matrixes(source_dir: str, subject_list: list, ses_list: l
             print(f"Running on {subject_id} - {session_id}")
 
             # Set directories
-            main_workflow_dir = source_dir + "/" + pipe_name + "/" + "main_workflow"
+            main_workflow_dir = source_dir + "/" + derivatives_dir + "/" + "main_workflow"
 
             preproc_dir = os.path.join(main_workflow_dir, "preproc", identifier)
             tracto_dir = os.path.join(main_workflow_dir, "wf_tractography", identifier)
@@ -161,13 +190,16 @@ def build_connectivity_matrixes(source_dir: str, subject_list: list, ses_list: l
                         os.mkdir(connectome_sc_dir)
 
                     if createSCmatrix:
-                        bash_command1 = f"tck2connectome –symmetric –zero_diagonal {sift_file} {parcellation_file} {connectome_sc_dir}/sc_connectivity_matrix.csv –out_assignment {connectome_sc_dir}/sc_assignments.csv -force"
-                        print(f"Running command: {bash_command1}")
-                        subprocess.run(bash_command1, shell=True)
 
-                        bash_command2 = f"connectome2tck {sift_file} {connectome_sc_dir}/sc_assignments.csv {connectome_sc_dir}/exemplar_sc –files single –exemplars {parcellation_file} -force"
-                        print(f"Running command: {bash_command2}")
-                        subprocess.run(bash_command2, shell=True)
+                        if not os.path.isfile(f"{connectome_sc_dir}/sc_connectivity_matrix.csv"):
+
+                            bash_command1 = f"tck2connectome –symmetric –zero_diagonal {sift_file} {parcellation_file} {connectome_sc_dir}/sc_connectivity_matrix.csv –out_assignment {connectome_sc_dir}/sc_assignments.csv -force"
+                            print(f"Running command: {bash_command1}")
+                            subprocess.run(bash_command1, shell=True)
+
+                            bash_command2 = f"connectome2tck {sift_file} {connectome_sc_dir}/sc_assignments.csv {connectome_sc_dir}/exemplar_sc –files single –exemplars {parcellation_file} -force"
+                            print(f"Running command: {bash_command2}")
+                            subprocess.run(bash_command2, shell=True)
 
                     #####			create FA matrixes					####
 
@@ -180,21 +212,23 @@ def build_connectivity_matrixes(source_dir: str, subject_list: list, ses_list: l
                         os.mkdir(connectome_fa_dir)
 
                     if createFAmatrix:
-                        # Create FA map
-                        bash_command2 = f"tensor2metric {connectome_dir}/tensor.mif -fa {tracto_dir}/fa/fa.mif -force"  # | tensor2metric {tracto_dir}/fa/tensor.mif -vec {tracto_dir}/fa/vec.mif -force'
-                        subprocess.run(bash_command2, shell=True)
+                        if not os.path.isfile(f"{connectome_fa_dir}/fa_connectivity_matrix.csv"):
 
-                        # Create mean_FA_per_Streamline
-                        bash_command3 = f"tcksample {sift_file} {tracto_dir}/fa/fa.mif {connectome_fa_dir}/mean_FA_per_streamline.csv -stat_tck mean -force"
-                        subprocess.run(bash_command3, shell=True)
+                            # Create FA map
+                            bash_command2 = f"tensor2metric {connectome_dir}/tensor.mif -fa {tracto_dir}/fa/fa.mif -force"  # | tensor2metric {tracto_dir}/fa/tensor.mif -vec {tracto_dir}/fa/vec.mif -force'
+                            subprocess.run(bash_command2, shell=True)
 
-                        # Create FA matrix
-                        bash_command4 = f"tck2connectome -symmetric -zero_diagonal {sift_file} {parcellation_file}  {connectome_fa_dir}/fa_connectivity_matrix.csv -scale_file {connectome_fa_dir}/mean_FA_per_streamline.csv -stat_edge mean –out_assignment {connectome_fa_dir}/fa_assignments.csv -force"
-                        subprocess.run(bash_command4, shell=True)
+                            # Create mean_FA_per_Streamline
+                            bash_command3 = f"tcksample {sift_file} {tracto_dir}/fa/fa.mif {connectome_fa_dir}/mean_FA_per_streamline.csv -stat_tck mean -force"
+                            subprocess.run(bash_command3, shell=True)
 
-                        # Create streamtubes
-                        bash_command = f"connectome2tck {sift_file} {connectome_fa_dir}/fa_assignments.csv {connectome_fa_dir}/exemplar_fa –files single –exemplars {parcellation_file} -force"
-                        subprocess.run(bash_command, shell=True)
+                            # Create FA matrix
+                            bash_command4 = f"tck2connectome -symmetric -zero_diagonal {sift_file} {parcellation_file}  {connectome_fa_dir}/fa_connectivity_matrix.csv -scale_file {connectome_fa_dir}/mean_FA_per_streamline.csv -stat_edge mean –out_assignment {connectome_fa_dir}/fa_assignments.csv -force"
+                            subprocess.run(bash_command4, shell=True)
+
+                            # Create streamtubes
+                            bash_command = f"connectome2tck {sift_file} {connectome_fa_dir}/fa_assignments.csv {connectome_fa_dir}/exemplar_fa –files single –exemplars {parcellation_file} -force"
+                            subprocess.run(bash_command, shell=True)
 
                     #####			create RD matrixes					####
 
@@ -207,21 +241,22 @@ def build_connectivity_matrixes(source_dir: str, subject_list: list, ses_list: l
                         os.mkdir(connectome_rd_dir)
 
                     if createRDmatrix:
-                        # Create RD map
-                        bash_command2 = f"tensor2metric {connectome_dir}/tensor.mif -rd {tracto_dir}/rd/rd.mif -force"  # | tensor2metric {tracto_dir}/fa/tensor.mif -vec {tracto_dir}/fa/vec.mif -force'
-                        subprocess.run(bash_command2, shell=True)
+                        if not os.path.isfile(f"{connectome_rd_dir}/rd_connectivity_matrix.csv"):
+                            # Create RD map
+                            bash_command2 = f"tensor2metric {connectome_dir}/tensor.mif -rd {tracto_dir}/rd/rd.mif -force"  # | tensor2metric {tracto_dir}/fa/tensor.mif -vec {tracto_dir}/fa/vec.mif -force'
+                            subprocess.run(bash_command2, shell=True)
 
-                        # Create mean_RD_per_Streamline
-                        bash_command3 = f"tcksample {sift_file} {tracto_dir}/rd/rd.mif {connectome_rd_dir}/mean_RD_per_streamline.csv -stat_tck mean -force"
-                        subprocess.run(bash_command3, shell=True)
+                            # Create mean_RD_per_Streamline
+                            bash_command3 = f"tcksample {sift_file} {tracto_dir}/rd/rd.mif {connectome_rd_dir}/mean_RD_per_streamline.csv -stat_tck mean -force"
+                            subprocess.run(bash_command3, shell=True)
 
-                        # Create RD matrix
-                        bash_command4 = f"tck2connectome -symmetric -zero_diagonal {sift_file} {parcellation_file} {connectome_rd_dir}/rd_connectivity_matrix.csv -scale_file {connectome_rd_dir}/mean_RD_per_streamline.csv -stat_edge mean –out_assignment {connectome_rd_dir}/rd_assignments.csv -force"
-                        subprocess.run(bash_command4, shell=True)
+                            # Create RD matrix
+                            bash_command4 = f"tck2connectome -symmetric -zero_diagonal {sift_file} {parcellation_file} {connectome_rd_dir}/rd_connectivity_matrix.csv -scale_file {connectome_rd_dir}/mean_RD_per_streamline.csv -stat_edge mean –out_assignment {connectome_rd_dir}/rd_assignments.csv -force"
+                            subprocess.run(bash_command4, shell=True)
 
-                        # Create streamtubes
-                        bash_command = f"connectome2tck {sift_file} {connectome_rd_dir}/rd_assignments.csv {connectome_rd_dir}/exemplar_rd –files single –exemplars {parcellation_file} -force"
-                        subprocess.run(bash_command, shell=True)
+                            # Create streamtubes
+                            bash_command = f"connectome2tck {sift_file} {connectome_rd_dir}/rd_assignments.csv {connectome_rd_dir}/exemplar_rd –files single –exemplars {parcellation_file} -force"
+                            subprocess.run(bash_command, shell=True)
 
                     #####			create AD matrixes					####
 
@@ -234,21 +269,23 @@ def build_connectivity_matrixes(source_dir: str, subject_list: list, ses_list: l
                         os.mkdir(connectome_ad_dir)
 
                     if createADmatrix:
-                        # Create AD map
-                        bash_command2 = f"tensor2metric {connectome_dir}/tensor.mif -ad {tracto_dir}/ad/ad.mif -force"  # | tensor2metric {tracto_dir}/fa/tensor.mif -vec {tracto_dir}/fa/vec.mif -force'
-                        subprocess.run(bash_command2, shell=True)
 
-                        # Create mean_AD_per_Streamline
-                        bash_command3 = f"tcksample {sift_file} {tracto_dir}/ad/ad.mif {connectome_ad_dir}/mean_AD_per_streamline.csv -stat_tck mean -force"
-                        subprocess.run(bash_command3, shell=True)
+                        if not os.path.isfile(f"{connectome_ad_dir}/ad_connectivity_matrix.csv"):
+                            # Create AD map
+                            bash_command2 = f"tensor2metric {connectome_dir}/tensor.mif -ad {tracto_dir}/ad/ad.mif -force"  # | tensor2metric {tracto_dir}/fa/tensor.mif -vec {tracto_dir}/fa/vec.mif -force'
+                            subprocess.run(bash_command2, shell=True)
 
-                        # Create AD matrix
-                        bash_command4 = f"tck2connectome -symmetric -zero_diagonal {sift_file} {parcellation_file} {connectome_ad_dir}/ad_connectivity_matrix.csv -scale_file {connectome_ad_dir}/mean_AD_per_streamline.csv -stat_edge mean –out_assignment {connectome_ad_dir}/ad_assignments.csv -force"
-                        subprocess.run(bash_command4, shell=True)
+                            # Create mean_AD_per_Streamline
+                            bash_command3 = f"tcksample {sift_file} {tracto_dir}/ad/ad.mif {connectome_ad_dir}/mean_AD_per_streamline.csv -stat_tck mean -force"
+                            subprocess.run(bash_command3, shell=True)
 
-                        # Create AD streamtubes
-                        bash_command = f"connectome2tck {sift_file} {connectome_ad_dir}/ad_assignments.csv {connectome_ad_dir}/exemplar_ad –files single –exemplars {parcellation_file} -force"
-                        subprocess.run(bash_command, shell=True)
+                            # Create AD matrix
+                            bash_command4 = f"tck2connectome -symmetric -zero_diagonal {sift_file} {parcellation_file} {connectome_ad_dir}/ad_connectivity_matrix.csv -scale_file {connectome_ad_dir}/mean_AD_per_streamline.csv -stat_edge mean –out_assignment {connectome_ad_dir}/ad_assignments.csv -force"
+                            subprocess.run(bash_command4, shell=True)
+
+                            # Create AD streamtubes
+                            bash_command = f"connectome2tck {sift_file} {connectome_ad_dir}/ad_assignments.csv {connectome_ad_dir}/exemplar_ad –files single –exemplars {parcellation_file} -force"
+                            subprocess.run(bash_command, shell=True)
 
                     #####			create ADC matrixes					####
 
@@ -261,21 +298,24 @@ def build_connectivity_matrixes(source_dir: str, subject_list: list, ses_list: l
                         os.mkdir(connectome_adc_dir)
 
                     if createADCmatrix:
-                        # Create ADC map
-                        bash_command2 = f"tensor2metric {connectome_dir}/tensor.mif -adc {tracto_dir}/adc/adc.mif -force"  # | tensor2metric {tracto_dir}/fa/tensor.mif -vec {tracto_dir}/fa/vec.mif -force'
-                        subprocess.run(bash_command2, shell=True)
 
-                        # Create mean_AD_per_Streamline
-                        bash_command3 = f"tcksample {sift_file} {tracto_dir}/adc/adc.mif {connectome_adc_dir}/mean_ADC_per_streamline.csv -stat_tck mean -force"
-                        subprocess.run(bash_command3, shell=True)
+                        if not os.path.isfile(f"{connectome_adc_dir}/adc_connectivity_matrix.csv"):
 
-                        # Create AD matrix
-                        bash_command4 = f"tck2connectome -symmetric -zero_diagonal {sift_file} {parcellation_file} {connectome_adc_dir}/adc_connectivity_matrix.csv -scale_file {connectome_adc_dir}/mean_ADC_per_streamline.csv -stat_edge mean –out_assignment {connectome_adc_dir}/adc_assignments.csv -force"
-                        subprocess.run(bash_command4, shell=True)
+                            # Create ADC map
+                            bash_command2 = f"tensor2metric {connectome_dir}/tensor.mif -adc {tracto_dir}/adc/adc.mif -force"  # | tensor2metric {tracto_dir}/fa/tensor.mif -vec {tracto_dir}/fa/vec.mif -force'
+                            subprocess.run(bash_command2, shell=True)
 
-                        # Create AD streamtubes
-                        bash_command = f"connectome2tck {sift_file} {connectome_adc_dir}/adc_assignments.csv {connectome_adc_dir}/exemplar_adc –files single –exemplars {parcellation_file} -force"
-                        subprocess.run(bash_command, shell=True)
+                            # Create mean_AD_per_Streamline
+                            bash_command3 = f"tcksample {sift_file} {tracto_dir}/adc/adc.mif {connectome_adc_dir}/mean_ADC_per_streamline.csv -stat_tck mean -force"
+                            subprocess.run(bash_command3, shell=True)
+
+                            # Create AD matrix
+                            bash_command4 = f"tck2connectome -symmetric -zero_diagonal {sift_file} {parcellation_file} {connectome_adc_dir}/adc_connectivity_matrix.csv -scale_file {connectome_adc_dir}/mean_ADC_per_streamline.csv -stat_edge mean –out_assignment {connectome_adc_dir}/adc_assignments.csv -force"
+                            subprocess.run(bash_command4, shell=True)
+
+                            # Create AD streamtubes
+                            bash_command = f"connectome2tck {sift_file} {connectome_adc_dir}/adc_assignments.csv {connectome_adc_dir}/exemplar_adc –files single –exemplars {parcellation_file} -force"
+                            subprocess.run(bash_command, shell=True)
 
                     ### Create matrixes with noddi metrics
 
@@ -304,43 +344,46 @@ def build_connectivity_matrixes(source_dir: str, subject_list: list, ses_list: l
                             connectome_common_noddi_dir, "AMICO", "NODDI"
                         )
 
-                        # Create mean_NDI_per_Streamline
-                        bash_command1 = f"tcksample {sift_file} {noddi_maps_dir}/fit_NDI.nii.gz {connectome_ndi_dir}/mean_NDI_per_streamline.csv -stat_tck mean -force"
-                        subprocess.run(bash_command1, shell=True)
+                        if not os.path.isfile(f"{connectome_fwf_dir}/FWF_connectivity_matrix.csv"):
 
-                        # Create NDI matrix
-                        bash_command2 = f"tck2connectome -symmetric -zero_diagonal {sift_file} {parcellation_file} {connectome_ndi_dir}/NDI_connectivity_matrix.csv -scale_file {connectome_ndi_dir}/mean_NDI_per_streamline.csv -stat_edge mean –out_assignment {connectome_ndi_dir}/NDI_assignments.csv -force"
-                        subprocess.run(bash_command2, shell=True)
 
-                        # Create NDI streamtubes
-                        bash_command3 = f"connectome2tck {sift_file} {connectome_ndi_dir}/NDI_assignments.csv {connectome_ndi_dir}/exemplar_NDI –files single –exemplars {parcellation_file} -force"
-                        subprocess.run(bash_command3, shell=True)
+                            # Create mean_NDI_per_Streamline
+                            bash_command1 = f"tcksample {sift_file} {noddi_maps_dir}/fit_NDI.nii.gz {connectome_ndi_dir}/mean_NDI_per_streamline.csv -stat_tck mean -force"
+                            subprocess.run(bash_command1, shell=True)
 
-                        ## Compute ODI matrix ##
+                            # Create NDI matrix
+                            bash_command2 = f"tck2connectome -symmetric -zero_diagonal {sift_file} {parcellation_file} {connectome_ndi_dir}/NDI_connectivity_matrix.csv -scale_file {connectome_ndi_dir}/mean_NDI_per_streamline.csv -stat_edge mean –out_assignment {connectome_ndi_dir}/NDI_assignments.csv -force"
+                            subprocess.run(bash_command2, shell=True)
 
-                        bash_command4 = f"tcksample {sift_file} {noddi_maps_dir}/fit_ODI.nii.gz {connectome_odi_dir}/mean_ODI_per_streamline.csv -stat_tck mean -force"
-                        subprocess.run(bash_command4, shell=True)
+                            # Create NDI streamtubes
+                            bash_command3 = f"connectome2tck {sift_file} {connectome_ndi_dir}/NDI_assignments.csv {connectome_ndi_dir}/exemplar_NDI –files single –exemplars {parcellation_file} -force"
+                            subprocess.run(bash_command3, shell=True)
 
-                        # Create NDI matrix
-                        bash_command5 = f"tck2connectome -symmetric -zero_diagonal {sift_file} {parcellation_file} {connectome_odi_dir}/ODI_connectivity_matrix.csv -scale_file {connectome_odi_dir}/mean_ODI_per_streamline.csv -stat_edge mean –out_assignment {connectome_odi_dir}/ODI_assignments.csv -force"
-                        subprocess.run(bash_command5, shell=True)
+                            ## Compute ODI matrix ##
 
-                        # Create NDI streamtubes
-                        bash_command6 = f"connectome2tck {sift_file} {connectome_odi_dir}/ODI_assignments.csv {connectome_odi_dir}/exemplar_ODI –files single –exemplars {parcellation_file} -force"
-                        subprocess.run(bash_command6, shell=True)
+                            bash_command4 = f"tcksample {sift_file} {noddi_maps_dir}/fit_ODI.nii.gz {connectome_odi_dir}/mean_ODI_per_streamline.csv -stat_tck mean -force"
+                            subprocess.run(bash_command4, shell=True)
 
-                        ## Compute FWF matrix ##
+                            # Create NDI matrix
+                            bash_command5 = f"tck2connectome -symmetric -zero_diagonal {sift_file} {parcellation_file} {connectome_odi_dir}/ODI_connectivity_matrix.csv -scale_file {connectome_odi_dir}/mean_ODI_per_streamline.csv -stat_edge mean –out_assignment {connectome_odi_dir}/ODI_assignments.csv -force"
+                            subprocess.run(bash_command5, shell=True)
 
-                        bash_command7 = f"tcksample {sift_file} {noddi_maps_dir}/fit_FWF.nii.gz {connectome_fwf_dir}/mean_FWF_per_streamline.csv -stat_tck mean -force"
-                        subprocess.run(bash_command7, shell=True)
+                            # Create NDI streamtubes
+                            bash_command6 = f"connectome2tck {sift_file} {connectome_odi_dir}/ODI_assignments.csv {connectome_odi_dir}/exemplar_ODI –files single –exemplars {parcellation_file} -force"
+                            subprocess.run(bash_command6, shell=True)
 
-                        # Create NDI matrix
-                        bash_command8 = f"tck2connectome -symmetric -zero_diagonal {sift_file} {parcellation_file} {connectome_fwf_dir}/FWF_connectivity_matrix.csv -scale_file {connectome_fwf_dir}/mean_FWF_per_streamline.csv -stat_edge mean –out_assignment {connectome_fwf_dir}/FWF_assignments.csv -force"
-                        subprocess.run(bash_command8, shell=True)
+                            ## Compute FWF matrix ##
 
-                        # Create NDI streamtubes
-                        bash_command9 = f"connectome2tck {sift_file} {connectome_fwf_dir}/FWF_assignments.csv {connectome_fwf_dir}/exemplar_FWF –files single –exemplars {parcellation_file} -force"
-                        subprocess.run(bash_command9, shell=True)
+                            bash_command7 = f"tcksample {sift_file} {noddi_maps_dir}/fit_FWF.nii.gz {connectome_fwf_dir}/mean_FWF_per_streamline.csv -stat_tck mean -force"
+                            subprocess.run(bash_command7, shell=True)
+
+                            # Create NDI matrix
+                            bash_command8 = f"tck2connectome -symmetric -zero_diagonal {sift_file} {parcellation_file} {connectome_fwf_dir}/FWF_connectivity_matrix.csv -scale_file {connectome_fwf_dir}/mean_FWF_per_streamline.csv -stat_edge mean –out_assignment {connectome_fwf_dir}/FWF_assignments.csv -force"
+                            subprocess.run(bash_command8, shell=True)
+
+                            # Create NDI streamtubes
+                            bash_command9 = f"connectome2tck {sift_file} {connectome_fwf_dir}/FWF_assignments.csv {connectome_fwf_dir}/exemplar_FWF –files single –exemplars {parcellation_file} -force"
+                            subprocess.run(bash_command9, shell=True)
 
                     if save_matrix:
                         sc_file_path = f"{connectome_sc_dir}/sc_connectivity_matrix.csv"
