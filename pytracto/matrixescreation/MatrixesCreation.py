@@ -181,8 +181,11 @@ def build_connectivity_matrixes(
                         os.mkdir(connectome_spe_dir)
 
                     if create_smallertck:
-                        bash_command = f"tckedit {sift_file} -number 100k {tracto_dir}/tcksift2/smaller100ktracks.tck -force"
-                        subprocess.run(bash_command, shell=True)
+
+                        if not os.path.isfile(f"{tracto_dir}/tcksift2/smaller100ktracks.tck"):
+                            
+                            bash_command = f"tckedit {sift_file} -number 100k {tracto_dir}/tcksift2/smaller100ktracks.tck -force"
+                            subprocess.run(bash_command, shell=True)
 
                     #######################################################
                     #####        	 Generate Connectome               ####
