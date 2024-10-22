@@ -99,8 +99,10 @@ def build_connectivity_matrixes(
 
             if createTensor:
                 # Create tensor
-                bash_command = f"dwi2tensor -mask {tracto_dir}/brainmask/brainmask.mif {preproc_dir}/biascorrect/biascorrect.mif {connectome_dir}/tensor.mif -force"
-                subprocess.run(bash_command, shell=True)
+
+                if not os.path.isfile(f"{connectome_dir}/tensor.mif"):
+                    bash_command = f"dwi2tensor -mask {tracto_dir}/brainmask/brainmask.mif {preproc_dir}/biascorrect/biascorrect.mif {connectome_dir}/tensor.mif -force"
+                    subprocess.run(bash_command, shell=True)
 
             if createNODDImatrix:
 
@@ -183,7 +185,7 @@ def build_connectivity_matrixes(
                     if create_smallertck:
 
                         if not os.path.isfile(f"{tracto_dir}/tcksift2/smaller100ktracks.tck"):
-                            
+
                             bash_command = f"tckedit {sift_file} -number 100k {tracto_dir}/tcksift2/smaller100ktracks.tck -force"
                             subprocess.run(bash_command, shell=True)
 
