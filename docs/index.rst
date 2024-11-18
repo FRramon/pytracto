@@ -18,7 +18,7 @@ Uses nipype workflows, on interfaces of Mrtrix3, FSL, freesurfer, ANTs and other
 ====================================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Contents:
 
    Installation <install/index>

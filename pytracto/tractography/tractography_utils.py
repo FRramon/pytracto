@@ -279,9 +279,13 @@ def workflow_repartition(base_dir: str,folder_name: str, session: str,templates,
     have_not = []
     have_single_not = []
     have_single = []
+    have_single_notopup = []
+    have_single_not_notopup = []
+
 
     subjects = check_problems_nifti(base_dir,folder_name,templates,session,group)
     subject_list = subjects[0]
+    print(subject_list)
 
     for s in subject_list:
         #print(s)
@@ -333,6 +337,18 @@ def workflow_repartition(base_dir: str,folder_name: str, session: str,templates,
                 else: 
                     have_single_not.append(s)
 
+            elif shell == 'singleshell_notopup':
+
+                if os.path.exists(os.path.join(ses_path,'dwi')):
+                    all_files = acqs
+                    list_nifti = [st for st in all_files if "dwi" in st]
+                    print(list_nifti)
+                    print(len(list_nifti))
+                    if len(list_nifti) == 4 :
+                        have_single_notopup.append(s)
+                else: 
+                    have_single_not_notopup.append(s)
+
 
 
             ### Add for single shell : 1PA /1 AP, or 1 PA no AP
@@ -370,7 +386,7 @@ def workflow_repartition(base_dir: str,folder_name: str, session: str,templates,
 
 
 
-    return haveSes, have_even, have_odd, have_not,have_single,have_single_not,subjects[1]
+    return haveSes, have_even, have_odd, have_not,have_single,have_single_not,have_single_notopup,have_single_not_notopup,subjects[1]
 
 
 def move_workflow(
