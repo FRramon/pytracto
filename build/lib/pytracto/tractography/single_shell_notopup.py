@@ -136,7 +136,7 @@ def execute_single_shell_notopup_workflow(
     # avg_b0AP.inputs.out_file = "avg_b0AP.mif"
 
     # Concat B=0 in reverse phase directions
-    merger_preproc = Node(Merge(2), name="merger")
+    #merger_preproc = Node(Merge(2), name="merger")
 
     mrcatb0 = Node(mrt.MRCat(), name="mrcatb0")
     mrcatb0.inputs.axis = 3
@@ -401,7 +401,7 @@ def execute_single_shell_notopup_workflow(
     main_wf.config["execution"]["hash_method"] = "content"
 
     main_wf.connect(wf_dc, "mrconvertPA.out_file", wf_preproc, "denoise.in_file")
-    main_wf.connect(wf_dc, "mrconvertAP.out_file", wf_preproc, "b0AP_extract.in_file")
+    #main_wf.connect(wf_dc, "mrconvertAP.out_file", wf_preproc, "b0AP_extract.in_file")
     main_wf.connect(
         wf_preproc, "biascorrect.out_file", wf_tractography, "brainmask.in_file"
     )

@@ -132,13 +132,14 @@ def check_template(base_dir:str,folder_name:str, session_id:str, templates:dict,
 
 
 
-def extract_dim(pattern):
+def extract_dim(pattern,dim_template):
 
     """
     Explore nifti headers to search for a potential dimension error.
 
     Args:
             pattern : file path pattern for the nifti image to be analyzed
+            dim_template : dictionnary containing expected image dimensions
     Returns: 
             a tuple comprising:
             - a list of three int : dimension x,y,z
@@ -151,18 +152,38 @@ def extract_dim(pattern):
     header = n_img.header
     dims = header['dim']
 
+
+
     dimension_error = False
 
+    # if 'anat' in filepath:
+    #     expected_dimension = dim_template.get("anat")
+    #     dims_order = [dims[2],dims[3],dims[1]]
+    #     if dims_order[0] != 256 or dims_order[1] != 256:
+    #         dimension_error = True
+    # elif 'dwi' in filepath:
+    #     expected_dimension = dim_template.get("dwi")
+    #     dims_order = [dims[1],dims[2],dims[3]]
+    #     if dims_order[0] != 128 or dims_order[1] != 128 or dims_order[2] != 70:
+    #         dimension_error = True
+
     if 'anat' in filepath:
+        #print("has anat")
+        expected_dimension = dim_template.get("anat")
+        #print(f'expected : {expected_dimension}')
         dims_order = [dims[2],dims[3],dims[1]]
-        if dims_order[0] != 256 or dims_order[1] != 256:
+
+        #print(f'actual dim : {dims_order}')
+        if dims_order[0] != expected_dimension[0] or dims_order[1] != expected_dimension[1]:
             dimension_error = True
     elif 'dwi' in filepath:
+        expected_dimension = dim_template.get("dwi")
         dims_order = [dims[1],dims[2],dims[3]]
-        if dims_order[0] != 128 or dims_order[1] != 128 or dims_order[2] != 70:
+        if dims_order[0] != expected_dimension[0] or dims_order[1] != expected_dimension[1] or dims_order[2] != expected_dimension[2]:
             dimension_error = True
 
     elif 'fmap' in filepath:
+        expected_dimension = dim_template.get("fmap")
         dims_order = [dims[1],dims[2],dims[3]]
         if dims_order[0] != 128 or dims_order[1] != 128 or dims_order[2] != 70:
             dimension_error = True
@@ -171,7 +192,7 @@ def extract_dim(pattern):
 
     return dims_order,dimension_error
 
-def check_problems_nifti(base_dir: str,folder_name: str,templates: dict,session: str,group = None):
+def check_problems_nifti(base_dir: str,folder_name: str,templates: dict,dim_template: dict,session: str,group = None):
 
     """
     Get the list of subject that can be processed using the diffusion workflows
@@ -215,7 +236,7 @@ def check_problems_nifti(base_dir: str,folder_name: str,templates: dict,session:
             file_paths = glob.glob(file_pattern)
             
             file_path = file_paths[0]
-            dim,dim_error = extract_dim(file_path)
+            dim,dim_error = extract_dim(file_path,dim_template)
             if dim_error:
                 list_dimension_error.append(s)
             #print(f"{key}: {dim}")
@@ -238,7 +259,7 @@ def check_problems_nifti(base_dir: str,folder_name: str,templates: dict,session:
 
 
 
-def workflow_repartition(base_dir: str,folder_name: str, session: str,templates,shell,group: str = None):
+def workflow_repartition(base_dir: str,folder_name: str, session: str,templates,dim_template: dict,shell,group: str = None):
     """
     Get the list of subject that underwent session i and were aquired an inverse phase
 
@@ -283,7 +304,7 @@ def workflow_repartition(base_dir: str,folder_name: str, session: str,templates,
     have_single_not_notopup = []
 
 
-    subjects = check_problems_nifti(base_dir,folder_name,templates,session,group)
+    subjects = check_problems_nifti(base_dir,folder_name,templates,dim_template,session,group)
     subject_list = subjects[0]
     print(subject_list)
 
@@ -300,7 +321,6 @@ def workflow_repartition(base_dir: str,folder_name: str, session: str,templates,
             for key, template in templates.items():
                 file_pattern = f"{source_data_dir}/{template.format(subject_id=s, ses_id=session)}"
                 file_paths = glob.glob(file_pattern)[0]
-
                 acqs.append(file_paths)
                         
 
@@ -342,9 +362,7 @@ def workflow_repartition(base_dir: str,folder_name: str, session: str,templates,
                 if os.path.exists(os.path.join(ses_path,'dwi')):
                     all_files = acqs
                     list_nifti = [st for st in all_files if "dwi" in st]
-                    print(list_nifti)
-                    print(len(list_nifti))
-                    if len(list_nifti) == 4 :
+                    if len(list_nifti) == 1 :
                         have_single_notopup.append(s)
                 else: 
                     have_single_not_notopup.append(s)
