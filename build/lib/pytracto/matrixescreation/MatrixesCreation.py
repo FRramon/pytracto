@@ -55,6 +55,7 @@ def build_connectivity_matrixes(
     createTensor = kwargs.get("createTensor")
     createNODDImatrix = kwargs.get("createNODDImatrix")
     parcellate_schaefer = kwargs.get("parcellate_schaefer")
+    parcels_index = kwargs.get("parcels_index")
     tckgen_method = kwargs.get("tckgen_method")
     atlas_list = kwargs.get("atlas_list")
     create_smallertck = kwargs.get("create_smallertck")
@@ -166,7 +167,7 @@ def build_connectivity_matrixes(
                             connectome_dir,
                             "transform_parcels",
                             "mapflow",
-                            "_transform_parcels2",
+                            f"_transform_parcels{parcels_index}",
                             "parcels_coreg.mif",
                         )
                     elif atlas == "Schaefer":
@@ -434,18 +435,31 @@ def build_connectivity_matrixes(
                                 f"{connectome_fwf_dir}/FWF_connectivity_matrix.csv"
                             )
 
-                            if not (
-                                os.path.isfile(sc_file_path)
-                                and os.path.isfile(fa_file_path)
-                                and os.path.isfile(rd_file_path)
-                                and os.path.isfile(ad_file_path)
-                                and os.path.isfile(adc_file_path)
-                                and os.path.isfile(ndi_file_path)
-                                and os.path.isfile(odi_file_path)
-                                and os.path.isfile(fwf_file_path)
-                            ):
-                                print("Error: One or more files not found.")
-                                sys.exit(1)
+                            if createNODDImatrix:
+
+                                if not (
+                                    os.path.isfile(sc_file_path)
+                                    and os.path.isfile(fa_file_path)
+                                    and os.path.isfile(rd_file_path)
+                                    and os.path.isfile(ad_file_path)
+                                    and os.path.isfile(adc_file_path)
+                                    and os.path.isfile(ndi_file_path)
+                                    and os.path.isfile(odi_file_path)
+                                    and os.path.isfile(fwf_file_path)
+                                ):
+                                    print("Error: One or more files not found.")
+                                    sys.exit(1)
+
+                            else: 
+                                if not (
+                                    os.path.isfile(sc_file_path)
+                                    and os.path.isfile(fa_file_path)
+                                    and os.path.isfile(rd_file_path)
+                                    and os.path.isfile(ad_file_path)
+                                    and os.path.isfile(adc_file_path)
+                                ):
+                                    print("Error: One or more files not found.")
+                                    sys.exit(1)
 
                             # Read the CSV files without skipping the header
 
@@ -454,9 +468,11 @@ def build_connectivity_matrixes(
                             df_rd = pd.read_csv(fa_file_path, header=None)
                             df_ad = pd.read_csv(ad_file_path, header=None)
                             df_adc = pd.read_csv(adc_file_path, header=None)
-                            df_ndi = pd.read_csv(ndi_file_path, header=None)
-                            df_odi = pd.read_csv(odi_file_path, header=None)
-                            df_fwf = pd.read_csv(fwf_file_path, header=None)
+
+                            if createNODDImatrix:
+                                df_ndi = pd.read_csv(ndi_file_path, header=None)
+                                df_odi = pd.read_csv(odi_file_path, header=None)
+                                df_fwf = pd.read_csv(fwf_file_path, header=None)
 
                             # Calculate the adaptive outlier threshold (e.g., 99th percentile) for both dataframes
                             outlier_threshold_sc = df_sc.stack().quantile(0.99)
@@ -464,9 +480,11 @@ def build_connectivity_matrixes(
                             outlier_threshold_rd = df_rd.stack().quantile(0.99)
                             outlier_threshold_ad = df_ad.stack().quantile(0.99)
                             outlier_threshold_adc = df_adc.stack().quantile(0.99)
-                            outlier_threshold_ndi = df_ndi.stack().quantile(0.99)
-                            outlier_threshold_odi = df_odi.stack().quantile(0.99)
-                            outlier_threshold_fwf = df_fwf.stack().quantile(0.99)
+
+                            if createNODDImatrix:
+                                outlier_threshold_ndi = df_ndi.stack().quantile(0.99)
+                                outlier_threshold_odi = df_odi.stack().quantile(0.99)
+                                outlier_threshold_fwf = df_fwf.stack().quantile(0.99)
 
                             # Create a function to generate and save the heatmap
                             def save_heatmap(
@@ -495,15 +513,17 @@ def build_connectivity_matrixes(
                             save_heatmap(
                                 df_adc, outlier_threshold_adc, "adc", gen_met, atlas
                             )
-                            save_heatmap(
-                                df_ndi, outlier_threshold_ndi, "ndi", gen_met, atlas
-                            )
-                            save_heatmap(
-                                df_odi, outlier_threshold_odi, "odi", gen_met, atlas
-                            )
-                            save_heatmap(
-                                df_fwf, outlier_threshold_fwf, "fwf", gen_met, atlas
-                            )
+
+                            if createNODDImatrix:
+                                save_heatmap(
+                                    df_ndi, outlier_threshold_ndi, "ndi", gen_met, atlas
+                                )
+                                save_heatmap(
+                                    df_odi, outlier_threshold_odi, "odi", gen_met, atlas
+                                )
+                                save_heatmap(
+                                    df_fwf, outlier_threshold_fwf, "fwf", gen_met, atlas
+                                )
 
                     if viewSCConnectome:
                         bash_command = f"mrview {preproc_dir}/biascorrect/biascorrect.mif -connectome.init {connectome_dir}/labelconvert/mapflow/_labelconvert2/parcellation.mif -connectome.load {connectome_sc_dir}/sc_connectivity_matrix.csv -imagevisible 0"

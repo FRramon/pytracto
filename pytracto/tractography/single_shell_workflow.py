@@ -369,6 +369,7 @@ def execute_single_shell_workflow(
         mrt.MRTransform(), name="transform_parcels", iterfield=["in_files"]
     )
     transform_parcels.inputs.out_file = "parcels_coreg.mif"
+    ## Attention ici transform parcels doit être en nearest neighbours?
 
     # tck2connectome –symmetric –zero_diagonal tracks_10mio.tck
     # ${sub_id}_${ses_id}_parcels_destrieux.mif
