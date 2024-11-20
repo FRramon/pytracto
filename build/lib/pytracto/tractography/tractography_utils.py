@@ -167,6 +167,8 @@ def extract_dim(pattern,dim_template):
     #     if dims_order[0] != 128 or dims_order[1] != 128 or dims_order[2] != 70:
     #         dimension_error = True
 
+    #print(f"dim dict : {dim_template}")
+
     if 'anat' in filepath:
         #print("has anat")
         expected_dimension = dim_template.get("anat")
