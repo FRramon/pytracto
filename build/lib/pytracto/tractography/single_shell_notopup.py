@@ -9,7 +9,13 @@ import cmtklib.interfaces.mrtrix3 as cmp_mrt
 import os
 import sys
 
+import glob
+from tqdm import tqdm
+import json
 from nipype import config, logging
+import subprocess
+from python_on_whales import docker
+import shutil
 
 config.enable_debug_mode()
 config.set('execution','use_relative_paths','true')
@@ -21,7 +27,7 @@ logging.update_logging(config)
 ############# DC : Node Definition #######################
 
 
-def execute_single_shell_notopup_workflow(
+def execute_single_shell_notopup_preproc_workflow(
     source_dir: str,
     rawdata_dir: str,
     derivatives_dir: str,
@@ -52,20 +58,33 @@ def execute_single_shell_notopup_workflow(
     sf = Node(SelectFiles(templates), name="sf")
     sf.inputs.base_directory = rawdata_dir
 
+        # Datasink - creates output folder for important outputs
+    datasink = Node(DataSink(base_directory=derivatives_dir,
+                             container='derivatives'),
+                    name="datasink")
+
+    ## Use the following DataSink output substitutions
+    substitutions = [('_subject_id_', 'sub-'),
+                     ('_ses_id_','ses-'),
+                     ('_concatenated_', ''),
+                     ('_roi', '')
+                     ]
+
+    subjFolders = [
+        ('ses-%ssub-%s' % (session_id, subject_id), 'sub-%s/ses-%s' % (subject_id, session_id))
+        for subject_id in subject_list
+        for session_id in session_list  
+    ]
+    substitutions.extend(subjFolders)
+    datasink.inputs.substitutions = substitutions
+
+
     # Conversion des DWI PA en .mif (utilisation du nifti, bvec et bval) +
     # Concatenation
     mrconvertPA = Node(
         mrt.MRConvert(), name="mrconvertPA"
     )
-    # mrcatPA = Node(mrt.MRCat(), name="mrcatPA")
-
-    # Conversion du DWI AP en .mif avec le nifti, bvec, bval
-    # mrconvertAP = Node(
-    #     mrt.MRConvert(), name="mrconvertAP"
-    # )
-    # mrconvertAP = Node(mrt.MRConvert(),name = "mrconvertAP")
-    # mrcatAP = Node(mrt.MRCat(), name="mrcatAP")
-
+ 
     ############# DC : Connecting the WF #######################
 
     wf_dc = Workflow(name="wf_dc", base_dir=derivatives_dir)
@@ -78,28 +97,6 @@ def execute_single_shell_notopup_workflow(
     wf_dc.connect(sf, "dwiPA", mrconvertPA, "in_file")
     wf_dc.connect(sf, "bvecPA", mrconvertPA, "in_bvec")
     wf_dc.connect(sf, "bvalPA", mrconvertPA, "in_bval")
-
-    # wf_dc.connect(sf, "dwiAP", mrconvertAP, "in_file")
-    # wf_dc.connect(sf, "bvecAP", mrconvertAP, "in_bvec")
-    # wf_dc.connect(sf, "bvalAP", mrconvertAP, "in_bval")
-
-    # wf_dc.connect(mrconvertPA, "out_file", mrcatPA, "in_files")
-    # wf_dc.connect(mrconvertAP, "out_file", mrcatAP, "in_files")
-
-    ############################################################
-    ########          Freesurfer  Workflow           ###########
-    ############################################################
-
-    os.environ["SUBJECTS_DIR"] = rawdata_dir
-    fs_reconall = Node(ReconAll(), name="fs_reconall")
-    fs_reconall.inputs.directive = kwargs.get("reconall_param")
-    # .inputs.subjects_dir = data_dir
-    fs_workflow = Workflow(name="fs_workflow", base_dir=derivatives_dir)
-    fs_workflow.config["execution"]["use_caching"] = "True"
-    fs_workflow.config["execution"]["hash_method"] = "content"
-
-    fs_workflow.connect(infosource, "subject_id", fs_reconall, "subject_id")
-    fs_workflow.connect(sf, "anat", fs_reconall, "T1_files")
 
 
     ############################################################
@@ -123,23 +120,258 @@ def execute_single_shell_notopup_workflow(
     avg_b0PA.inputs.axis = 3
     avg_b0PA.inputs.out_file = "avg_b0PA.mif"
 
-    # extract b=0 channels from the DWI PA:
+ 
 
-    # b0AP_extract = Node(mrt.DWIExtract(), name="b0AP_extract")
-    # b0AP_extract.inputs.bzero = True
-    # b0AP_extract.inputs.out_file = "b0AP.mif"
+    ##########           Preproc Connecting the WF         ##########
 
-    # # Mean b=0 AP
-    # avg_b0AP = Node(mrt.MRMath(), name="avg_b0AP")
-    # avg_b0AP.inputs.operation = "mean"
-    # avg_b0AP.inputs.axis = 3
-    # avg_b0AP.inputs.out_file = "avg_b0AP.mif"
+    wf_preproc = Workflow(name="preproc", base_dir=derivatives_dir)
+    wf_preproc.config["execution"]["use_caching"] = "True"
+    wf_preproc.config["execution"]["hash_method"] = "content"
 
-    # Concat B=0 in reverse phase directions
-    #merger_preproc = Node(Merge(2), name="merger")
+    wf_preproc.connect(denoise, "out_file", unring, "in_file")
+    wf_preproc.connect(unring, "out_file", b0PA_extract, "in_file")
+    wf_preproc.connect(b0PA_extract, "out_file", avg_b0PA, "in_file")
 
-    mrcatb0 = Node(mrt.MRCat(), name="mrcatb0")
-    mrcatb0.inputs.axis = 3
+
+    #######################################################################
+    #########         Connecting Workflows together        ################
+    #######################################################################
+
+    main_wf = Workflow(name="main_workflow", base_dir=derivatives_dir)
+    main_wf.config["execution"]["use_caching"] = "True"
+    main_wf.config["execution"]["hash_method"] = "content"
+
+    main_wf.connect(wf_dc, "mrconvertPA.out_file", wf_preproc, "denoise.in_file")
+
+    main_wf.connect([
+
+        (wf_preproc, datasink, [('denoise.out_file', 'dwi.preproc.@denoise')]),
+        (wf_preproc, datasink, [('unring.out_file', 'dwi.preproc.@unr')]),
+        (wf_preproc, datasink, [('avg_b0PA.out_file', 'dwi.preproc.@b0')])
+
+    
+
+        ])
+
+    main_wf.run(plugin=kwargs.get("plugin_processing"), plugin_args={"n_procs": 12})
+
+
+#########################################################################################
+#################                        SYNBO-DISCO                #####################
+#################                 Generate b0 AP                   ######################
+#########################################################################################
+
+
+
+def process_dwi_json(source_dir,rawdata_folder,derivatives_folder,node_dir,subject_id,session_id,json_file):
+    """
+    Extract fields from a JSON file to calculate TotalReadoutTime 
+    and save the acquisition parameters in a specified format.
+
+    Args:
+        json_file (str): Path to the input JSON file.
+        output_file (str): Path to the output file (default is 'acqparam.txt').
+    """
+    try:
+        # Load the JSON file
+        with open(json_file, 'r') as f:
+            data = json.load(f)
+        
+        # Extract required fields
+        num_phase_encoding_steps = data.get("PhaseEncodingSteps")
+        pixel_bandwidth = data.get("PixelBandwidth")
+        
+        if not num_phase_encoding_steps or not pixel_bandwidth:
+            raise ValueError("Missing required fields in the JSON file.")
+        
+        # Calculate TotalReadoutTime
+        total_readout_time = num_phase_encoding_steps / pixel_bandwidth
+        
+        # Create acqparam content
+        acqparam_content = f"""\
+0 1 0 {total_readout_time:.6f}
+0 -1 0 0
+"""
+
+        rawdata_dir = os.path.join(source_dir,rawdata_folder)
+
+        synb0_inputdir = os.path.join(node_dir,"inputs")
+        if not os.path.isdir(synb0_inputdir):
+            os.mkdir(synb0_inputdir)
+        # Write to output file
+        with open(os.path.join(synb0_inputdir,"acqparams.txt"), 'w') as f:
+            f.write(acqparam_content)
+        
+        ## get b0 PA and save it to b0.nii.gz
+        ## get T1 and save it to T1.nii.gz
+
+        T1_nii = glob.glob(f"{rawdata_dir}/{subject_id}/{session_id}/anat/s*T1w.nii.gz")[0]
+
+        if not os.path.isfile(os.path.join(synb0_inputdir,"T1.nii.gz")):
+
+            shutil.copy(T1_nii,os.path.join(synb0_inputdir,'T1.nii.gz'))
+
+        b0_mif = glob.glob(f"{source_dir}/{derivatives_folder}/derivatives/dwi/preproc/{subject_id}/{session_id}/avg_b0PA.mif")[0]
+
+        if not os.path.isfile(os.path.join(synb0_inputdir,"b0.nii.gz")):
+            command = f"mrconvert {b0_mif} {synb0_inputdir}/b0.nii.gz"
+            subprocess.run(command,shell = True)
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+# Example usage
+#process_dwi_json('sub_ses_dwi.json')
+
+
+
+def get_inputs(
+
+    source_dir,
+    derivatives_folder,
+    rawdata_folder,
+    subject_list,
+    session_list):
+
+    if not os.path.isdir(os.path.join(source_dir,derivatives_folder)):
+        os.mkdir(os.path.join(source_dir,derivatives_folder))
+
+    if not os.path.isdir(os.path.join(source_dir,derivatives_folder,"main_workflow")):
+        os.mkdir(os.path.join(source_dir,derivatives_folder,"main_workflow"))
+
+    if not os.path.isdir(os.path.join(source_dir,derivatives_folder,"main_workflow","preproc")):
+        os.mkdir(os.path.join(source_dir,derivatives_folder,"main_workflow","preproc"))
+
+
+    for sub in subject_list:
+        for ses in session_list:
+            subject_id = "sub-" + sub
+            session_id = "ses-" + ses
+            identifier = "_ses_id_" + ses + "_subject_id_" + sub
+            print(f"Running on {subject_id} - {session_id}")
+
+            if not os.path.isdir(os.path.join(source_dir,derivatives_folder,"main_workflow","preproc",identifier)):
+                os.mkdir(os.path.join(source_dir,derivatives_folder,"main_workflow","preproc",identifier))
+
+            synb0_dir = os.path.join(source_dir,derivatives_folder,"main_workflow","preproc",identifier,"synb0")
+            if not os.path.isdir(synb0_dir):
+                os.mkdir(synb0_dir)
+
+            dwi_dir = os.path.join(source_dir,rawdata_folder,subject_id,session_id,"dwi")
+            rawdata_dir = os.path.join(source_dir,rawdata_folder,subject_id,session_id) 
+            dwi_json = glob.glob(f"{dwi_dir}/*.json")[0]
+            print(dwi_json)
+
+            process_dwi_json(source_dir,rawdata_folder,derivatives_folder,synb0_dir,subject_id,session_id,dwi_json)
+
+
+    print("Inputs are ready")
+
+
+def execute_synb0_disco(source_dir,rawdata_folder,derivatives_folder,subject_list,session_list,**kwargs):
+
+
+    get_inputs(source_dir,derivatives_folder,rawdata_folder,subject_list,session_list)
+
+    ## replace by kwargs get freesurfer license
+
+    freesurfer_bin_path = kwargs.get("freesurfer_path")
+    FS_license_file = os.path.join(freesurfer_bin_path, 'license.txt')
+
+    iterate_nb = len(subject_list) * len(session_list)
+
+    for sub in tqdm(subject_list,total = iterate_nb):
+        for ses in session_list:
+            identifier = f"_ses_id_{ses}_subject_id_{sub}"
+
+            input_synb0 = os.path.join(source_dir,derivatives_folder,"main_workflow","preproc",identifier,"synb0","inputs")
+            output_synb0 = os.path.join(source_dir,derivatives_folder,"main_workflow","preproc",identifier,"synb0","outputs")
+
+            if not os.path.isfile(os.path.join(output_synb0,"b0_all.nii.gz")):
+
+                print(os.listdir(input_synb0))
+                print(str(os.getuid()))
+                       
+                output_generator = docker.run(
+                    "leonyichencai/synb0-disco:v3.1",
+                    ["--user", str(os.getuid()) + ":" + str(os.getgid()),"--notopup"],
+                    volumes=[(input_synb0, "/INPUTS"), (output_synb0, "/OUTPUTS"), (FS_license_file, "/extra/freesurfer/license.txt")],
+                    remove=True, stream=True,
+                    )
+                for stream_type, stream_content in output_generator:
+                    print(f"Stream type: {stream_type}, stream content: {stream_content}")
+
+
+
+
+def execute_single_shell_notopup_tractography_workflow(
+    source_dir: str,
+    rawdata_dir: str,
+    derivatives_dir: str,
+    subject_list: list,
+    session_list: str,
+    templates: dict,
+    **kwargs,
+):
+    """
+    Workflow for diffusion MRI tractography and connectivity matrixes creation.
+    For single shell diffusion MRI data
+
+    Args:
+          source_dir (str): base directory 
+          rawdata_dir (str):  path to nifti files
+          derivatives_dir (str): chosen derivatives folder
+          subject_list (list[str]): subjects list in the format ['01','02','03']
+          session_list (str): session id
+          **kwargs: keywords argument for specific pipeline parameters
+
+    """
+
+    infosource = Node(
+        IdentityInterface(fields=["subject_id", "ses_id"]), name="infosource"
+    )
+    infosource.iterables = [("subject_id", subject_list),("ses_id", session_list)]
+
+    sf = Node(SelectFiles(templates), name="sf")
+    sf.inputs.base_directory = source_dir
+
+    # Conversion des DWI PA en .mif (utilisation du nifti, bvec et bval) +
+    # Concatenation
+    mrconvertPA = Node(
+        mrt.MRConvert(), name="mrconvertPA"
+    )
+
+    ############# DC : Connecting the WF #######################
+
+    wf_dc = Workflow(name="wf_dc", base_dir=derivatives_dir)
+    wf_dc.config["execution"]["use_caching"] = "True"
+    wf_dc.config["execution"]["hash_method"] = "content"
+
+    wf_dc.connect(infosource, "subject_id", sf, "subject_id")
+    wf_dc.connect(infosource, "ses_id", sf, "ses_id")
+
+    ############################################################
+    ########          Freesurfer  Workflow           ###########
+    ############################################################
+
+    os.environ["SUBJECTS_DIR"] = rawdata_dir
+    fs_reconall = Node(ReconAll(), name="fs_reconall")
+    fs_reconall.inputs.directive = kwargs.get("reconall_param")
+    # .inputs.subjects_dir = data_dir
+    fs_workflow = Workflow(name="fs_workflow", base_dir=derivatives_dir)
+    fs_workflow.config["execution"]["use_caching"] = "True"
+    fs_workflow.config["execution"]["hash_method"] = "content"
+
+    fs_workflow.connect(infosource, "subject_id", fs_reconall, "subject_id")
+    fs_workflow.connect(sf, "anat", fs_reconall, "T1_files")
+
+
+    ############################################################
+    ########          Preprocessing Workflow           #########
+    ############################################################
+
+    ##########       Preproc: Node definition       ############
+
 
     ### Topup -> Eddy ###
 
@@ -150,13 +382,13 @@ def execute_single_shell_notopup_workflow(
     # /mnt/CONHECT_data/pipeline_tmp/main_workflow/preproc/_ses_id_001_subject_id_01/mrcatb0/concatenated.mif
     # -pe_dir j
 
-    # dwpreproc = Node(mrt.DWIPreproc(), name="dwpreproc")
-    # dwpreproc.inputs.rpe_options = "pair"
-    # dwpreproc.inputs.out_file = "preproc.mif"
-    # # preproc.inputs.out_grad_mrtrix = "grad.b"    # export final gradient table in MRtrix format
-    # # linear second level model and replace outliers
-    # dwpreproc.inputs.eddy_options = kwargs.get("eddyoptions_param")
-    # dwpreproc.inputs.pe_dir = "PA"
+    dwpreproc = Node(mrt.DWIPreproc(), name="dwpreproc")
+    dwpreproc.inputs.rpe_options = "pair"
+    dwpreproc.inputs.out_file = "preproc.mif"
+    # preproc.inputs.out_grad_mrtrix = "grad.b"    # export final gradient table in MRtrix format
+    # linear second level model and replace outliers
+    dwpreproc.inputs.eddy_options = kwargs.get("eddyoptions_param")
+    dwpreproc.inputs.pe_dir = "PA"
 
     # Unbias
     biascorrect = Node(mrt.DWIBiasCorrect(), name="biascorrect")
@@ -169,17 +401,10 @@ def execute_single_shell_notopup_workflow(
     wf_preproc.config["execution"]["use_caching"] = "True"
     wf_preproc.config["execution"]["hash_method"] = "content"
 
-    wf_preproc.connect(denoise, "out_file", unring, "in_file")
-    wf_preproc.connect(unring, "out_file", b0PA_extract, "in_file")
-    wf_preproc.connect(b0PA_extract, "out_file", avg_b0PA, "in_file")
-    # wf_preproc.connect(b0AP_extract, "out_file", avg_b0AP, "in_file")
 
-    # wf_preproc.connect(avg_b0PA, "out_file", merger_preproc, "in1")
-    # wf_preproc.connect(avg_b0AP, "out_file", merger_preproc, "in2")
-    # wf_preproc.connect(merger_preproc, "out", mrcatb0, "in_files")
-    # wf_preproc.connect(unring, "out_file", dwpreproc, "in_file")
-    # wf_preproc.connect(mrcatb0, "out_file", dwpreproc, "in_epi")
-    wf_preproc.connect(unring, "out_file", biascorrect, "in_file")
+    wf_preproc.connect(sf, "dwi_unr", dwpreproc, "in_file")
+    wf_preproc.connect(sf,"b0_pair",dwpreproc,"in_epi")
+    wf_preproc.connect(dwpreproc,"out_file",biascorrect,"in_file")
 
     ##################################################################
     #########            Tractography             ####################
@@ -188,15 +413,6 @@ def execute_single_shell_notopup_workflow(
     ############    Tractography: Nodes definition       #############
 
     # # Estimation du brain mask : FSL bet
-    # convert_mask2nii = Node(mrt.MRConvert(),name = "convert_mask2nii")
-    # convert_mask2nii.inputs.out_file = "dwi_preproc.nii"
-
-    # bet_mask = Node(fsl.BET(),name = 'bet_mask')
-    # bet_mask.inputs.mask = True
-    # # bet_mask.inputs.mask_file = 'mask.nii'
-
-    # convert_mask2mif = Node(mrt.MRConvert(),name = "convert_mask2mif")
-    # convert_mask2mif.inputs.out_file = 'mask_preproc.mif'
 
     brainmask = Node(mrt.BrainMask(), name="brainmask")
     brainmask.out_file = "brainmask.mif"
@@ -204,9 +420,7 @@ def execute_single_shell_notopup_workflow(
     # DWI2response
     dwiresponse = Node(mrt.ResponseSD(), name="dwiresponse")
     dwiresponse.inputs.algorithm = kwargs.get("fod_algorithm_param")
-    dwiresponse.inputs.csf_file = "wm.txt"
-    dwiresponse.inputs.gm_file = "gm.txt"
-    dwiresponse.inputs.csf_file = "csf.txt"
+    dwiresponse.inputs.wm_file = "wm.txt"
 
     # dwi2fod msmt_csd ${pref}_dwi_preproc.mif -mask ${pref}_mask_preproc.mif
     # ${pref}_wm.txt ${pref}_wmfod.mif ${pref}_gm.txt ${pref}_gmfod.mif
@@ -215,8 +429,7 @@ def execute_single_shell_notopup_workflow(
     dwi2fod.inputs.algorithm = kwargs.get("csd_algorithm_param")
     dwi2fod.inputs.wm_txt = "wm.txt"  # ici faire le lien avec dwiresp
     dwi2fod.inputs.wm_odf = "wm.mif"
-    dwi2fod.inputs.csf_odf = "csf.mif"
-    dwi2fod.inputs.gm_odf = "gm.mif"
+
 
     gen5tt = Node(mrt.Generate5tt(), name="gen5tt")
     gen5tt.inputs.algorithm = kwargs.get("tt_algorithm_param")
@@ -273,27 +486,13 @@ def execute_single_shell_notopup_workflow(
     gmwmi = Node(cmp_mrt.GenerateGMWMInterface(), name="gmwmi")
     gmwmi.inputs.out_file = "gmwmi.mif"
 
-    # tckgen -act ${pref}_5tt_coreg.mif -backtrack -seed_gmwmi
-    # ${pref}_gmwmSeed_coreg.mif -select 10000000 ${pref}_wmfod_norm.mif
-    # ${pref}_tracks_10mio.tck
-    tckgen = Node(mrt.Tractography(), name="tckgen")
-    tckgen.inputs.algorithm = kwargs.get("tckgen_algorithm_param")
-    tckgen.inputs.select = kwargs.get("tckgen_ntracks_param")
-    tckgen.inputs.backtrack = kwargs.get("tckgen_backtrack_param")
-
     tckgenDet = Node(mrt.Tractography(), name="tckgenDet")
     tckgenDet.inputs.algorithm = "SD_Stream"
     tckgenDet.inputs.select = kwargs.get("tckgen_ntracks_param")
 
-    tcksift2 = Node(cmp_mrt.FilterTractogram(), name="tcksift2")
-    tcksift2.inputs.out_file = "sift_tracks.tck"
-
     tcksift2Det = Node(cmp_mrt.FilterTractogram(), name="tcksift2Det")
     tcksift2Det.inputs.out_file = "sift_tracks.tck"
 
-    # tcksift2.inputs.out_tracks = 'sift_tracks.tck'
-
-    # tcksift2.inputs.out_weights = 'finaltracks.tck'
 
     #############     Tractography: Connecting the WF    ##################
 
@@ -330,17 +529,9 @@ def execute_single_shell_notopup_workflow(
     wf_tractography.connect(dwiresponse, "csf_file", dwi2fod, "csf_txt")
     wf_tractography.connect(brainmask, "out_file", dwi2fod, "mask_file")
 
-    wf_tractography.connect(gmwmi, "out_file", tckgen, "seed_gmwmi")
-    wf_tractography.connect(transform5tt, "out_file", tckgen, "act_file")
-    wf_tractography.connect(dwi2fod, "wm_odf", tckgen, "in_file")
-
     wf_tractography.connect(gmwmi, "out_file", tckgenDet, "seed_gmwmi")
     wf_tractography.connect(transform5tt, "out_file", tckgenDet, "act_file")
     wf_tractography.connect(dwi2fod, "wm_odf", tckgenDet, "in_file")
-
-    wf_tractography.connect(tckgen, "out_file", tcksift2, "in_tracks")
-    wf_tractography.connect(transform5tt, "out_file", tcksift2, "act_file")
-    wf_tractography.connect(dwi2fod, "wm_odf", tcksift2, "in_fod")
 
     wf_tractography.connect(tckgenDet, "out_file", tcksift2Det, "in_tracks")
     wf_tractography.connect(transform5tt, "out_file", tcksift2Det, "act_file")
@@ -370,16 +561,6 @@ def execute_single_shell_notopup_workflow(
     )
     transform_parcels.inputs.out_file = "parcels_coreg.mif"
 
-    # tck2connectome –symmetric –zero_diagonal tracks_10mio.tck
-    # ${sub_id}_${ses_id}_parcels_destrieux.mif
-    # ${sub_id}_${ses_id}_sc_connectivity_matrix.csv –out_assignment
-    # ${sub_id}_${ses_id}_sc_assignments.csv -force
-    tck2connectome = MapNode(
-        mrt.BuildConnectome(), name="tck2connectome", iterfield=["in_parc"]
-    )
-    tck2connectome.inputs.zero_diagonal = True
-    tck2connectome.inputs.out_file = "connectome.csv"
-
     tck2connectomeDet = MapNode(
         mrt.BuildConnectome(), name="tck2connectomeDet", iterfield=["in_parc"]
     )
@@ -388,9 +569,8 @@ def execute_single_shell_notopup_workflow(
     # connectome.connect(tcksift2,'out_tracks',tck2connectome,'in_file')
 
     connectome.connect(labelconvert, "out_file", transform_parcels, "in_files")
-    connectome.connect(transform_parcels, "out_file", tck2connectome, "in_parc")
+    # connectome.connect(transform_parcels, "out_file", tck2connectome, "in_parc")
     connectome.connect(transform_parcels, "out_file", tck2connectomeDet, "in_parc")
-
 
     #######################################################################
     #########         Connecting Workflows together        ################
@@ -400,7 +580,9 @@ def execute_single_shell_notopup_workflow(
     main_wf.config["execution"]["use_caching"] = "True"
     main_wf.config["execution"]["hash_method"] = "content"
 
-    main_wf.connect(wf_dc, "mrconvertPA.out_file", wf_preproc, "denoise.in_file")
+    # main_wf.connect(wf_dc, "sf.dwi_unr", wf_preproc, "preproc.in_file")
+    # main_wf.connect(wf_dc, "sf.b0_pair", wf_preproc, "preproc.in_pair")
+
     #main_wf.connect(wf_dc, "mrconvertAP.out_file", wf_preproc, "b0AP_extract.in_file")
     main_wf.connect(
         wf_preproc, "biascorrect.out_file", wf_tractography, "brainmask.in_file"
@@ -427,9 +609,9 @@ def execute_single_shell_notopup_workflow(
         connectome,
         "transform_parcels.linear_transform",
     )
-    main_wf.connect(
-        wf_tractography, "tcksift2.out_tracks", connectome, "tck2connectome.in_file"
-    )
+    # main_wf.connect(
+    #     wf_tractography, "tcksift2.out_tracks", connectome, "tck2connectome.in_file"
+    # )
     main_wf.connect(
         wf_tractography,
         "tcksift2Det.out_tracks",
@@ -437,11 +619,6 @@ def execute_single_shell_notopup_workflow(
         "tck2connectomeDet.in_file",
     )
 
-    #main_wf.write_graph(graph2use="colored", dotfilename="./pipeline_graph.dot")
-    # wf_tractography.write_graph(
-    #     graph2use="orig", dotfilename="./graph_tractography.dot"
-    # )
-    # wf_dc.write_graph(graph2use="orig", dotfilename="./graph_dc.dot")
-    # connectome.write_graph(graph2use="orig", dotfilename="./graph_connectome.dot")
-
     main_wf.run(plugin=kwargs.get("plugin_processing"), plugin_args={"n_procs": 12})
+
+

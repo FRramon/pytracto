@@ -223,7 +223,6 @@ pytracto/tractography/odd_workflow_sink.py
 pytracto/tractography/pipeline_parameters.py
 pytracto/tractography/run_tractseg_nipype.py
 pytracto/tractography/single_shell_notopup.py
-pytracto/tractography/single_shell_notopup_preproc.py
 pytracto/tractography/single_shell_workflow.py
 pytracto/tractography/synth_workflow.py
 pytracto/tractography/tractography_utils.py
