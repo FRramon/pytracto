@@ -13,6 +13,10 @@ import glob
 from tqdm import tqdm
 import json
 from nipype import config, logging
+logging.update_logging(config)
+
+import logging
+from nipype.utils.profiler import log_nodes_cb
 import subprocess
 from python_on_whales import docker
 import shutil
@@ -21,7 +25,6 @@ config.enable_debug_mode()
 config.set('execution','use_relative_paths','true')
 config.set('execution','has_method','content')
 
-logging.update_logging(config)
 
 
 ############# DC : Node Definition #######################
@@ -49,6 +52,20 @@ def execute_single_shell_notopup_preproc_workflow(
           **kwargs: keywords argument for specific pipeline parameters
 
     """
+
+
+    callback_log_path = '/home/imabrain/run_stats_preproc.log'
+
+    # Set up the logger if it doesn't exist already
+    logger = logging.getLogger('callback')
+
+    if not logger.hasHandlers():  # Avoid adding multiple handlers if logger is already configured
+        handler = logging.FileHandler(callback_log_path)
+        handler.setLevel(logging.DEBUG)
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+        logger.setLevel(logging.DEBUG)
 
     infosource = Node(
         IdentityInterface(fields=["subject_id", "ses_id"]), name="infosource"
@@ -153,7 +170,8 @@ def execute_single_shell_notopup_preproc_workflow(
 
         ])
 
-    main_wf.run(plugin=kwargs.get("plugin_processing"), plugin_args={"n_procs": 12})
+
+    main_wf.run(plugin=kwargs.get("plugin_processing"), plugin_args={"n_procs": 12,'status_callback' : log_nodes_cb})
 
 
 #########################################################################################
@@ -189,8 +207,8 @@ def process_dwi_json(source_dir,rawdata_folder,derivatives_folder,node_dir,subje
         
         # Create acqparam content
         acqparam_content = f"""\
-0 1 0 {total_readout_time:.6f}
-0 -1 0 0
+0 -1 0 {total_readout_time:.6f}
+0 1 0 0
 """
 
         rawdata_dir = os.path.join(source_dir,rawdata_folder)
@@ -294,14 +312,35 @@ def execute_synb0_disco(source_dir,rawdata_folder,derivatives_folder,subject_lis
                        
                 output_generator = docker.run(
                     "leonyichencai/synb0-disco:v3.1",
-                    ["--user", str(os.getuid()) + ":" + str(os.getgid()),"--notopup"],
+                    ["--user", str(os.getuid()) + ":" + str(os.getgid()),"--notopup",'--memory=48g',"--cpus=12"],
                     volumes=[(input_synb0, "/INPUTS"), (output_synb0, "/OUTPUTS"), (FS_license_file, "/extra/freesurfer/license.txt")],
                     remove=True, stream=True,
                     )
                 for stream_type, stream_content in output_generator:
                     print(f"Stream type: {stream_type}, stream content: {stream_content}")
 
+                command_fslmerge = "fslmerge -t {output_synb0}/b0_all.nii.gz {output_synb0}/b0_d_smooth.nii.gz {output_synb0}/b0_u.nii.gz"
+                subprocess.run(command_fslmerge,shell = True)
 
+
+    ## replace by kwargs get freesurfer license
+def create_b0_pair(source_dir,rawdata_folder,derivatives_folder,subject_list,session_list,**kwargs):
+
+    freesurfer_bin_path = kwargs.get("freesurfer_path")
+    FS_license_file = os.path.join(freesurfer_bin_path, 'license.txt')
+
+    iterate_nb = len(subject_list) * len(session_list)
+
+    for sub in tqdm(subject_list,total = iterate_nb):
+        for ses in session_list:
+            identifier = f"_ses_id_{ses}_subject_id_{sub}"
+
+            input_synb0 = os.path.join(source_dir,derivatives_folder,"main_workflow","preproc",identifier,"synb0","inputs")
+            output_synb0 = os.path.join(source_dir,derivatives_folder,"main_workflow","preproc",identifier,"synb0","outputs")
+
+            command_fslmerge = f"fslmerge -t {output_synb0}/b0_all.nii.gz {output_synb0}/b0_d_smooth.nii.gz {output_synb0}/b0_u.nii.gz"
+            subprocess.run(command_fslmerge,shell = True)
+             
 
 
 def execute_single_shell_notopup_tractography_workflow(
@@ -326,6 +365,8 @@ def execute_single_shell_notopup_tractography_workflow(
           **kwargs: keywords argument for specific pipeline parameters
 
     """
+
+
 
     infosource = Node(
         IdentityInterface(fields=["subject_id", "ses_id"]), name="infosource"
@@ -372,7 +413,6 @@ def execute_single_shell_notopup_tractography_workflow(
 
     ##########       Preproc: Node definition       ############
 
-
     ### Topup -> Eddy ###
 
     # # dwifslpreproc ${pref}_dwi_den_unr.mif ${pref}_dwi_den_unr_preproc.mif -pe_dir PA -rpe_pair -se_epi ${pref}_b0_pair.mif -eddy_options " --slm=linear "
@@ -388,7 +428,7 @@ def execute_single_shell_notopup_tractography_workflow(
     # preproc.inputs.out_grad_mrtrix = "grad.b"    # export final gradient table in MRtrix format
     # linear second level model and replace outliers
     dwpreproc.inputs.eddy_options = kwargs.get("eddyoptions_param")
-    dwpreproc.inputs.pe_dir = "PA"
+    dwpreproc.inputs.pe_dir = "AP"
 
     # Unbias
     biascorrect = Node(mrt.DWIBiasCorrect(), name="biascorrect")

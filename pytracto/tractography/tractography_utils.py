@@ -180,8 +180,8 @@ def extract_dim(pattern,dim_template):
             dimension_error = True
     elif 'dwi' in filepath:
         expected_dimension = dim_template.get("dwi")
-        dims_order = [dims[1],dims[2],dims[3]]
-        if dims_order[0] != expected_dimension[0] or dims_order[1] != expected_dimension[1] or dims_order[2] != expected_dimension[2]:
+        dims_order = [dims[1],dims[2],dims[3],dims[4]]
+        if dims_order[0] != expected_dimension[0] or dims_order[1] != expected_dimension[1] or dims_order[2] != expected_dimension[2] or dims_order[3] != expected_dimension[3]:
             dimension_error = True
 
     elif 'fmap' in filepath:
@@ -308,7 +308,8 @@ def workflow_repartition(base_dir: str,folder_name: str, session: str,templates,
 
     subjects = check_problems_nifti(base_dir,folder_name,templates,dim_template,session,group)
     subject_list = subjects[0]
-    print(subject_list)
+    print("dimension_error")
+    print(subjects[1])
 
     for s in subject_list:
         #print(s)
