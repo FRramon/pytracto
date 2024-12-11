@@ -161,6 +161,15 @@ def build_connectivity_matrixes(
                 elif gen_met == "Probabilistic":
                     sift_file = os.path.join(tracto_dir, "tcksift2", "sift_tracks.tck")
 
+                elif gen_met == "Deterministic_raw":
+                    sift_file = os.path.join(
+                        tracto_dir, "tckgenDet", "tracked.tck"
+                    )
+                elif gen_met == "Probabilistic_raw":
+                    sift_file = os.path.join(
+                        tracto_dir, "tckgen", "tracked.tck"
+                    )
+
                 for atlas in atlas_list:
                     if atlas == "Destrieux":
                         parcellation_file = os.path.join(
@@ -532,3 +541,4 @@ def build_connectivity_matrixes(
                     if viewFAConnectome:
                         bash_command = f"mrview {preproc_dir}/biascorrect/biascorrect.mif -connectome.init {connectome_dir}/labelconvert/mapflow/_labelconvert2/parcellation.mif -connectome.load {connectome_fa_dir}/fa_connectivity_matrix.csv -imagevisible 0"
                         subprocess.run(bash_command, shell=True)
+
