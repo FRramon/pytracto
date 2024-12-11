@@ -132,7 +132,7 @@ def check_template(base_dir:str,folder_name:str, session_id:str, templates:dict,
 
 
 
-def extract_dim(pattern,dim_template):
+def extract_dim_single(pattern,dim_template):
 
     """
     Explore nifti headers to search for a potential dimension error.
@@ -191,6 +191,63 @@ def extract_dim(pattern,dim_template):
             dimension_error = True
             
 
+
+    return dims_order,dimension_error
+
+
+def extract_dim(pattern,dim_template):
+
+    """
+    Explore nifti headers to search for a potential dimension error.
+
+    Args:
+            pattern : file path pattern for the nifti image to be analyzed
+            dim_template : dictionnary containing expected image dimensions
+    Returns: 
+            a tuple comprising:
+            - a list of three int : dimension x,y,z
+            - a boolean, True if the image has a dimension error
+    """
+    file_paths = glob.glob(pattern)
+    filepath = file_paths[0]
+
+    n_img = nib.load(filepath)
+    header = n_img.header
+    dims = header['dim']
+
+    dimension_error = True
+
+    if 'anat' in filepath:
+        expected_dimensions = dim_template.get("anat", [])
+        dims_order = [dims[2], dims[3], dims[1]]
+
+        print(f'anat : {dims_order}')
+
+        for expected in expected_dimensions:
+            if dims_order[:3] == expected[:3]:
+                dimension_error = False
+                break
+
+    elif 'dwi' in filepath:
+        expected_dimensions = dim_template.get("dwi", [])
+        dims_order = [dims[1], dims[2], dims[3], dims[4]]
+
+        print(f'dwi : {dims_order}')
+
+
+        for expected in expected_dimensions:
+            if dims_order == expected:
+                dimension_error = False
+                break
+
+    elif 'fmap' in filepath:
+        expected_dimensions = dim_template.get("fmap", [])
+        dims_order = [dims[1], dims[2], dims[3]]
+
+        for expected in expected_dimensions:
+            if dims_order[:3] == expected[:3]:
+                dimension_error = False
+                break
 
     return dims_order,dimension_error
 
