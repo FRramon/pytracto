@@ -13,7 +13,7 @@ import subprocess
 from pytracto.tractography.tractography_utils import *
 
 
-def create_roi_file(base_dir, derivatives_folder, rawdata_folder, templates, ses_list, group = None,**kwargs):
+def create_roi_file(base_dir, derivatives_folder, rawdata_folder, templates, subject_list,ses_list, group = None,**kwargs):
     """
     This function create a xlsx file containing information of all connectivity matrixes for all subjects/sessions in a group.
 
@@ -62,9 +62,8 @@ def create_roi_file(base_dir, derivatives_folder, rawdata_folder, templates, ses
         for ses in ses_list:
 
 
-            slist = check_problems_nifti(base_dir, rawdata_folder, templates, ses, group)
-            subject_list = slist[0]
-
+            # slist = check_problems_nifti(base_dir, rawdata_folder, templates, ses, group)
+            # subject_list = slist[0]
 
 
             for sub in subject_list:
