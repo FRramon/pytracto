@@ -1,4 +1,4 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.2
 Name: pytracto
 Version: 0.1
 Summary: A python package for diffusion MRI tractography and connectivity, using interfaces of mrtrix3, fsl, freesurfer, ants, connectomemapper
@@ -17,3 +17,8 @@ Requires-Dist: numpy
 Requires-Dist: matplotlib
 Requires-Dist: sympy
 Requires-Dist: dipy
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: requires-dist
+Dynamic: summary

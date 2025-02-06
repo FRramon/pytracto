@@ -221,8 +221,6 @@ def extract_dim(pattern,dim_template):
         expected_dimensions = dim_template.get("anat", [])
         dims_order = [dims[2], dims[3], dims[1]]
 
-        print(f'anat : {dims_order}')
-
         for expected in expected_dimensions:
             if dims_order[:3] == expected[:3]:
                 dimension_error = False
@@ -231,9 +229,6 @@ def extract_dim(pattern,dim_template):
     elif 'dwi' in filepath:
         expected_dimensions = dim_template.get("dwi", [])
         dims_order = [dims[1], dims[2], dims[3], dims[4]]
-
-        print(f'dwi : {dims_order}')
-
 
         for expected in expected_dimensions:
             if dims_order == expected:

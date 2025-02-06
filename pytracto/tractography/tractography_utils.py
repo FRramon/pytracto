@@ -218,31 +218,55 @@ def extract_dim(pattern,dim_template):
     dimension_error = True
 
     if 'anat' in filepath:
-        expected_dimensions = dim_template.get("anat", [])
+        expected_dimensions = dim_template.get("anat",[])
         dims_order = [dims[2], dims[3], dims[1]]
 
-        for expected in expected_dimensions:
-            if dims_order[:3] == expected[:3]:
+        print("anat")
+        print(expected_dimensions)
+        print(dims_order)
+
+        if all(isinstance(i,int) for i in expected_dimensions):
+            if dims_order  == expected_dimensions:
                 dimension_error = False
-                break
+        else:
+            for expected in expected_dimensions:
+                if dims_order == expected:
+                    dimension_error = False
+                    break
 
-    elif 'dwi' in filepath:
-        expected_dimensions = dim_template.get("dwi", [])
-        dims_order = [dims[1], dims[2], dims[3], dims[4]]
+    elif "dwi" and 'dir-PA' in filepath:
+        print("dwi")
+        expected_dimensions = dim_template.get("dwiPA", [])
+        print(expected_dimensions)
+        dims_order = [dims[1], dims[2], dims[4]]
+        print(dims_order)
 
-        for expected in expected_dimensions:
-            if dims_order == expected:
+        if all(isinstance(i,int) for i in expected_dimensions):
+            if dims_order  == expected_dimensions:
                 dimension_error = False
-                break
+        elif any(isinstance(i,list) for i in expected_dimensions):
 
-    elif 'fmap' in filepath:
-        expected_dimensions = dim_template.get("fmap", [])
-        dims_order = [dims[1], dims[2], dims[3]]
+            for expected in expected_dimensions:
+                if dims_order == expected:
+                    dimension_error = False
+                    break
 
-        for expected in expected_dimensions:
-            if dims_order[:3] == expected[:3]:
+    elif 'dwi' and 'dir-AP' in filepath:
+        expected_dimensions = dim_template.get("dwiAP", [])
+        dims_order = [dims[1], dims[2], dims[3],dims[4]]
+
+        print("dwiAP")
+        print(expected_dimensions)
+        print(dims_order)
+
+        if all(isinstance(i,int) for i in expected_dimensions):
+            if dims_order  == expected_dimensions:
                 dimension_error = False
-                break
+        else:
+            for expected in expected_dimensions:
+                if dims_order == expected:
+                    dimension_error = False
+                    break
 
     return dims_order,dimension_error
 
@@ -284,13 +308,14 @@ def check_problems_nifti(base_dir: str,folder_name: str,templates: dict,dim_temp
     list_dimension_error = []
 
     for s in subject_list:
-        #print(s)
         for key, template in templates.items():
             file_pattern = f"{data_dir}/{template.format(subject_id=s, ses_id=session)}"
             file_paths = glob.glob(file_pattern)
             
             file_path = file_paths[0]
             dim,dim_error = extract_dim(file_path,dim_template)
+            print(dim_error)
+ 
             if dim_error:
                 list_dimension_error.append(s)
             #print(f"{key}: {dim}")
@@ -360,8 +385,6 @@ def workflow_repartition(base_dir: str,folder_name: str, session: str,templates,
 
     subjects = check_problems_nifti(base_dir,folder_name,templates,dim_template,session,group)
     subject_list = subjects[0]
-    print("dimension_error")
-    print(subjects[1])
 
     for s in subject_list:
         #print(s)
@@ -512,6 +535,42 @@ def move_workflow(
 #         "dwiAP": "sub-{subject_id}/ses-{ses_id}/fmap/sub-{subject_id}_ses-{ses_id}_dir-AP_epi.nii.gz"
 #     }
 
+dim_template_apexenf = {
+    'anat' : [256,176,256],
+    'dwiPA' : [128,128,31],
+    'dwiAP' : [128,128,7]
+} 
+
+templates_apexenf_shell = {
+    'anat': 'sub-{subject_id}/ses-{ses_id}/anat/sub-{subject_id}_ses-{ses_id}_T1w.nii.gz',
+    'dwiPA': 'sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.nii.gz',
+    'dwiAP': 'sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-AP_dwi.nii.gz',
+}
+
+templates_apexenf = {
+    'anat': 'sub-{subject_id}/ses-{ses_id}/anat/sub-{subject_id}_ses-{ses_id}_T1w.nii.gz',
+    'dwiPA': 'sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.nii.gz',
+    'bvalPA': 'sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.bval',
+    'bvecPA': 'sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.bvec',
+    'dwiAP': 'sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-AP_dwi.nii.gz',
+    'bvalAP': 'sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-AP_dwi.bval',
+    'bvecAP': 'sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-AP_dwi.bvec',
+}
+
+templates_apexenf_synth = {
+    'anat': 'sub-{subject_id}/ses-{ses_id}/anat/sub-{subject_id}_ses-{ses_id}_T1w.nii.gz',
+    'dwiPA': 'sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.nii.gz',
+    'bvalPA': 'sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.bval',
+    'bvecPA': 'sub-{subject_id}/ses-{ses_id}/dwi/sub-{subject_id}_ses-{ses_id}_acq-*_dir-PA_dwi.bvec',
+}
+
+templates = [templates_apexenf_shell,templates_apexenf,templates_apexenf_synth]
+
+res = workflow_repartition("/mnt/POOL_IRM07/francois/APEX/","rawdata","post",templates[0],dim_template_apexenf,"singleshell_enf")
+res2 = check_problems_nifti("/mnt/POOL_IRM07/francois/APEX/","rawdata",templates[0],dim_template_apexenf,"post")
+#res3 = check_template("/mnt/POOL_IRM07/francois/APEX/","rawdata",session_id = "pre", templates = templates[0])
+
+print(res2)
 
 # templates_seq = {
 #         "anat": "sub-{subject_id}/ses-{ses_id}/anat/sub-{subject_id}_ses-{ses_id}_T1w.nii.gz",
