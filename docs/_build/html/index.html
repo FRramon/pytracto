@@ -30,6 +30,8 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=e42486fa" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
@@ -41,6 +43,8 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -139,7 +143,14 @@
                 
 
                     <li class="nav-item">
-                      <a class="nav-link nav-internal" href="documentation/index.html">
+                      <a class="nav-link nav-internal" href="tutorials/index.html">
+                        Quickstart
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="documentation/method.html">
                         Documentation
                       </a>
                     </li>
@@ -243,7 +254,14 @@ document.write(`
                 
 
                     <li class="nav-item">
-                      <a class="nav-link nav-internal" href="documentation/index.html">
+                      <a class="nav-link nav-internal" href="tutorials/index.html">
+                        Quickstart
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="documentation/method.html">
                         Documentation
                       </a>
                     </li>
@@ -309,14 +327,41 @@ document.write(`
 <h2>Python package for diffusion MRI tractography and connectivity<a class="headerlink" href="#python-package-for-diffusion-mri-tractography-and-connectivity" title="Link to this heading">#</a></h2>
 <p><strong>Author</strong>: François Ramon</p>
 <p><strong>Mail</strong>: <a class="reference external" href="mailto:francois&#46;ramon&#37;&#52;&#48;ghu-paris&#46;fr">francois<span>&#46;</span>ramon<span>&#64;</span>ghu-paris<span>&#46;</span>fr</a></p>
-<p>Uses nipype workflows, on interfaces of Mrtrix3, FSL, freesurfer, ANTs and other neuroimaging softwares</p>
+<p>Uses nipype workflows, on interfaces of Mrtrix3, FSL, freesurfer, ANTs and other neuroimaging softwares
+It encapsulates pipelines for processing structural and diffusion MRI data. It includes :</p>
+<ul class="simple">
+<li><p>Input verification and file integrity checks (single-shell and multi-shell diffusion sequences, phase encoding direction checks)</p></li>
+<li><p>preprocessing : MP-PCA denoising, Gibbs ringing removal, and susceptibility artifact correction using either phase-reversed or synthetically generated images.</p></li>
+<li><p>White matter tractography using constrained spherical deconvolution, both deterministic and probabilistic methods for streamline reconstruction, and SIFT filtering .</p></li>
+<li><p>Connectivity matrices construction</p></li>
+</ul>
 <hr class="docutils" />
 <div class="toctree-wrapper compound">
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="install/index.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="documentation/index.html">Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="documentation/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install/index.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install/index.html#neuroimaging-software-requirements">Neuroimaging software requirements:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install/index.html#python-packages-requirements">Python packages requirements:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="documentation/method.html">Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="documentation/method.html#pipeline-adaptation-according-to-mri-data-type">1. Pipeline Adaptation According to MRI Data Type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documentation/method.html#preprocessing">2. Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documentation/method.html#t1w-image-parcellation-atlas-mapping">3. T1w Image Parcellation &amp; Atlas Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documentation/method.html#white-matter-tractography">4. White Matter Tractography</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documentation/method.html#microstructural-maps">5. Microstructural Maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documentation/method.html#connectivity-matrix-construction">6. Connectivity Matrix Construction</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="documentation/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="source/BIDS_formatting.html">BIDS formatting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/tractography.html">Tractography</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/matrixescreation.html">Matrixes creation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/bundlesegmentation.html">Bundle segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/QA_check.html">QA_check</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
@@ -419,7 +464,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     <br/>
   </p>
 </div>

@@ -30,6 +30,8 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e42486fa" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
@@ -41,6 +43,8 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'source/bundlesegmentation';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -140,7 +144,14 @@
                 
 
                     <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../documentation/index.html">
+                      <a class="nav-link nav-internal" href="../tutorials/index.html">
+                        Quickstart
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../documentation/method.html">
                         Documentation
                       </a>
                     </li>
@@ -242,7 +253,14 @@ document.write(`
                 
 
                     <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../documentation/index.html">
+                      <a class="nav-link nav-internal" href="../tutorials/index.html">
+                        Quickstart
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../documentation/method.html">
                         Documentation
                       </a>
                     </li>
@@ -349,7 +367,25 @@ document.write(`
 <span id="bundlesegmentation-bundlesegmentation-module"></span><h2>bundlesegmentation.BundleSegmentation module<a class="headerlink" href="#module-bundlesegmentation.BundleSegmentation" title="Link to this heading">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="bundlesegmentation.BundleSegmentation.bundle_segmentation">
-<span class="sig-prename descclassname"><span class="pre">bundlesegmentation.BundleSegmentation.</span></span><span class="sig-name descname"><span class="pre">bundle_segmentation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ses_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bundlesegmentation.BundleSegmentation.bundle_segmentation" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">bundlesegmentation.BundleSegmentation.</span></span><span class="sig-name descname"><span class="pre">bundle_segmentation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ses_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">derivatives_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bundlesegmentation.BundleSegmentation.bundle_segmentation" title="Link to this definition">#</a></dt>
+<dd><p>Performs bundle segmentation using tractseg.
+DWI images are first registered to MNI152 space using a FA map.
+Tractseg segments into 72 bundles, using a U-net architecture
+All 72 bundles are registered back to subject DWI space using inverse transform</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_dir</strong> (<em>str</em>) – source directory of the DICOM</p></li>
+<li><p><strong>subject_list</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – list of subjects</p></li>
+<li><p><strong>ses_list</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – list of sessions</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bundlesegmentation.BundleSegmentation.tract_masking">
+<span class="sig-prename descclassname"><span class="pre">bundlesegmentation.BundleSegmentation.</span></span><span class="sig-name descname"><span class="pre">tract_masking</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ses_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">derivatives_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bundlesegmentation.BundleSegmentation.tract_masking" title="Link to this definition">#</a></dt>
 <dd><p>Performs bundle segmentation using tractseg.
 DWI images are first registered to MNI152 space using a FA map.
 Tractseg segments into 72 bundles, using a U-net architecture
@@ -510,6 +546,7 @@ All 72 bundles are registered back to subject DWI space using inverse transform<
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-bundlesegmentation.BundleSegmentation">bundlesegmentation.BundleSegmentation module</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bundlesegmentation.BundleSegmentation.bundle_segmentation"><code class="docutils literal notranslate"><span class="pre">bundle_segmentation()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bundlesegmentation.BundleSegmentation.tract_masking"><code class="docutils literal notranslate"><span class="pre">tract_masking()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-bundlesegmentation.BundleSegmentationParameters">bundlesegmentation.BundleSegmentationParameters module</a></li>
@@ -569,7 +606,7 @@ All 72 bundles are registered back to subject DWI space using inverse transform<
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     <br/>
   </p>
 </div>

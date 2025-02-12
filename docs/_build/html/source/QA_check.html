@@ -30,6 +30,8 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e42486fa" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
@@ -41,6 +43,8 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'source/QA_check';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -139,7 +143,14 @@
                 
 
                     <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../documentation/index.html">
+                      <a class="nav-link nav-internal" href="../tutorials/index.html">
+                        Quickstart
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../documentation/method.html">
                         Documentation
                       </a>
                     </li>
@@ -241,7 +252,14 @@ document.write(`
                 
 
                     <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../documentation/index.html">
+                      <a class="nav-link nav-internal" href="../tutorials/index.html">
+                        Quickstart
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../documentation/method.html">
                         Documentation
                       </a>
                     </li>
@@ -389,6 +407,33 @@ It creates an excel with steps qualities.</p>
 </section>
 <section id="module-QA_check.check_avancement">
 <span id="qa-check-check-avancement-module"></span><h2>QA_check.check_avancement module<a class="headerlink" href="#module-QA_check.check_avancement" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="QA_check.check_avancement.fill_list">
+<span class="sig-prename descclassname"><span class="pre">QA_check.check_avancement.</span></span><span class="sig-name descname"><span class="pre">fill_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#QA_check.check_avancement.fill_list" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="QA_check.check_avancement.get_percentage">
+<span class="sig-prename descclassname"><span class="pre">QA_check.check_avancement.</span></span><span class="sig-name descname"><span class="pre">get_percentage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">L</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#QA_check.check_avancement.get_percentage" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="QA_check.check_avancement.main">
+<span class="sig-prename descclassname"><span class="pre">QA_check.check_avancement.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ses_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#QA_check.check_avancement.main" title="Link to this definition">#</a></dt>
+<dd><p>Function to generate a csv file of computation progress during the execution of the pipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_dir</strong> (<em>str</em>) – base directory</p></li>
+<li><p><strong>source_dir</strong> (<em>str</em>) – source directory (parent folder of dicom directory)</p></li>
+<li><p><strong>group</strong> (<em>str</em>) – group of subjects to be processed (either patients, temoins etc. )</p></li>
+<li><p><strong>ses_list</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – list of sessions to be processed</p></li>
+<li><p><strong>output_file</strong> (<em>str</em>) – filename for the output file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-QA_check">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-QA_check" title="Link to this heading">#</a></h2>
@@ -443,7 +488,12 @@ It creates an excel with steps qualities.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#QA_check.QA_check_v2.execute_qa_check"><code class="docutils literal notranslate"><span class="pre">execute_qa_check()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-QA_check.check_avancement">QA_check.check_avancement module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-QA_check.check_avancement">QA_check.check_avancement module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#QA_check.check_avancement.fill_list"><code class="docutils literal notranslate"><span class="pre">fill_list()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#QA_check.check_avancement.get_percentage"><code class="docutils literal notranslate"><span class="pre">get_percentage()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#QA_check.check_avancement.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-QA_check">Module contents</a></li>
 </ul>
   </nav></div>
@@ -491,7 +541,7 @@ It creates an excel with steps qualities.</p>
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     <br/>
   </p>
 </div>

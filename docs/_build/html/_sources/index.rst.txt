@@ -14,17 +14,26 @@ Python package for diffusion MRI tractography and connectivity
 **Mail**: francois.ramon@ghu-paris.fr
 
 Uses nipype workflows, on interfaces of Mrtrix3, FSL, freesurfer, ANTs and other neuroimaging softwares
+It encapsulates pipelines for processing structural and diffusion MRI data. It includes : 
+
+- Input verification and file integrity checks (single-shell and multi-shell diffusion sequences, phase encoding direction checks)
+
+- preprocessing : MP-PCA denoising, Gibbs ringing removal, and susceptibility artifact correction using either phase-reversed or synthetically generated images.
+
+- White matter tractography using constrained spherical deconvolution, both deterministic and probabilistic methods for streamline reconstruction, and SIFT filtering .
+
+- Connectivity matrices construction
 
 ====================================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Contents:
 
    Installation <install/index>
-   Documentation <documentation/index>
+   Quickstart <tutorials/index>
+   Documentation <documentation/method.rst>
    API Reference <documentation/index>
-
 
    .. source/BIDS_formatting
    .. source/tractography
@@ -32,7 +41,6 @@ Uses nipype workflows, on interfaces of Mrtrix3, FSL, freesurfer, ANTs and other
    .. source/bundlesegmentation
    .. source/QA_check
    .. source/NetworkAnalysis
-
 
 
 

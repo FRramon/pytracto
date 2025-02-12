@@ -30,6 +30,8 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e42486fa" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
@@ -41,6 +43,8 @@
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'source/modules';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -138,7 +142,14 @@
                 
 
                     <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../documentation/index.html">
+                      <a class="nav-link nav-internal" href="../tutorials/index.html">
+                        Quickstart
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../documentation/method.html">
                         Documentation
                       </a>
                     </li>
@@ -242,7 +253,14 @@ document.write(`
                 
 
                     <li class="nav-item">
-                      <a class="nav-link nav-internal" href="../documentation/index.html">
+                      <a class="nav-link nav-internal" href="../tutorials/index.html">
+                        Quickstart
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../documentation/method.html">
                         Documentation
                       </a>
                     </li>
@@ -373,7 +391,12 @@ document.write(`
 <li class="toctree-l3"><a class="reference internal" href="QA_check.html#QA_check.QA_check_v2.execute_qa_check"><code class="docutils literal notranslate"><span class="pre">execute_qa_check()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="QA_check.html#module-QA_check.check_avancement">QA_check.check_avancement module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="QA_check.html#module-QA_check.check_avancement">QA_check.check_avancement module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="QA_check.html#QA_check.check_avancement.fill_list"><code class="docutils literal notranslate"><span class="pre">fill_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="QA_check.html#QA_check.check_avancement.get_percentage"><code class="docutils literal notranslate"><span class="pre">get_percentage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="QA_check.html#QA_check.check_avancement.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="QA_check.html#module-QA_check">Module contents</a></li>
 </ul>
 </li>
@@ -381,6 +404,7 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="bundlesegmentation.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="bundlesegmentation.html#module-bundlesegmentation.BundleSegmentation">bundlesegmentation.BundleSegmentation module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="bundlesegmentation.html#bundlesegmentation.BundleSegmentation.bundle_segmentation"><code class="docutils literal notranslate"><span class="pre">bundle_segmentation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="bundlesegmentation.html#bundlesegmentation.BundleSegmentation.tract_masking"><code class="docutils literal notranslate"><span class="pre">tract_masking()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="bundlesegmentation.html#module-bundlesegmentation.BundleSegmentationParameters">bundlesegmentation.BundleSegmentationParameters module</a></li>
@@ -438,13 +462,11 @@ document.write(`
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="tractography.html#module-tractography.tractography_utils">tractography.tractography_utils module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="tractography.html#tractography.tractography_utils.check_problems_nifti"><code class="docutils literal notranslate"><span class="pre">check_problems_nifti()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="tractography.html#tractography.tractography_utils.check_template"><code class="docutils literal notranslate"><span class="pre">check_template()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="tractography.html#tractography.tractography_utils.extract_dim"><code class="docutils literal notranslate"><span class="pre">extract_dim()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="tractography.html#tractography.tractography_utils.get_list_sessions"><code class="docutils literal notranslate"><span class="pre">get_list_sessions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tractography.html#tractography.tractography_utils.automatic_repartition"><code class="docutils literal notranslate"><span class="pre">automatic_repartition()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tractography.html#tractography.tractography_utils.extract_dim_v2"><code class="docutils literal notranslate"><span class="pre">extract_dim_v2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="tractography.html#tractography.tractography_utils.get_worflow_templates"><code class="docutils literal notranslate"><span class="pre">get_worflow_templates()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="tractography.html#tractography.tractography_utils.isEmpty"><code class="docutils literal notranslate"><span class="pre">isEmpty()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="tractography.html#tractography.tractography_utils.move_workflow"><code class="docutils literal notranslate"><span class="pre">move_workflow()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="tractography.html#tractography.tractography_utils.workflow_repartition"><code class="docutils literal notranslate"><span class="pre">workflow_repartition()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="tractography.html#module-tractography">Module contents</a></li>
@@ -517,7 +539,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     <br/>
   </p>
 </div>

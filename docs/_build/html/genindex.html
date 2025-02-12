@@ -29,6 +29,8 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=e42486fa" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
@@ -40,6 +42,8 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'genindex';</script>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" />
@@ -137,7 +141,14 @@
                 
 
                     <li class="nav-item">
-                      <a class="nav-link nav-internal" href="documentation/index.html">
+                      <a class="nav-link nav-internal" href="tutorials/index.html">
+                        Quickstart
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="documentation/method.html">
                         Documentation
                       </a>
                     </li>
@@ -237,7 +248,14 @@ document.write(`
                 
 
                     <li class="nav-item">
-                      <a class="nav-link nav-internal" href="documentation/index.html">
+                      <a class="nav-link nav-internal" href="tutorials/index.html">
+                        Quickstart
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="documentation/method.html">
                         Documentation
                       </a>
                     </li>
@@ -305,13 +323,13 @@ document.write(`
  | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
  | <a href="#Q"><strong>Q</strong></a>
  | <a href="#T"><strong>T</strong></a>
- | <a href="#W"><strong>W</strong></a>
  
 </div>
 <h2 id="A">A</h2>
@@ -319,11 +337,13 @@ document.write(`
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/matrixescreation.html#matrixescreation.add_connectome_schaefer.add_schaefer_parcellation">add_schaefer_parcellation() (in module matrixescreation.add_connectome_schaefer)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/BIDS_formatting.html#BIDS_formatting.anonymize_conhect.anonymize_conhect">anonymize_conhect() (in module BIDS_formatting.anonymize_conhect)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/BIDS_formatting.html#BIDS_formatting.heudiconv_conhect.atoi">atoi() (in module BIDS_formatting.heudiconv_conhect)</a>
+</li>
+      <li><a href="source/tractography.html#tractography.tractography_utils.automatic_repartition">automatic_repartition() (in module tractography.tractography_utils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -406,20 +426,16 @@ document.write(`
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="source/tractography.html#tractography.tractography_utils.check_problems_nifti">check_problems_nifti() (in module tractography.tractography_utils)</a>
-</li>
-      <li><a href="source/tractography.html#tractography.tractography_utils.check_template">check_template() (in module tractography.tractography_utils)</a>
-</li>
       <li><a href="source/tractography.html#tractography.clean_tracks_done.clean_tracks_done">clean_tracks_done() (in module tractography.clean_tracks_done)</a>
 </li>
       <li><a href="source/QA_check.html#QA_check.QA_check_v2.clickA">clickA() (in module QA_check.QA_check_v2)</a>
 </li>
       <li><a href="source/QA_check.html#QA_check.QA_check_v2.clickB">clickB() (in module QA_check.QA_check_v2)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/QA_check.html#QA_check.QA_check_v2.clickC">clickC() (in module QA_check.QA_check_v2)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/BIDS_formatting.html#BIDS_formatting.anonymize_conhect.correct_names">correct_names() (in module BIDS_formatting.anonymize_conhect)</a>
 </li>
       <li><a href="source/bundlesegmentation.html#bundlesegmentation.MergeBundles.create_equivalence_table">create_equivalence_table() (in module bundlesegmentation.MergeBundles)</a>
@@ -450,7 +466,15 @@ document.write(`
 </li>
       <li><a href="source/tractography.html#tractography.synth_workflow.execute_synth_workflow">execute_synth_workflow() (in module tractography.synth_workflow)</a>
 </li>
-      <li><a href="source/tractography.html#tractography.tractography_utils.extract_dim">extract_dim() (in module tractography.tractography_utils)</a>
+      <li><a href="source/tractography.html#tractography.tractography_utils.extract_dim_v2">extract_dim_v2() (in module tractography.tractography_utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/QA_check.html#QA_check.check_avancement.fill_list">fill_list() (in module QA_check.check_avancement)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -460,11 +484,13 @@ document.write(`
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="source/bundlesegmentation.html#bundlesegmentation.MergeBundles.gen_sphere">gen_sphere() (in module bundlesegmentation.MergeBundles)</a>
 </li>
-      <li><a href="source/tractography.html#tractography.tractography_utils.get_list_sessions">get_list_sessions() (in module tractography.tractography_utils)</a>
+      <li><a href="source/bundlesegmentation.html#bundlesegmentation.MergeBundles.get_masked_infos">get_masked_infos() (in module bundlesegmentation.MergeBundles)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="source/bundlesegmentation.html#bundlesegmentation.MergeBundles.get_masked_infos">get_masked_infos() (in module bundlesegmentation.MergeBundles)</a>
+      <li><a href="source/QA_check.html#QA_check.check_avancement.get_percentage">get_percentage() (in module QA_check.check_avancement)</a>
+</li>
+      <li><a href="source/tractography.html#tractography.tractography_utils.get_worflow_templates">get_worflow_templates() (in module tractography.tractography_utils)</a>
 </li>
       <li><a href="source/bundlesegmentation.html#bundlesegmentation.MergeBundles.GetBest">GetBest() (in module bundlesegmentation.MergeBundles)</a>
 </li>
@@ -486,6 +512,8 @@ document.write(`
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/QA_check.html#QA_check.check_avancement.main">main() (in module QA_check.check_avancement)</a>
+</li>
       <li><a href="source/bundlesegmentation.html#bundlesegmentation.MergeBundles.main_merge_bundles">main_merge_bundles() (in module bundlesegmentation.MergeBundles)</a>
 </li>
       <li>
@@ -681,6 +709,8 @@ document.write(`
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="source/bundlesegmentation.html#bundlesegmentation.BundleSegmentation.tract_masking">tract_masking() (in module bundlesegmentation.BundleSegmentation)</a>
+</li>
       <li>
     tractography
 
@@ -742,14 +772,6 @@ document.write(`
   </ul></td>
 </tr></table>
 
-<h2 id="W">W</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="source/tractography.html#tractography.tractography_utils.workflow_repartition">workflow_repartition() (in module tractography.tractography_utils)</a>
-</li>
-  </ul></td>
-</tr></table>
-
 
 
                 </article>
@@ -802,7 +824,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
     <br/>
   </p>
 </div>

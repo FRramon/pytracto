@@ -23,7 +23,7 @@ release = '0.1'
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon','myst_parser','sphinx_copybutton']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon','myst_parser','sphinx_copybutton','nbsphinx','sphinx_design']
 
 source_suffix = {
     '.rst': 'restructuredtext',
@@ -31,6 +31,7 @@ source_suffix = {
     '.md': 'markdown',
 }
 
+nbsphinx_allow_errors = True
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
@@ -38,7 +39,10 @@ source_suffix = {
 html_theme = 'pydata_sphinx_theme'
 
 html_static_path = ["_static"]
-
+html_extra_path = ['tutorial']
+html_css_files = [
+    "custom.css",
+]
 # html_theme_options = {
 #     # Options specific to pydata_sphinx_theme
 #     "github_url": "https://github.com/FRramon/pytracto",
