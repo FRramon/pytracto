@@ -83,6 +83,11 @@ def execute_single_shell_workflow(
     wf_dc.connect(sf, "bvecAP", mrconvertAP, "in_bvec")
     wf_dc.connect(sf, "bvalAP", mrconvertAP, "in_bval")
 
+
+
+
+
+
     # wf_dc.connect(mrconvertPA, "out_file", mrcatPA, "in_files")
     # wf_dc.connect(mrconvertAP, "out_file", mrcatAP, "in_files")
 
@@ -204,9 +209,8 @@ def execute_single_shell_workflow(
     # DWI2response
     dwiresponse = Node(mrt.ResponseSD(), name="dwiresponse")
     dwiresponse.inputs.algorithm = kwargs.get("fod_algorithm_param")
-    dwiresponse.inputs.csf_file = "wm.txt"
-    dwiresponse.inputs.gm_file = "gm.txt"
-    dwiresponse.inputs.csf_file = "csf.txt"
+    dwiresponse.inputs.wm_file = "wm.txt"
+
 
     # dwi2fod msmt_csd ${pref}_dwi_preproc.mif -mask ${pref}_mask_preproc.mif
     # ${pref}_wm.txt ${pref}_wmfod.mif ${pref}_gm.txt ${pref}_gmfod.mif
@@ -215,8 +219,7 @@ def execute_single_shell_workflow(
     dwi2fod.inputs.algorithm = kwargs.get("csd_algorithm_param")
     dwi2fod.inputs.wm_txt = "wm.txt"  # ici faire le lien avec dwiresp
     dwi2fod.inputs.wm_odf = "wm.mif"
-    dwi2fod.inputs.csf_odf = "csf.mif"
-    dwi2fod.inputs.gm_odf = "gm.mif"
+
 
     gen5tt = Node(mrt.Generate5tt(), name="gen5tt")
     gen5tt.inputs.algorithm = kwargs.get("tt_algorithm_param")
@@ -276,17 +279,17 @@ def execute_single_shell_workflow(
     # tckgen -act ${pref}_5tt_coreg.mif -backtrack -seed_gmwmi
     # ${pref}_gmwmSeed_coreg.mif -select 10000000 ${pref}_wmfod_norm.mif
     # ${pref}_tracks_10mio.tck
-    tckgen = Node(mrt.Tractography(), name="tckgen")
-    tckgen.inputs.algorithm = kwargs.get("tckgen_algorithm_param")
-    tckgen.inputs.select = kwargs.get("tckgen_ntracks_param")
-    tckgen.inputs.backtrack = kwargs.get("tckgen_backtrack_param")
+    # tckgen = Node(mrt.Tractography(), name="tckgen")
+    # tckgen.inputs.algorithm = kwargs.get("tckgen_algorithm_param")
+    # tckgen.inputs.select = kwargs.get("tckgen_ntracks_param")
+    # tckgen.inputs.backtrack = kwargs.get("tckgen_backtrack_param")
 
     tckgenDet = Node(mrt.Tractography(), name="tckgenDet")
     tckgenDet.inputs.algorithm = "SD_Stream"
     tckgenDet.inputs.select = kwargs.get("tckgen_ntracks_param")
 
-    tcksift2 = Node(cmp_mrt.FilterTractogram(), name="tcksift2")
-    tcksift2.inputs.out_file = "sift_tracks.tck"
+    # tcksift2 = Node(cmp_mrt.FilterTractogram(), name="tcksift2")
+    # tcksift2.inputs.out_file = "sift_tracks.tck"
 
     tcksift2Det = Node(cmp_mrt.FilterTractogram(), name="tcksift2Det")
     tcksift2Det.inputs.out_file = "sift_tracks.tck"
@@ -326,21 +329,19 @@ def execute_single_shell_workflow(
     wf_tractography.connect(transform5tt, "out_file", gmwmi, "in_file")
 
     wf_tractography.connect(dwiresponse, "wm_file", dwi2fod, "wm_txt")
-    wf_tractography.connect(dwiresponse, "gm_file", dwi2fod, "gm_txt")
-    wf_tractography.connect(dwiresponse, "csf_file", dwi2fod, "csf_txt")
     wf_tractography.connect(brainmask, "out_file", dwi2fod, "mask_file")
 
-    wf_tractography.connect(gmwmi, "out_file", tckgen, "seed_gmwmi")
-    wf_tractography.connect(transform5tt, "out_file", tckgen, "act_file")
-    wf_tractography.connect(dwi2fod, "wm_odf", tckgen, "in_file")
+    # wf_tractography.connect(gmwmi, "out_file", tckgen, "seed_gmwmi")
+    # wf_tractography.connect(transform5tt, "out_file", tckgen, "act_file")
+    # wf_tractography.connect(dwi2fod, "wm_odf", tckgen, "in_file")
 
     wf_tractography.connect(gmwmi, "out_file", tckgenDet, "seed_gmwmi")
     wf_tractography.connect(transform5tt, "out_file", tckgenDet, "act_file")
     wf_tractography.connect(dwi2fod, "wm_odf", tckgenDet, "in_file")
 
-    wf_tractography.connect(tckgen, "out_file", tcksift2, "in_tracks")
-    wf_tractography.connect(transform5tt, "out_file", tcksift2, "act_file")
-    wf_tractography.connect(dwi2fod, "wm_odf", tcksift2, "in_fod")
+    # wf_tractography.connect(tckgen, "out_file", tcksift2, "in_tracks")
+    # wf_tractography.connect(transform5tt, "out_file", tcksift2, "act_file")
+    # wf_tractography.connect(dwi2fod, "wm_odf", tcksift2, "in_fod")
 
     wf_tractography.connect(tckgenDet, "out_file", tcksift2Det, "in_tracks")
     wf_tractography.connect(transform5tt, "out_file", tcksift2Det, "act_file")
@@ -375,11 +376,11 @@ def execute_single_shell_workflow(
     # ${sub_id}_${ses_id}_parcels_destrieux.mif
     # ${sub_id}_${ses_id}_sc_connectivity_matrix.csv –out_assignment
     # ${sub_id}_${ses_id}_sc_assignments.csv -force
-    tck2connectome = MapNode(
-        mrt.BuildConnectome(), name="tck2connectome", iterfield=["in_parc"]
-    )
-    tck2connectome.inputs.zero_diagonal = True
-    tck2connectome.inputs.out_file = "connectome.csv"
+    # tck2connectome = MapNode(
+    #     mrt.BuildConnectome(), name="tck2connectome", iterfield=["in_parc"]
+    # )
+    # tck2connectome.inputs.zero_diagonal = True
+    # tck2connectome.inputs.out_file = "connectome.csv"
 
     tck2connectomeDet = MapNode(
         mrt.BuildConnectome(), name="tck2connectomeDet", iterfield=["in_parc"]
@@ -389,7 +390,7 @@ def execute_single_shell_workflow(
     # connectome.connect(tcksift2,'out_tracks',tck2connectome,'in_file')
 
     connectome.connect(labelconvert, "out_file", transform_parcels, "in_files")
-    connectome.connect(transform_parcels, "out_file", tck2connectome, "in_parc")
+    # connectome.connect(transform_parcels, "out_file", tck2connectome, "in_parc")
     connectome.connect(transform_parcels, "out_file", tck2connectomeDet, "in_parc")
 
 
@@ -428,9 +429,9 @@ def execute_single_shell_workflow(
         connectome,
         "transform_parcels.linear_transform",
     )
-    main_wf.connect(
-        wf_tractography, "tcksift2.out_tracks", connectome, "tck2connectome.in_file"
-    )
+    # main_wf.connect(
+    #     wf_tractography, "tcksift2.out_tracks", connectome, "tck2connectome.in_file"
+    # )
     main_wf.connect(
         wf_tractography,
         "tcksift2Det.out_tracks",

@@ -109,7 +109,7 @@ def move_workflow(
 
 def extract_dim_v2(filepath,dim_template):
 
-  def extract_dim_v2(filepath, dim_template):
+  
     """
     Checks NIfTI image dimensions for potential mismatches.
 
@@ -133,11 +133,17 @@ def extract_dim_v2(filepath,dim_template):
 
     dimension_error = True
 
+    print(filepath)
+
     if 'anat' in filepath:
         expected_dimensions = dim_template.get("anat",[])
         dims_order = [dims[2], dims[3], dims[1]]
 
         if all(isinstance(i,int) for i in expected_dimensions):
+
+            print(expected_dimensions)
+            print(dims_order) 
+
             if dims_order  == expected_dimensions:
                 dimension_error = False 
         else:
@@ -150,11 +156,33 @@ def extract_dim_v2(filepath,dim_template):
         expected_dimensions = dim_template.get("dwi", [])
         dims_order = [dims[1],dims[2],dims[3], dims[4]]
 
-        if all(isinstance(i,int) for i in expected_dimensions):          
+        print(dims_order)
+
+        if all(isinstance(i,int) for i in expected_dimensions):      
 
             if (dims_order[:2] + dims_order[3:])  == (expected_dimensions[:2] + expected_dimensions[3:]):
                 dimension_error = False
         elif any(isinstance(i,list) for i in expected_dimensions):
+ 
+
+            for expected in expected_dimensions:
+
+                if (dims_order[:2] + dims_order[3:]) == (expected[:2] + expected[3:]):
+                    dimension_error = False
+                    break
+
+    elif "fmap" in filepath:
+        expected_dimensions = dim_template.get("fmap", [])
+        dims_order = [dims[1],dims[2],dims[3], dims[4]]
+
+        print(dims_order)
+
+        if all(isinstance(i,int) for i in expected_dimensions):      
+
+            if (dims_order[:2] + dims_order[3:])  == (expected_dimensions[:2] + expected_dimensions[3:]):
+                dimension_error = False
+        elif any(isinstance(i,list) for i in expected_dimensions):
+ 
 
             for expected in expected_dimensions:
 
@@ -201,10 +229,14 @@ def automatic_repartition(rawdata_dir,dim_template):
 
     subject_list = [s for s in os.listdir(rawdata_dir) if "sub-" in s and not "." in s]
 
+    print(subject_list)
+
     row_list = []
 
     for sub in tqdm(subject_list):
         session_list = [s for s in os.listdir(os.path.join(rawdata_dir,sub)) if 'ses' in s and not "." in s]
+
+        print(session_list)
 
         for ses in session_list:
 
@@ -217,8 +249,16 @@ def automatic_repartition(rawdata_dir,dim_template):
                 # print("- Files found")
 
                 T1_file = [s for s in glob.glob(os.path.join(rawdata_dir,sub,ses,"anat","*T1w.nii.gz"))  if s[0] != "."]
-                dwiPA_files = [s for s in glob.glob(os.path.join(rawdata_dir,sub,ses,"dwi","*acq-*_dir-PA_dwi.nii.gz")) if s[0] != "."]
-                dwiAP_files =[s for s in glob.glob(os.path.join(rawdata_dir,sub,ses,"dwi","*acq-*_dir-AP_dwi.nii.gz")) if s[0] != "."]
+                dwiPA_files = [s for s in glob.glob(os.path.join(rawdata_dir,sub,ses,"dwi","*dir-PA_dwi.nii.gz")) if s[0] != "."]
+
+                print(dwiPA_files)
+
+
+                L_dwiAP =[s for s in glob.glob(os.path.join(rawdata_dir,sub,ses,"dwi","*dir-AP_dwi.nii.gz")) if s[0] != "."]
+                L_fmapAP =[s for s in glob.glob(os.path.join(rawdata_dir,sub,ses,"fmap","*dir-AP_epi.nii.gz")) if s[0] != "."]
+
+                dwiAP_files = L_dwiAP + L_fmapAP
+
 
                 if len(dwiPA_files) > 1 or len(dwiAP_files) > 1:
                     large_cat = "multishell"

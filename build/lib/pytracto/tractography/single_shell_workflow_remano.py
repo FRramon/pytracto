@@ -8,6 +8,7 @@ from nipype.interfaces.freesurfer import ReconAll
 import cmtklib.interfaces.mrtrix3 as cmp_mrt
 import os
 import sys
+import pandas as pd
 
 from nipype import config, logging
 
@@ -21,14 +22,15 @@ logging.update_logging(config)
 ############# DC : Node Definition #######################
 
 
-def execute_single_shell_workflow(
+def execute_single_shell_workflow_remano(
     source_dir: str,
     rawdata_dir: str,
     derivatives_dir: str,
     subject_list: list,
     session_list: str,
     templates: dict,
-    **kwargs,
+    csv_file:str,
+    **kwargs
 ):
     """
     Workflow for diffusion MRI tractography and connectivity matrixes creation.
@@ -44,13 +46,45 @@ def execute_single_shell_workflow(
 
     """
 
+    def get_folder_paths(subject_id, ses_id, csv_file):
+        import pandas as pd
+        # Format the subject_id and ses_id to match the CSV file
+        formatted_subject_id = f'sub-{subject_id}'
+        formatted_ses_id = f'ses-{ses_id}'
+
+        df = pd.read_csv(csv_file)
+        dwiPA_row = df[(df['subject_id'] == formatted_subject_id) & (df['session_id'] == formatted_ses_id) & (df['modality'] == 'dwiPA')]
+        dwiAP_row = df[(df['subject_id'] == formatted_subject_id) & (df['session_id'] == formatted_ses_id) & (df['modality'] == 'dwiAP')]
+        anat_row = df[(df['subject_id'] == formatted_subject_id) & (df['session_id'] == formatted_ses_id) & (df['modality'] == 'anat')]
+        if not dwiPA_row.empty and not dwiAP_row.empty and not anat_row.empty:
+            dwiPA_folder = dwiPA_row['folder'].values[0]
+            dwiAP_folder = dwiAP_row['folder'].values[0]
+            anat_folder = anat_row['folder'].values[0]
+            return dwiPA_folder, dwiAP_folder, anat_folder
+        else:
+            raise ValueError(f"No matching rows found for subject_id={formatted_subject_id} and ses_id={formatted_ses_id}")
+
     infosource = Node(
         IdentityInterface(fields=["subject_id", "ses_id"]), name="infosource"
     )
     infosource.iterables = [("subject_id", subject_list),("ses_id", session_list)]
 
-    sf = Node(SelectFiles(templates), name="sf")
-    sf.inputs.base_directory = rawdata_dir
+    get_folders = Node(
+        Function(
+            input_names=["subject_id", "ses_id", "csv_file"],
+            output_names=["dwiPA_folder", "dwiAP_folder","anat_folder"],
+            function=get_folder_paths
+        ),
+        name="get_folders"
+    )
+    get_folders.inputs.csv_file = csv_file
+
+    sf = Node(SelectFiles({
+        'dwiPA': 'source_data/sub-{subject_id}/ses-{ses_id}/{dwiPA_folder}/*',
+        'dwiAP': 'source_data/sub-{subject_id}/ses-{ses_id}/{dwiAP_folder}/*',
+        'anat' : 'source_data/sub-{subject_id}/ses-{ses_id}/{anat_folder}/*'
+    }), name="sf")
+    sf.inputs.base_directory = source_dir
 
     # Conversion des DWI PA en .mif (utilisation du nifti, bvec et bval) +
     # Concatenation
@@ -72,21 +106,18 @@ def execute_single_shell_workflow(
     wf_dc.config["execution"]["use_caching"] = "True"
     wf_dc.config["execution"]["hash_method"] = "content"
 
+    wf_dc.connect(infosource, "subject_id", get_folders, "subject_id")
+    wf_dc.connect(infosource, "ses_id", get_folders, "ses_id")
+
     wf_dc.connect(infosource, "subject_id", sf, "subject_id")
     wf_dc.connect(infosource, "ses_id", sf, "ses_id")
 
+    wf_dc.connect(get_folders, "dwiPA_folder", sf, "dwiPA_folder")
+    wf_dc.connect(get_folders, "dwiAP_folder", sf, "dwiAP_folder")
+    wf_dc.connect(get_folders, "anat_folder", sf, "anat_folder")
+
     wf_dc.connect(sf, "dwiPA", mrconvertPA, "in_file")
-    wf_dc.connect(sf, "bvecPA", mrconvertPA, "in_bvec")
-    wf_dc.connect(sf, "bvalPA", mrconvertPA, "in_bval")
-
     wf_dc.connect(sf, "dwiAP", mrconvertAP, "in_file")
-    wf_dc.connect(sf, "bvecAP", mrconvertAP, "in_bvec")
-    wf_dc.connect(sf, "bvalAP", mrconvertAP, "in_bval")
-
-
-
-
-
 
     # wf_dc.connect(mrconvertPA, "out_file", mrcatPA, "in_files")
     # wf_dc.connect(mrconvertAP, "out_file", mrcatAP, "in_files")
@@ -94,17 +125,6 @@ def execute_single_shell_workflow(
     ############################################################
     ########          Freesurfer  Workflow           ###########
     ############################################################
-
-    os.environ["SUBJECTS_DIR"] = rawdata_dir
-    fs_reconall = Node(ReconAll(), name="fs_reconall")
-    fs_reconall.inputs.directive = kwargs.get("reconall_param")
-    # .inputs.subjects_dir = data_dir
-    fs_workflow = Workflow(name="fs_workflow", base_dir=derivatives_dir)
-    fs_workflow.config["execution"]["use_caching"] = "True"
-    fs_workflow.config["execution"]["hash_method"] = "content"
-
-    fs_workflow.connect(infosource, "subject_id", fs_reconall, "subject_id")
-    fs_workflow.connect(sf, "anat", fs_reconall, "T1_files")
 
 
     ############################################################
@@ -279,17 +299,17 @@ def execute_single_shell_workflow(
     # tckgen -act ${pref}_5tt_coreg.mif -backtrack -seed_gmwmi
     # ${pref}_gmwmSeed_coreg.mif -select 10000000 ${pref}_wmfod_norm.mif
     # ${pref}_tracks_10mio.tck
-    # tckgen = Node(mrt.Tractography(), name="tckgen")
-    # tckgen.inputs.algorithm = kwargs.get("tckgen_algorithm_param")
-    # tckgen.inputs.select = kwargs.get("tckgen_ntracks_param")
-    # tckgen.inputs.backtrack = kwargs.get("tckgen_backtrack_param")
+    tckgen = Node(mrt.Tractography(), name="tckgen")
+    tckgen.inputs.algorithm = kwargs.get("tckgen_algorithm_param")
+    tckgen.inputs.select = kwargs.get("tckgen_ntracks_param")
+    tckgen.inputs.backtrack = kwargs.get("tckgen_backtrack_param")
 
-    tckgenDet = Node(mrt.Tractography(), name="tckgenDet")
-    tckgenDet.inputs.algorithm = "SD_Stream"
-    tckgenDet.inputs.select = kwargs.get("tckgen_ntracks_param")
+    # tckgenDet = Node(mrt.Tractography(), name="tckgenDet")
+    # tckgenDet.inputs.algorithm = "SD_Stream"
+    # tckgenDet.inputs.select = kwargs.get("tckgen_ntracks_param")
 
-    # tcksift2 = Node(cmp_mrt.FilterTractogram(), name="tcksift2")
-    # tcksift2.inputs.out_file = "sift_tracks.tck"
+    tcksift2 = Node(cmp_mrt.FilterTractogram(), name="tcksift2")
+    tcksift2.inputs.out_file = "sift_tracks.tck"
 
     tcksift2Det = Node(cmp_mrt.FilterTractogram(), name="tcksift2Det")
     tcksift2Det.inputs.out_file = "sift_tracks.tck"
@@ -331,67 +351,22 @@ def execute_single_shell_workflow(
     wf_tractography.connect(dwiresponse, "wm_file", dwi2fod, "wm_txt")
     wf_tractography.connect(brainmask, "out_file", dwi2fod, "mask_file")
 
-    # wf_tractography.connect(gmwmi, "out_file", tckgen, "seed_gmwmi")
-    # wf_tractography.connect(transform5tt, "out_file", tckgen, "act_file")
-    # wf_tractography.connect(dwi2fod, "wm_odf", tckgen, "in_file")
+    wf_tractography.connect(gmwmi, "out_file", tckgen, "seed_gmwmi")
+    wf_tractography.connect(transform5tt, "out_file", tckgen, "act_file")
+    wf_tractography.connect(dwi2fod, "wm_odf", tckgen, "in_file")
 
-    wf_tractography.connect(gmwmi, "out_file", tckgenDet, "seed_gmwmi")
-    wf_tractography.connect(transform5tt, "out_file", tckgenDet, "act_file")
-    wf_tractography.connect(dwi2fod, "wm_odf", tckgenDet, "in_file")
+    # wf_tractography.connect(gmwmi, "out_file", tckgenDet, "seed_gmwmi")
+    # wf_tractography.connect(transform5tt, "out_file", tckgenDet, "act_file")
+    # wf_tractography.connect(dwi2fod, "wm_odf", tckgenDet, "in_file")
 
-    # wf_tractography.connect(tckgen, "out_file", tcksift2, "in_tracks")
-    # wf_tractography.connect(transform5tt, "out_file", tcksift2, "act_file")
-    # wf_tractography.connect(dwi2fod, "wm_odf", tcksift2, "in_fod")
+    wf_tractography.connect(tckgen, "out_file", tcksift2, "in_tracks")
+    wf_tractography.connect(transform5tt, "out_file", tcksift2, "act_file")
+    wf_tractography.connect(dwi2fod, "wm_odf", tcksift2, "in_fod")
 
-    wf_tractography.connect(tckgenDet, "out_file", tcksift2Det, "in_tracks")
-    wf_tractography.connect(transform5tt, "out_file", tcksift2Det, "act_file")
-    wf_tractography.connect(dwi2fod, "wm_odf", tcksift2Det, "in_fod")
+    # wf_tractography.connect(tckgenDet, "out_file", tcksift2Det, "in_tracks")
+    # wf_tractography.connect(transform5tt, "out_file", tcksift2Det, "act_file")
+    # wf_tractography.connect(dwi2fod, "wm_odf", tcksift2Det, "in_fod")
 
-    #######################################################################
-    ############          Connectome construction          ################
-    #######################################################################
-
-    connectome = Workflow(name="connectome", base_dir=derivatives_dir)
-    connectome.config["execution"]["use_caching"] = "True"
-    connectome.config["execution"]["hash_method"] = "content"
-
-    # labelconvert $datadir/anat/$sub_id/mri/aparc.a2009s+aseg.mgz
-    # $FREESURFER_HOME/FreeSurferColorLUT.txt
-    # ~/miniconda3/share/mrtrix3/labelconvert/fs_a2009s.txt
-    # $datadir/results/${sub_id}_${ses_id}_parcels_destrieux.mif -force
-
-    labelconvert = MapNode(
-        mrt.LabelConvert(), name="labelconvert", iterfield=["in_file"]
-    )
-    labelconvert.inputs.in_config = kwargs.get("labelconvert_param")
-    labelconvert.inputs.in_lut = kwargs.get("fs_lut_param")
-
-    transform_parcels = MapNode(
-        mrt.MRTransform(), name="transform_parcels", iterfield=["in_files"]
-    )
-    transform_parcels.inputs.out_file = "parcels_coreg.mif"
-    ## Attention ici transform parcels doit être en nearest neighbours?
-
-    # tck2connectome –symmetric –zero_diagonal tracks_10mio.tck
-    # ${sub_id}_${ses_id}_parcels_destrieux.mif
-    # ${sub_id}_${ses_id}_sc_connectivity_matrix.csv –out_assignment
-    # ${sub_id}_${ses_id}_sc_assignments.csv -force
-    # tck2connectome = MapNode(
-    #     mrt.BuildConnectome(), name="tck2connectome", iterfield=["in_parc"]
-    # )
-    # tck2connectome.inputs.zero_diagonal = True
-    # tck2connectome.inputs.out_file = "connectome.csv"
-
-    tck2connectomeDet = MapNode(
-        mrt.BuildConnectome(), name="tck2connectomeDet", iterfield=["in_parc"]
-    )
-    tck2connectomeDet.inputs.zero_diagonal = True
-    tck2connectomeDet.inputs.out_file = "connectome.csv"
-    # connectome.connect(tcksift2,'out_tracks',tck2connectome,'in_file')
-
-    connectome.connect(labelconvert, "out_file", transform_parcels, "in_files")
-    # connectome.connect(transform_parcels, "out_file", tck2connectome, "in_parc")
-    connectome.connect(transform_parcels, "out_file", tck2connectomeDet, "in_parc")
 
 
     #######################################################################
@@ -420,30 +395,8 @@ def execute_single_shell_workflow(
     main_wf.connect(wf_dc, "sf.anat", wf_tractography, "transformT1.in_files")
 
 
-    main_wf.connect(
-        fs_workflow, "fs_reconall.aparc_aseg", connectome, "labelconvert.in_file"
-    )
-    main_wf.connect(
-        wf_tractography,
-        "transformconvert.out_transform",
-        connectome,
-        "transform_parcels.linear_transform",
-    )
-    # main_wf.connect(
-    #     wf_tractography, "tcksift2.out_tracks", connectome, "tck2connectome.in_file"
-    # )
-    main_wf.connect(
-        wf_tractography,
-        "tcksift2Det.out_tracks",
-        connectome,
-        "tck2connectomeDet.in_file",
-    )
 
-    #main_wf.write_graph(graph2use="colored", dotfilename="./pipeline_graph.dot")
-    # wf_tractography.write_graph(
-    #     graph2use="orig", dotfilename="./graph_tractography.dot"
-    # )
-    # wf_dc.write_graph(graph2use="orig", dotfilename="./graph_dc.dot")
-    # connectome.write_graph(graph2use="orig", dotfilename="./graph_connectome.dot")
+    main_wf.write_graph(graph2use="colored", dotfilename="./pipeline_graph.dot")
+
 
     main_wf.run(plugin=kwargs.get("plugin_processing"), plugin_args={"n_procs": 12})

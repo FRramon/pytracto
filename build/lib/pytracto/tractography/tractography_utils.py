@@ -109,16 +109,22 @@ def move_workflow(
 
 def extract_dim_v2(filepath,dim_template):
 
+  
     """
-    Explore nifti headers to search for a potential dimension error.
+    Checks NIfTI image dimensions for potential mismatches.
 
-    Args:
-            pattern : file path pattern for the nifti image to be analyzed
-            dim_template : dictionnary containing expected image dimensions
-    Returns: 
-            a tuple comprising:
-            - a list of three int : dimension x,y,z
-            - a boolean, True if the image has a dimension error
+    Parameters:
+    ----------
+    filepath : str
+        Path to the NIfTI file.
+    dim_template : dict
+        Expected dimensions for "anat" (T1) and "dwi" (diffusion) images.
+
+    Returns:
+    -------
+    tuple:
+        - dims_order (list of int): Extracted dimensions ([x, y, z] for T1, [x, y, z, volumes] for DWI).
+        - dimension_error (bool): True if dimensions mismatch, False otherwise.
     """
 
     n_img = nib.load(filepath)
@@ -127,11 +133,17 @@ def extract_dim_v2(filepath,dim_template):
 
     dimension_error = True
 
+    print(filepath)
+
     if 'anat' in filepath:
         expected_dimensions = dim_template.get("anat",[])
         dims_order = [dims[2], dims[3], dims[1]]
 
         if all(isinstance(i,int) for i in expected_dimensions):
+
+            print(expected_dimensions)
+            print(dims_order) 
+
             if dims_order  == expected_dimensions:
                 dimension_error = False 
         else:
@@ -144,11 +156,33 @@ def extract_dim_v2(filepath,dim_template):
         expected_dimensions = dim_template.get("dwi", [])
         dims_order = [dims[1],dims[2],dims[3], dims[4]]
 
-        if all(isinstance(i,int) for i in expected_dimensions):          
+        print(dims_order)
+
+        if all(isinstance(i,int) for i in expected_dimensions):      
 
             if (dims_order[:2] + dims_order[3:])  == (expected_dimensions[:2] + expected_dimensions[3:]):
                 dimension_error = False
         elif any(isinstance(i,list) for i in expected_dimensions):
+ 
+
+            for expected in expected_dimensions:
+
+                if (dims_order[:2] + dims_order[3:]) == (expected[:2] + expected[3:]):
+                    dimension_error = False
+                    break
+
+    elif "fmap" in filepath:
+        expected_dimensions = dim_template.get("fmap", [])
+        dims_order = [dims[1],dims[2],dims[3], dims[4]]
+
+        print(dims_order)
+
+        if all(isinstance(i,int) for i in expected_dimensions):      
+
+            if (dims_order[:2] + dims_order[3:])  == (expected_dimensions[:2] + expected_dimensions[3:]):
+                dimension_error = False
+        elif any(isinstance(i,list) for i in expected_dimensions):
+ 
 
             for expected in expected_dimensions:
 
@@ -157,18 +191,52 @@ def extract_dim_v2(filepath,dim_template):
                     break
 
     return dims_order,dimension_error
-    
+
 def automatic_repartition(rawdata_dir,dim_template):
     """
-    First define large categories based on the number of files only : multishell,multishel_synth,singleshell,singleshell_synth
+    Categorizes diffusion MRI datasets based on the number and type of available files.
+
+    This function scans a raw data directory to classify subjects into large categories based on 
+    the presence and number of specific diffusion-weighted imaging (DWI) files. The categories are:
+        - "multishell": Multiple AP and PA diffusion acquisitions.
+        - "singleshell": A single AP and PA diffusion acquisition.
+        - "multishell_synth": Multiple PA or AP acquisitions but none from the other.
+        - "singleshell_synth": A single PA or AP acquisition but none from the other.
+        - "unknown": Cases that do not fit any of the above.
+        - "dimension_error": If inconsistencies in image dimensions are detected.
+        - "missing_data": If required anatomical or DWI files are missing.
+
+    The function iterates over subjects and their sessions, extracting relevant files and 
+    verifying their dimensions against a provided template.
+
+    Parameters:
+    ----------
+    rawdata_dir : str
+        Path to the directory containing raw BIDS-formatted MRI data.
+    dim_template : dict
+        A reference dictionary specifying the expected dimensions of images.
+
+    Returns:
+    -------
+    category_df : pandas.DataFrame
+        A DataFrame containing the classification results with columns:
+        - "subject_id": Subject identifier.
+        - "session_id": Session identifier.
+        - "category": The assigned category.
+
+    The resulting classification is also saved as "workflows.csv" in `rawdata_dir`.
     """
 
     subject_list = [s for s in os.listdir(rawdata_dir) if "sub-" in s and not "." in s]
+
+    print(subject_list)
 
     row_list = []
 
     for sub in tqdm(subject_list):
         session_list = [s for s in os.listdir(os.path.join(rawdata_dir,sub)) if 'ses' in s and not "." in s]
+
+        print(session_list)
 
         for ses in session_list:
 
@@ -181,8 +249,16 @@ def automatic_repartition(rawdata_dir,dim_template):
                 # print("- Files found")
 
                 T1_file = [s for s in glob.glob(os.path.join(rawdata_dir,sub,ses,"anat","*T1w.nii.gz"))  if s[0] != "."]
-                dwiPA_files = [s for s in glob.glob(os.path.join(rawdata_dir,sub,ses,"dwi","*acq-*_dir-PA_dwi.nii.gz")) if s[0] != "."]
-                dwiAP_files =[s for s in glob.glob(os.path.join(rawdata_dir,sub,ses,"dwi","*acq-*_dir-AP_dwi.nii.gz")) if s[0] != "."]
+                dwiPA_files = [s for s in glob.glob(os.path.join(rawdata_dir,sub,ses,"dwi","*dir-PA_dwi.nii.gz")) if s[0] != "."]
+
+                print(dwiPA_files)
+
+
+                L_dwiAP =[s for s in glob.glob(os.path.join(rawdata_dir,sub,ses,"dwi","*dir-AP_dwi.nii.gz")) if s[0] != "."]
+                L_fmapAP =[s for s in glob.glob(os.path.join(rawdata_dir,sub,ses,"fmap","*dir-AP_epi.nii.gz")) if s[0] != "."]
+
+                dwiAP_files = L_dwiAP + L_fmapAP
+
 
                 if len(dwiPA_files) > 1 or len(dwiAP_files) > 1:
                     large_cat = "multishell"
@@ -213,19 +289,6 @@ def automatic_repartition(rawdata_dir,dim_template):
 
                 for file in list_image_files:
                     dim,dim_error = extract_dim_v2(file,dim_template)
-
-                    # if "T1w" in file and dim_error == False:
-                    #     print("- T1 dimensions are ok")
-                    # if "T1w" in file and dim_error == True:
-                    #     print("- T1 dimensions are NOT ok")
-                    # if "dir-PA" in file and dim_error == False:
-                    #     print("- dwi PA dimensions are ok")
-                    # if "dir-PA" in file and dim_error == True:
-                    #     print("- dwi PA dimensions are NOT ok")
-                    # if "dir-AP" in file and dim_error == False:
-                    #     print("- dwi AP dimensions are ok")
-                    # if "dir-AP" in file and dim_error == True:
-                    #     print("- dwi AP dimensions are NOT ok")
 
                     if "dwi" in file and "AP" in file:
                         dwi_dims["dwiAP"] = dim[2] 
@@ -261,6 +324,21 @@ def automatic_repartition(rawdata_dir,dim_template):
 
 def get_worflow_templates(category):
 
+    """
+    Returns file path templates for MRI data based on category.
+
+    Parameters:
+    ----------
+    category : str
+        Dataset classification.
+
+    Returns:
+    -------
+    dict
+        A dictionary of file path templates for anatomical and DWI images.
+        Includes PA/AP acquisitions if applicable. Returns an empty dict for unrecognized categories.
+    """
+
     if category == "multishell_odd" or category == "multishell_even" or category == "singleshell":
 
         template = {
@@ -286,8 +364,6 @@ def get_worflow_templates(category):
         return {}
 
     return template
-
-
 
 
 
