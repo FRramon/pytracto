@@ -377,6 +377,7 @@ document.write(`
     <span class="s1">&#39;tckgen_method&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Deterministic&#39;</span><span class="p">],</span>
     <span class="s1">&#39;atlas_list&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Schaefer&#39;</span><span class="p">,</span> <span class="s1">&#39;Destrieux&#39;</span><span class="p">],</span>
 <span class="p">}</span>
+
 <span class="n">run_steps</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;convert2bids&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="s1">&#39;run_pipeline&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
@@ -386,21 +387,33 @@ document.write(`
     <span class="s1">&#39;bundleSegmentation&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="s1">&#39;ClusterConsensus&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">}</span>
-
 <span class="n">general_parameters</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;session_list&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;01&quot;</span><span class="p">,</span><span class="s2">&quot;02&quot;</span><span class="p">],</span>
-    <span class="s1">&#39;source_dir&#39;</span><span class="p">:</span> <span class="s2">&quot;/path/to/dir&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;session_list&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;V1&quot;</span><span class="p">,</span><span class="s2">&quot;V2&quot;</span><span class="p">],</span>
+    <span class="s1">&#39;source_dir&#39;</span><span class="p">:</span> <span class="s2">&quot;/path/to/source_dir&quot;</span><span class="p">,</span>
     <span class="s1">&#39;dicom_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
     <span class="s1">&#39;derivatives_folder&#39;</span><span class="p">:</span> <span class="s1">&#39;derivatives&#39;</span><span class="p">,</span>
     <span class="s1">&#39;rawdata_folder&#39;</span><span class="p">:</span> <span class="s1">&#39;rawdata&#39;</span><span class="p">,</span>
     <span class="s1">&#39;group&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
     <span class="s1">&#39;group_list&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="s1">&#39;pipe_name&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="s1">&#39;result_name&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="s1">&#39;pipe_name&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;result_name&#39;</span><span class="p">:</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span>
 <span class="p">}</span>
+
 <span class="n">dim_template</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;anat&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">256</span><span class="p">,</span><span class="mi">176</span><span class="p">,</span><span class="mi">256</span><span class="p">],</span>
-    <span class="s1">&#39;dwi&#39;</span> <span class="p">:</span> <span class="p">[[</span><span class="mi">128</span><span class="p">,</span><span class="mi">128</span><span class="p">,</span><span class="mi">70</span><span class="p">,</span><span class="mi">31</span><span class="p">],[</span><span class="mi">128</span><span class="p">,</span><span class="mi">128</span><span class="p">,</span><span class="mi">70</span><span class="p">,</span><span class="mi">7</span><span class="p">]]</span>
+    <span class="s1">&#39;anat&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">256</span><span class="p">,</span><span class="mi">256</span><span class="p">,</span><span class="mi">160</span><span class="p">],</span>
+    <span class="s1">&#39;dwi&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">112</span><span class="p">,</span><span class="mi">112</span><span class="p">,</span><span class="mi">70</span><span class="p">,</span><span class="mi">33</span><span class="p">],</span>
+    <span class="s1">&#39;fmap&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">112</span><span class="p">,</span><span class="mi">112</span><span class="p">,</span><span class="mi">70</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+<span class="p">}</span>
+
+
+<span class="n">template</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;anat&quot;</span> <span class="p">:</span> <span class="s2">&quot;sub-</span><span class="si">{subject_id}</span><span class="s2">/ses-</span><span class="si">{ses_id}</span><span class="s2">/anat/sub-</span><span class="si">{subject_id}</span><span class="s2">_ses-</span><span class="si">{ses_id}</span><span class="s2">_T1w.nii.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dwiPA&quot;</span> <span class="p">:</span> <span class="s2">&quot;sub-</span><span class="si">{subject_id}</span><span class="s2">/ses-</span><span class="si">{ses_id}</span><span class="s2">/dwi/sub-</span><span class="si">{subject_id}</span><span class="s2">_ses-</span><span class="si">{ses_id}</span><span class="s2">_dir-PA_dwi.nii.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bvecPA&quot;</span> <span class="p">:</span> <span class="s2">&quot;sub-</span><span class="si">{subject_id}</span><span class="s2">/ses-</span><span class="si">{ses_id}</span><span class="s2">/dwi/sub-</span><span class="si">{subject_id}</span><span class="s2">_ses-</span><span class="si">{ses_id}</span><span class="s2">_dir-PA_dwi.bvec&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bvalPA&quot;</span> <span class="p">:</span> <span class="s2">&quot;sub-</span><span class="si">{subject_id}</span><span class="s2">/ses-</span><span class="si">{ses_id}</span><span class="s2">/dwi/sub-</span><span class="si">{subject_id}</span><span class="s2">_ses-</span><span class="si">{ses_id}</span><span class="s2">_dir-PA_dwi.bval&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dwiAP&quot;</span> <span class="p">:</span> <span class="s2">&quot;sub-</span><span class="si">{subject_id}</span><span class="s2">/ses-</span><span class="si">{ses_id}</span><span class="s2">/fmap/sub-</span><span class="si">{subject_id}</span><span class="s2">_ses-</span><span class="si">{ses_id}</span><span class="s2">_dir-AP_epi.nii.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bvecAP&quot;</span> <span class="p">:</span> <span class="s2">&quot;sub-</span><span class="si">{subject_id}</span><span class="s2">/ses-</span><span class="si">{ses_id}</span><span class="s2">/fmap/sub-</span><span class="si">{subject_id}</span><span class="s2">_ses-</span><span class="si">{ses_id}</span><span class="s2">_dir-AP_epi.bvec&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bvalAP&quot;</span> <span class="p">:</span> <span class="s2">&quot;sub-</span><span class="si">{subject_id}</span><span class="s2">/ses-</span><span class="si">{ses_id}</span><span class="s2">/fmap/sub-</span><span class="si">{subject_id}</span><span class="s2">_ses-</span><span class="si">{ses_id}</span><span class="s2">_dir-AP_epi.bval&quot;</span>
 <span class="p">}</span>
 <br/></pre></div>
 </div>
@@ -424,6 +437,8 @@ document.write(`
 <span class="kn">from</span> <span class="nn">pytracto.tractography.even_workflow</span> <span class="kn">import</span> <span class="n">execute_even_workflow</span>
 <span class="kn">from</span> <span class="nn">pytracto.tractography.synth_workflow</span> <span class="kn">import</span> <span class="n">execute_synth_workflow</span>
 <span class="kn">from</span> <span class="nn">pytracto.tractography.single_shell_workflow</span> <span class="kn">import</span> <span class="n">execute_single_shell_workflow</span>
+<span class="kn">from</span> <span class="nn">pytracto.tractography.single_shell_workflow_remano</span> <span class="kn">import</span> <span class="n">execute_single_shell_workflow_remano</span>
+
 <span class="kn">from</span> <span class="nn">pytracto.tractography.single_shell_notopup</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="kn">from</span> <span class="nn">pytracto.matrixescreation.MatrixesCreation</span> <span class="kn">import</span> <span class="n">build_connectivity_matrixes</span>
@@ -471,7 +486,7 @@ document.write(`
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rawdata_dir</span><span class="p">,</span><span class="s2">&quot;workflows.csv&quot;</span><span class="p">)):</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rawdata_dir</span><span class="p">,</span><span class="s2">&quot;workflows.csv&quot;</span><span class="p">)):</span>
     <span class="n">categories_repartition</span> <span class="o">=</span> <span class="n">automatic_repartition</span><span class="p">(</span><span class="n">rawdata_dir</span><span class="p">,</span><span class="n">dim_template</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="n">categories_repartition</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rawdata_dir</span><span class="p">,</span><span class="s2">&quot;workflows.csv&quot;</span><span class="p">))</span>
@@ -480,20 +495,30 @@ document.write(`
 
 <span class="nb">print</span><span class="p">(</span><span class="n">workflow_list</span><span class="p">)</span>
 
+<span class="n">wf_map</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;singleshell&#39;</span> <span class="p">:</span> <span class="n">execute_single_shell_workflow_remano</span>
+<span class="p">}</span>
+
+<span class="n">dcm_folder_file</span> <span class="o">=</span> <span class="s2">&quot;/Volumes/RAMON/code_remano/dicom_folders.csv&quot;</span>
+
 <span class="k">if</span> <span class="n">run_pipeline</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;yes&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">ses</span> <span class="ow">in</span> <span class="n">session_list</span><span class="p">:</span>
             <span class="n">ses_id</span> <span class="o">=</span> <span class="s2">&quot;ses-&quot;</span> <span class="o">+</span> <span class="n">ses</span>
             <span class="k">for</span> <span class="n">wf_category</span> <span class="ow">in</span> <span class="n">workflow_list</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">wf_category</span> <span class="o">==</span> <span class="s2">&quot;singleshell_synth&quot;</span> <span class="ow">or</span>  <span class="n">wf_category</span> <span class="o">==</span> <span class="s2">&quot;single_shell&quot;</span><span class="p">:</span>
-                            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;session </span><span class="si">{</span><span class="n">ses</span><span class="si">}</span><span class="s2"> : workflow : </span><span class="si">{</span><span class="n">wf_category</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">wf_category</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">wf_category</span> <span class="o">==</span> <span class="s2">&quot;singleshell_synth&quot;</span> <span class="ow">or</span>  <span class="n">wf_category</span> <span class="o">==</span> <span class="s2">&quot;singleshell&quot;</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;session </span><span class="si">{</span><span class="n">ses</span><span class="si">}</span><span class="s2"> : workflow : </span><span class="si">{</span><span class="n">wf_category</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-                            <span class="n">subject_list</span>  <span class="o">=</span> <span class="n">categories_repartition</span><span class="p">[(</span><span class="n">categories_repartition</span><span class="p">[</span><span class="s1">&#39;session_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">ses_id</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">categories_repartition</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">wf_category</span><span class="p">)][</span><span class="s1">&#39;subject_id&#39;</span><span class="p">]</span>
-                            <span class="n">subject_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subject_list</span><span class="p">]</span>
+                    <span class="n">subject_list</span>  <span class="o">=</span> <span class="n">categories_repartition</span><span class="p">[(</span><span class="n">categories_repartition</span><span class="p">[</span><span class="s1">&#39;session_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">ses_id</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">categories_repartition</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">wf_category</span><span class="p">)][</span><span class="s1">&#39;subject_id&#39;</span><span class="p">]</span>
+                    <span class="n">subject_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">subject_list</span><span class="p">]</span>
 
-                            <span class="nb">print</span><span class="p">(</span><span class="n">subject_list</span><span class="p">)</span>
-                            <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">subject_list</span><span class="p">))</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">subject_list</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">subject_list</span><span class="p">))</span>
 
-                            <span class="n">wf_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">wf_category</span><span class="p">)(</span><span class="n">source_dir</span><span class="p">,</span><span class="n">rawdata_dir</span><span class="p">,</span><span class="n">derivatives_dir</span><span class="p">,</span><span class="n">subject_list</span><span class="p">,[</span><span class="n">ses</span><span class="p">],</span><span class="n">template</span><span class="p">,</span><span class="o">**</span><span class="n">pipeline_parameters</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+
+                    <span class="n">wf_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">wf_category</span><span class="p">)(</span><span class="n">source_dir</span><span class="p">,</span><span class="n">rawdata_dir</span><span class="p">,</span><span class="n">derivatives_dir</span><span class="p">,</span><span class="n">subject_list</span><span class="p">,[</span><span class="n">ses</span><span class="p">],</span><span class="n">template</span><span class="p">,</span><span class="n">dcm_folder_file</span><span class="p">,</span><span class="o">**</span><span class="n">pipeline_parameters</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -506,20 +531,23 @@ document.write(`
 <span class="ansi-red-fg">FileNotFoundError</span>                         Traceback (most recent call last)
 Cell <span class="ansi-green-fg">In[4], line 2</span>
 <span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> os<span style="color: rgb(98,98,98)">.</span>path<span style="color: rgb(98,98,98)">.</span>isfile(os<span style="color: rgb(98,98,98)">.</span>path<span style="color: rgb(98,98,98)">.</span>join(rawdata_dir,<span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">workflows.csv</span><span style="color: rgb(175,0,0)">&#34;</span>)):
-<span class="ansi-green-fg">----&gt; 2</span>   categories_repartition <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">automatic_repartition</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">rawdata_dir</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg">dim_template</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">----&gt; 2</span>     categories_repartition <span style="color: rgb(98,98,98)">=</span> <span class="ansi-yellow-bg">automatic_repartition</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">rawdata_dir</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg">dim_template</span><span class="ansi-yellow-bg">)</span>
 <span class="ansi-green-intense-fg ansi-bold">      3</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
-<span class="ansi-green-intense-fg ansi-bold">      4</span>    categories_repartition <span style="color: rgb(98,98,98)">=</span> pd<span style="color: rgb(98,98,98)">.</span>read_csv(os<span style="color: rgb(98,98,98)">.</span>path<span style="color: rgb(98,98,98)">.</span>join(rawdata_dir,<span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">workflows.csv</span><span style="color: rgb(175,0,0)">&#34;</span>))
+<span class="ansi-green-intense-fg ansi-bold">      4</span>     categories_repartition <span style="color: rgb(98,98,98)">=</span> pd<span style="color: rgb(98,98,98)">.</span>read_csv(os<span style="color: rgb(98,98,98)">.</span>path<span style="color: rgb(98,98,98)">.</span>join(rawdata_dir,<span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">workflows.csv</span><span style="color: rgb(175,0,0)">&#34;</span>))
 
-File <span class="ansi-green-fg">~/miniconda3/lib/python3.11/site-packages/pytracto/tractography/tractography_utils.py:166</span>, in <span class="ansi-cyan-fg">automatic_repartition</span><span class="ansi-blue-fg">(rawdata_dir, dim_template)</span>
-<span class="ansi-green-intense-fg ansi-bold">    161</span> <span class="ansi-bold" style="color: rgb(0,135,0)">def</span> <span style="color: rgb(0,0,255)">automatic_repartition</span>(rawdata_dir,dim_template):
-<span class="ansi-green-intense-fg ansi-bold">    162</span> <span style="color: rgb(188,188,188)">    </span><span style="color: rgb(175,0,0)">&#34;&#34;&#34;</span>
-<span class="ansi-green-intense-fg ansi-bold">    163</span> <span style="color: rgb(175,0,0)">    First define large categories based on the number of files only : multishell,multishel_synth,singleshell,singleshell_synth</span>
-<span class="ansi-green-intense-fg ansi-bold">    164</span> <span style="color: rgb(175,0,0)">    &#34;&#34;&#34;</span>
-<span class="ansi-green-fg">--&gt; 166</span>     subject_list <span style="color: rgb(98,98,98)">=</span> [s <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> s <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span class="ansi-yellow-bg">os</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">listdir</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">rawdata_dir</span><span class="ansi-yellow-bg">)</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">sub-</span><span style="color: rgb(175,0,0)">&#34;</span> <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> s <span class="ansi-bold" style="color: rgb(175,0,255)">and</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">.</span><span style="color: rgb(175,0,0)">&#34;</span> <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> s]
-<span class="ansi-green-intense-fg ansi-bold">    168</span>     row_list <span style="color: rgb(98,98,98)">=</span> []
-<span class="ansi-green-intense-fg ansi-bold">    170</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> sub <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> tqdm(subject_list):
+File <span class="ansi-green-fg">~/miniconda3/lib/python3.11/site-packages/pytracto/tractography/tractography_utils.py:230</span>, in <span class="ansi-cyan-fg">automatic_repartition</span><span class="ansi-blue-fg">(rawdata_dir, dim_template)</span>
+<span class="ansi-green-intense-fg ansi-bold">    195</span> <span class="ansi-bold" style="color: rgb(0,135,0)">def</span> <span style="color: rgb(0,0,255)">automatic_repartition</span>(rawdata_dir,dim_template):
+<span class="ansi-green-intense-fg ansi-bold">    196</span> <span style="color: rgb(188,188,188)">    </span><span style="color: rgb(175,0,0)">&#34;&#34;&#34;</span>
+<span class="ansi-green-intense-fg ansi-bold">    197</span> <span style="color: rgb(175,0,0)">    Categorizes diffusion MRI datasets based on the number and type of available files.</span>
+<span class="ansi-green-intense-fg ansi-bold">    198</span>
+<span class="ansi-green-fg">   (...)</span>
+<span class="ansi-green-intense-fg ansi-bold">    227</span> <span style="color: rgb(175,0,0)">    The resulting classification is also saved as &#34;workflows.csv&#34; in `rawdata_dir`.</span>
+<span class="ansi-green-intense-fg ansi-bold">    228</span> <span style="color: rgb(175,0,0)">    &#34;&#34;&#34;</span>
+<span class="ansi-green-fg">--&gt; 230</span>     subject_list <span style="color: rgb(98,98,98)">=</span> [s <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> s <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span class="ansi-yellow-bg">os</span><span class="ansi-yellow-bg" style="color: rgb(98,98,98)">.</span><span class="ansi-yellow-bg">listdir</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">rawdata_dir</span><span class="ansi-yellow-bg">)</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">sub-</span><span style="color: rgb(175,0,0)">&#34;</span> <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> s <span class="ansi-bold" style="color: rgb(175,0,255)">and</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span style="color: rgb(175,0,0)">&#34;</span><span style="color: rgb(175,0,0)">.</span><span style="color: rgb(175,0,0)">&#34;</span> <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> s]
+<span class="ansi-green-intense-fg ansi-bold">    232</span>     <span style="color: rgb(0,135,0)">print</span>(subject_list)
+<span class="ansi-green-intense-fg ansi-bold">    234</span>     row_list <span style="color: rgb(98,98,98)">=</span> []
 
-<span class="ansi-red-fg">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;/path/to/dir/rawdata&#39;
+<span class="ansi-red-fg">FileNotFoundError</span>: [Errno 2] No such file or directory: &#39;/path/to/source_dir/rawdata&#39;
 </pre></div></div>
 </div>
 </section>

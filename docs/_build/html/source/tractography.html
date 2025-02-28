@@ -518,21 +518,41 @@ verifying their dimensions against a provided template.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="tractography.tractography_utils.extract_dim_v2">
 <span class="sig-prename descclassname"><span class="pre">tractography.tractography_utils.</span></span><span class="sig-name descname"><span class="pre">extract_dim_v2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_template</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.tractography_utils.extract_dim_v2" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="tractography.tractography_utils.get_worflow_templates">
-<span class="sig-prename descclassname"><span class="pre">tractography.tractography_utils.</span></span><span class="sig-name descname"><span class="pre">get_worflow_templates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.tractography_utils.get_worflow_templates" title="Link to this definition">#</a></dt>
-<dd><p>Returns file path templates for MRI data based on category.</p>
+<dd><p>Checks NIfTI image dimensions for potential mismatches.</p>
 <section id="id1">
 <h3>Parameters:<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
 <dl class="simple">
-<dt>category<span class="classifier">str</span></dt><dd><p>Dataset classification.</p>
+<dt>filepath<span class="classifier">str</span></dt><dd><p>Path to the NIfTI file.</p>
+</dd>
+<dt>dim_template<span class="classifier">dict</span></dt><dd><p>Expected dimensions for “anat” (T1) and “dwi” (diffusion) images.</p>
 </dd>
 </dl>
 </section>
 <section id="id2">
 <h3>Returns:<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt>tuple:</dt><dd><ul class="simple">
+<li><p>dims_order (list of int): Extracted dimensions ([x, y, z] for T1, [x, y, z, volumes] for DWI).</p></li>
+<li><p>dimension_error (bool): True if dimensions mismatch, False otherwise.</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tractography.tractography_utils.get_worflow_templates">
+<span class="sig-prename descclassname"><span class="pre">tractography.tractography_utils.</span></span><span class="sig-name descname"><span class="pre">get_worflow_templates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tractography.tractography_utils.get_worflow_templates" title="Link to this definition">#</a></dt>
+<dd><p>Returns file path templates for MRI data based on category.</p>
+<section id="id3">
+<h3>Parameters:<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt>category<span class="classifier">str</span></dt><dd><p>Dataset classification.</p>
+</dd>
+</dl>
+</section>
+<section id="id4">
+<h3>Returns:<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
 <dl class="simple">
 <dt>dict</dt><dd><p>A dictionary of file path templates for anatomical and DWI images.
 Includes PA/AP acquisitions if applicable. Returns an empty dict for unrecognized categories.</p>

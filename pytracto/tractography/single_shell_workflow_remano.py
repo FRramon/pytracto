@@ -53,8 +53,8 @@ def execute_single_shell_workflow_remano(
         formatted_ses_id = f'ses-{ses_id}'
 
         df = pd.read_csv(csv_file)
-        dwiPA_row = df[(df['subject_id'] == formatted_subject_id) & (df['session_id'] == formatted_ses_id) & (df['modality'] == 'dwiPA')]
-        dwiAP_row = df[(df['subject_id'] == formatted_subject_id) & (df['session_id'] == formatted_ses_id) & (df['modality'] == 'dwiAP')]
+        dwiPA_row = df[(df['subject_id'] == formatted_subject_id) & (df['session_id'] == formatted_ses_id) & (df['modality'] == 'dwi')]
+        dwiAP_row = df[(df['subject_id'] == formatted_subject_id) & (df['session_id'] == formatted_ses_id) & (df['modality'] == 'fmap')]
         anat_row = df[(df['subject_id'] == formatted_subject_id) & (df['session_id'] == formatted_ses_id) & (df['modality'] == 'anat')]
         if not dwiPA_row.empty and not dwiAP_row.empty and not anat_row.empty:
             dwiPA_folder = dwiPA_row['folder'].values[0]
