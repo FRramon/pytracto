@@ -15,7 +15,6 @@ docs/Makefile
 docs/conf.py
 docs/index.rst
 docs/make.bat
-docs/_build/.DS_Store
 docs/_build/doctrees/environment.pickle
 docs/_build/doctrees/index.doctree
 docs/_build/doctrees/documentation/index.doctree
@@ -28,7 +27,6 @@ docs/_build/doctrees/source/bundlesegmentation.doctree
 docs/_build/doctrees/source/matrixescreation.doctree
 docs/_build/doctrees/source/modules.doctree
 docs/_build/doctrees/source/tractography.doctree
-docs/_build/html/.DS_Store
 docs/_build/html/.buildinfo
 docs/_build/html/genindex.html
 docs/_build/html/index.html

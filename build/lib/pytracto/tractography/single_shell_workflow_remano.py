@@ -53,8 +53,8 @@ def execute_single_shell_workflow_remano(
         formatted_ses_id = f'ses-{ses_id}'
 
         df = pd.read_csv(csv_file)
-        dwiPA_row = df[(df['subject_id'] == formatted_subject_id) & (df['session_id'] == formatted_ses_id) & (df['modality'] == 'dwiPA')]
-        dwiAP_row = df[(df['subject_id'] == formatted_subject_id) & (df['session_id'] == formatted_ses_id) & (df['modality'] == 'dwiAP')]
+        dwiPA_row = df[(df['subject_id'] == formatted_subject_id) & (df['session_id'] == formatted_ses_id) & (df['modality'] == 'dwi')]
+        dwiAP_row = df[(df['subject_id'] == formatted_subject_id) & (df['session_id'] == formatted_ses_id) & (df['modality'] == 'fmap')]
         anat_row = df[(df['subject_id'] == formatted_subject_id) & (df['session_id'] == formatted_ses_id) & (df['modality'] == 'anat')]
         if not dwiPA_row.empty and not dwiAP_row.empty and not anat_row.empty:
             dwiPA_folder = dwiPA_row['folder'].values[0]
@@ -63,6 +63,24 @@ def execute_single_shell_workflow_remano(
             return dwiPA_folder, dwiAP_folder, anat_folder
         else:
             raise ValueError(f"No matching rows found for subject_id={formatted_subject_id} and ses_id={formatted_ses_id}")
+    def convert_dicom_to_mif(dicom_folder, in_path):
+            import subprocess
+            command = f"mrconvert {dicom_folder} {in_path}/dwi.mif"
+            subprocess.run(command, shell=True, check=True)
+            return f'{in_path}/dwi.mif'
+
+    def get_mrconvertPA_path(subject_id,ses_id,derivatives_dir):
+        import os
+        return os.path.join(derivatives_dir,"wf_dc",f"_ses_id_{ses_id}_subject_id_{subject_id}","mrconvertPA")
+
+    def get_mrconvertAP_path(subject_id,ses_id,derivatives_dir):
+        import os
+        return os.path.join(derivatives_dir,"wf_dc",f"_ses_id_{ses_id}_subject_id_{subject_id}","mrconvertAP")
+
+    def get_mrconvertT1_path(subject_id,ses_id,derivatives_dir):
+        import os
+        return os.path.join(derivatives_dir,"wf_dc",f"_ses_id_{ses_id}_subject_id_{subject_id}","mrconvertT1")
+
 
     infosource = Node(
         IdentityInterface(fields=["subject_id", "ses_id"]), name="infosource"
@@ -79,23 +97,67 @@ def execute_single_shell_workflow_remano(
     )
     get_folders.inputs.csv_file = csv_file
 
+    get_mrconvertPA = Node(
+        Function(
+            input_names=["subject_id", "ses_id", "derivatives_dir"],
+            output_names=["out_path"],
+            function = get_mrconvertPA_path
+        ),
+        name = "get_mrconvertPA"
+    )
+    get_mrconvertPA.inputs.derivatives_dir = os.path.join(derivatives_dir,'main_workflow')
+
+    get_mrconvertAP = Node(
+        Function(
+            input_names=["subject_id", "ses_id", "derivatives_dir"],
+            output_names=["out_path"],
+            function = get_mrconvertAP_path
+        ),
+        name = "get_mrconvertAP"
+    )
+    get_mrconvertAP.inputs.derivatives_dir = os.path.join(derivatives_dir,'main_workflow')
+
+    get_mrconvertT1 = Node(
+        Function(
+            input_names=["subject_id", "ses_id", "derivatives_dir"],
+            output_names=["out_path"],
+            function = get_mrconvertT1_path
+        ),
+        name = "get_mrconvertT1"
+    )
+    get_mrconvertT1.inputs.derivatives_dir = os.path.join(derivatives_dir,'main_workflow')
+
+
+
     sf = Node(SelectFiles({
-        'dwiPA': 'source_data/sub-{subject_id}/ses-{ses_id}/{dwiPA_folder}/*',
-        'dwiAP': 'source_data/sub-{subject_id}/ses-{ses_id}/{dwiAP_folder}/*',
-        'anat' : 'source_data/sub-{subject_id}/ses-{ses_id}/{anat_folder}/*'
+        'dwiPA': 'sourcedata/sub-{subject_id}/ses-{ses_id}/{dwiPA_folder}/',
+        'dwiAP': 'sourcedata/sub-{subject_id}/ses-{ses_id}/{dwiAP_folder}/',
+        'anat' : 'sourcedata/sub-{subject_id}/ses-{ses_id}/{anat_folder}/'
     }), name="sf")
     sf.inputs.base_directory = source_dir
 
     # Conversion des DWI PA en .mif (utilisation du nifti, bvec et bval) +
     # Concatenation
     mrconvertPA = Node(
-        mrt.MRConvert(), name="mrconvertPA"
+        Function(input_names=["dicom_folder", "in_path"],
+                 output_names=["out_file"],
+                 function=convert_dicom_to_mif),
+        name="mrconvertPA"
     )
-    # mrcatPA = Node(mrt.MRCat(), name="mrcatPA")
+    # mrconvertPA.inputs.out_file = "dwi.mif"
 
-    # Conversion du DWI AP en .mif avec le nifti, bvec, bval
     mrconvertAP = Node(
-        mrt.MRConvert(), name="mrconvertAP"
+        Function(input_names=["dicom_folder", "in_path"],
+                 output_names=["out_file"],
+                 function=convert_dicom_to_mif),
+        name="mrconvertAP"
+    )
+
+    mrconvertT1 = Node(
+        Function(input_names=["dicom_folder", "in_path"],
+                 output_names=["out_file"],
+                 function=convert_dicom_to_mif),
+        name="mrconvertT1"
     )
     # mrconvertAP = Node(mrt.MRConvert(),name = "mrconvertAP")
     # mrcatAP = Node(mrt.MRCat(), name="mrcatAP")
@@ -112,19 +174,28 @@ def execute_single_shell_workflow_remano(
     wf_dc.connect(infosource, "subject_id", sf, "subject_id")
     wf_dc.connect(infosource, "ses_id", sf, "ses_id")
 
+    wf_dc.connect(infosource,"subject_id",get_mrconvertPA,"subject_id")
+    wf_dc.connect(infosource,"ses_id",get_mrconvertPA,"ses_id")
+    wf_dc.connect(infosource,"subject_id",get_mrconvertAP,"subject_id")
+    wf_dc.connect(infosource,"ses_id",get_mrconvertAP,"ses_id")    
+    wf_dc.connect(infosource,"subject_id",get_mrconvertT1,"subject_id")
+    wf_dc.connect(infosource,"ses_id",get_mrconvertT1,"ses_id")
+
     wf_dc.connect(get_folders, "dwiPA_folder", sf, "dwiPA_folder")
     wf_dc.connect(get_folders, "dwiAP_folder", sf, "dwiAP_folder")
     wf_dc.connect(get_folders, "anat_folder", sf, "anat_folder")
 
-    wf_dc.connect(sf, "dwiPA", mrconvertPA, "in_file")
-    wf_dc.connect(sf, "dwiAP", mrconvertAP, "in_file")
+    wf_dc.connect(get_mrconvertPA,'out_path',mrconvertPA,"in_path")
+    wf_dc.connect(get_mrconvertAP,'out_path',mrconvertAP,"in_path")
+    wf_dc.connect(get_mrconvertT1,'out_path',mrconvertT1,"in_path")
+
+    wf_dc.connect(sf, "dwiPA", mrconvertPA, "dicom_folder")
+    wf_dc.connect(sf, "dwiAP", mrconvertAP, "dicom_folder")
+    wf_dc.connect(sf, "anat", mrconvertT1, "dicom_folder")
+
 
     # wf_dc.connect(mrconvertPA, "out_file", mrcatPA, "in_files")
     # wf_dc.connect(mrconvertAP, "out_file", mrcatAP, "in_files")
-
-    ############################################################
-    ########          Freesurfer  Workflow           ###########
-    ############################################################
 
 
     ############################################################
@@ -391,8 +462,8 @@ def execute_single_shell_workflow_remano(
     main_wf.connect(
         wf_preproc, "biascorrect.out_file", wf_tractography, "dwi2fod.in_file"
     )
-    main_wf.connect(wf_dc, "sf.anat", wf_tractography, "gen5tt.in_file")
-    main_wf.connect(wf_dc, "sf.anat", wf_tractography, "transformT1.in_files")
+    main_wf.connect(wf_dc, "mrconvertT1.out_file", wf_tractography, "gen5tt.in_file")
+    main_wf.connect(wf_dc, "mrconvertT1.out_file", wf_tractography, "transformT1.in_files")
 
 
 
