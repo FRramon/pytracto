@@ -198,16 +198,26 @@ def process_dwi_json(source_dir,rawdata_folder,derivatives_folder,node_dir,subje
         # Extract required fields
         num_phase_encoding_steps = data.get("PhaseEncodingSteps")
         pixel_bandwidth = data.get("PixelBandwidth")
+        total_readout_time = data.get("TotalReadoutTime")
+        epi_factor = data.get("EPIFactor")
+
+        if total_readout_time is not None:
+            if epi_factor == 67:
+                total_readout_time = 0.0691753
+            elif epi_factor == 59:
+                total_readout_time = 0.0690376
+
+        if total_readout_time is None:
         
-        if not num_phase_encoding_steps or not pixel_bandwidth:
-            raise ValueError("Missing required fields in the JSON file.")
+            if not num_phase_encoding_steps or not pixel_bandwidth:
+                raise ValueError("Missing required fields in the JSON file.")
         
         # Calculate TotalReadoutTime
-        total_readout_time = num_phase_encoding_steps / pixel_bandwidth
+            total_readout_time = num_phase_encoding_steps / pixel_bandwidth
         
         # Create acqparam content
         acqparam_content = f"""\
-0 -1 0 {total_readout_time:.6f}
+0 1 0 {total_readout_time:.6f}
 0 1 0 0
 """
 

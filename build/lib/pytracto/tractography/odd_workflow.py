@@ -218,7 +218,6 @@ def execute_odd_workflow(
     # DWI2response
     dwiresponse = Node(mrt.ResponseSD(), name="dwiresponse")
     dwiresponse.inputs.algorithm = kwargs.get("fod_algorithm_param")
-    dwiresponse.inputs.csf_file = "wm.txt"
     dwiresponse.inputs.gm_file = "gm.txt"
     dwiresponse.inputs.csf_file = "csf.txt"
 

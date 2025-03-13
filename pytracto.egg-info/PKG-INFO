@@ -9,11 +9,12 @@ Classifier: License :: OSI Approved :: MIT License
 Classifier: Operating System :: OS Independent
 Requires-Dist: python-on-whales>=0.71
 Requires-Dist: pybids>=0.16
-Requires-Dist: nipype>=1.8.6
+Requires-Dist: nipype==1.8.6
 Requires-Dist: connectomemapper>=3.1
 Requires-Dist: seaborn
 Requires-Dist: pandas
 Requires-Dist: numpy
+Requires-Dist: dmri-amico
 Requires-Dist: matplotlib
 Requires-Dist: sympy
 Requires-Dist: dipy

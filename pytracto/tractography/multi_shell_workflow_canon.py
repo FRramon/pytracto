@@ -52,6 +52,9 @@ def execute_multi_shell_workflow_canon(
         formatted_subject_id = f'sub-{subject_id}'
         formatted_ses_id = f'ses-{ses_id}'
 
+        if ses_id == "V1":
+            formatted_ses_id = "ses-01"
+
         df = pd.read_csv(csv_file)
         dwiPA30_row = df[(df['subject_id'] == formatted_subject_id) & (df['session_id'] == formatted_ses_id) & (df['modality'] == 'dwi30')]
         dwiPA45_row = df[(df['subject_id'] == formatted_subject_id) & (df['session_id'] == formatted_ses_id) & (df['modality'] == 'dwi45')]
@@ -143,13 +146,13 @@ def execute_multi_shell_workflow_canon(
 
 
     sf = Node(SelectFiles({
-        'dwiPA30': 'source_data/sub-{subject_id}/ses-{ses_id}/{dwiPA30_folder}',
-        'dwiPA45': 'source_data/sub-{subject_id}/ses-{ses_id}/{dwiPA45_folder}',
-        'dwiPA60': 'source_data/sub-{subject_id}/ses-{ses_id}/{dwiPA60_folder}',
-        'dwiAP': 'source_data/sub-{subject_id}/ses-{ses_id}/{dwiAP_folder}',
-        'anat' : 'source_data/sub-{subject_id}/ses-{ses_id}/{anat_folder}'
+        'dwiPA30': '{dwiPA30_folder}',
+        'dwiPA45': '{dwiPA45_folder}',
+        'dwiPA60': '{dwiPA60_folder}',
+        'dwiAP': '{dwiAP_folder}',
+        'anat' : '{anat_folder}'
     }), name="sf")
-    sf.inputs.base_directory = source_dir
+    sf.inputs.base_directory = "/"
 
     # Conversion des DWI PA en .mif (utilisation du nifti, bvec et bval) +
     # Concatenation
@@ -323,7 +326,8 @@ def execute_multi_shell_workflow_canon(
     dwiresponse = Node(mrt.ResponseSD(), name="dwiresponse")
     dwiresponse.inputs.algorithm = kwargs.get("fod_algorithm_param")
     dwiresponse.inputs.wm_file = "wm.txt"
-
+    dwiresponse.inputs.gm_file = "gm.txt"
+    dwiresponse.inputs.csf_file = "csf.txt"
 
     # dwi2fod msmt_csd ${pref}_dwi_preproc.mif -mask ${pref}_mask_preproc.mif
     # ${pref}_wm.txt ${pref}_wmfod.mif ${pref}_gm.txt ${pref}_gmfod.mif
@@ -332,7 +336,8 @@ def execute_multi_shell_workflow_canon(
     dwi2fod.inputs.algorithm = kwargs.get("csd_algorithm_param")
     dwi2fod.inputs.wm_txt = "wm.txt"  # ici faire le lien avec dwiresp
     dwi2fod.inputs.wm_odf = "wm.mif"
-
+    dwi2fod.inputs.gm_odf = "gm.mif"
+    dwi2fod.inputs.csf_odf = "csf.mif"
 
     gen5tt = Node(mrt.Generate5tt(), name="gen5tt")
     gen5tt.inputs.algorithm = kwargs.get("tt_algorithm_param")
@@ -442,6 +447,9 @@ def execute_multi_shell_workflow_canon(
     wf_tractography.connect(transform5tt, "out_file", gmwmi, "in_file")
 
     wf_tractography.connect(dwiresponse, "wm_file", dwi2fod, "wm_txt")
+    wf_tractography.connect(dwiresponse, "gm_file", dwi2fod, "gm_txt")
+    wf_tractography.connect(dwiresponse, "csf_file", dwi2fod, "csf_txt")
+    
     wf_tractography.connect(brainmask, "out_file", dwi2fod, "mask_file")
 
     wf_tractography.connect(gmwmi, "out_file", tckgen, "seed_gmwmi")
