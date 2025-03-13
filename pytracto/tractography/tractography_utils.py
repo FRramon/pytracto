@@ -156,7 +156,9 @@ def extract_dim_v2(filepath,dim_template):
         expected_dimensions = dim_template.get("dwi", [])
         dims_order = [dims[1],dims[2],dims[3], dims[4]]
 
+        print("dwi")
         print(dims_order)
+        print(expected_dimensions)
 
         if all(isinstance(i,int) for i in expected_dimensions):      
 
@@ -167,6 +169,11 @@ def extract_dim_v2(filepath,dim_template):
 
             for expected in expected_dimensions:
 
+                print("dims_loop")
+
+                print(dims_order[:2] + dims_order[3:])
+                print(expected[:2] + expected[3:])
+
                 if (dims_order[:2] + dims_order[3:]) == (expected[:2] + expected[3:]):
                     dimension_error = False
                     break
@@ -174,6 +181,8 @@ def extract_dim_v2(filepath,dim_template):
     elif "fmap" in filepath:
         expected_dimensions = dim_template.get("fmap", [])
         dims_order = [dims[1],dims[2],dims[3], dims[4]]
+
+        print("fmap")
 
         print(dims_order)
 

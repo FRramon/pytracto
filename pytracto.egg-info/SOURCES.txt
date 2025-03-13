@@ -189,6 +189,7 @@ pytracto/tractography/.DS_Store
 pytracto/tractography/__init__.py
 pytracto/tractography/clean_tracks_done.py
 pytracto/tractography/even_workflow.py
+pytracto/tractography/multi_shell_workflow_canon.py
 pytracto/tractography/odd_workflow.py
 pytracto/tractography/odd_workflow_sink.py
 pytracto/tractography/pipeline_parameters.py
